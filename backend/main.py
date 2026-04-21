@@ -47,7 +47,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",  # Local development
-        "https://pmlf-frontend.2fd15639.er.aliyun-esa.net"  # Production
+        "https://intelligent-unity-production.up.railway.app",  # Railway frontend
+        "https://pmlf-frontend.2fd15639.er.aliyun-esa.net"  # Old production
     ],
     allow_credentials=True,
     allow_methods=["*"],
