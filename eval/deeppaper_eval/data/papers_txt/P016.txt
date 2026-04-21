@@ -1,0 +1,283 @@
+
+================================================================================
+Title
+================================================================================
+
+Occupational Safety within Non-Routine Manufacturing Processes: Evaluating the Validity of Task-Based Ergonomic Assessments
+
+
+================================================================================
+Abstract
+================================================================================
+
+Direct measurement ergonomic assessment is reshaping occupational safety by facilitating highly reliable risk estimation. Industry 5.0, advocating humancentricity, has catalysed increasing adoption of direct measurement tools in manufacturing industries. However, due to technical and feasibility constraints in their practical implementations, especially within non-routine manufacturing processes, task-based approach to ergonomic assessment is utilized. Despite enabling operationalization of robust ergonomic assessment technologies within complicated industrial processes, task-based approach raises several validity concerns. Hence, to ascertain functional utility of the resultant safety interventions, this study evaluates the construct validity of task-based ergonomic assessment within non-routine work utilizing Multitrait-multimethod (MTMM) matrix followed by video-based content analysis. Ergonomic exposure traits were collected for 46 participants through direct measurement and self-reported techniques utilizing inertial motion capture and Borg's RPE rating scale respectively. Findings include unsubstantiated convergent validity (low same-trait correlations: 0.149-0.243) and weak evidence of discriminant validity with statistical significance (p<0.001). The study also identifies three primary factors undermining construct validity through video-based content analysis. Findings also elucidate misinterpretation of ergonomic risk and action levels. Therefore, practical implications entail underestimation of actual ergonomic risks when estimated through task-based assessment. This highlights the need for enhancement in ergonomic assessment technologies focused on cumulative load analysis compatible within diverse industrial processes.
+
+
+================================================================================
+Introduction
+================================================================================
+
+Occupational safety is of utmost importance within manufacturing industries due to the inherently strenuous nature of a majority of tasks. Throughout the years, the significance of ergonomics within manufacturing industries has become progressively evident, driven by the imperative to ensure occupational safety, enhance productivity, and optimize operational efficiencies [1] [2] [3] [4] [5] [6] . With the emergence of Industry 5.0, the focus of manufacturing process planning is shifting from purely efficiency-driven approach to a more human-centric approach [7] [8] [9] [10] . The manufacturing sector, poses a plethora of risk factors such as repetitive motion, force exertion, heavy loads, awkward or stationary postures, excessive vibration etc. to the workers which leads to work-related musculoskeletal disorders (WMSDs) [11] [12] [13] . Manufacturing processes involve diverse working scenarios varying in terms of constituent tasks, repeating or cyclic patterns of tasks, controllable and uncontrollable disturbances at shop-floor and so on [14] [15] [16] [17] . While accurate and precise risk estimation within every working scenario remains an indispensable prerequisite for occupational safety, undertaking effective ergonomic assessment in each working scenario poses its own specific challenges.
+
+With technological advancements, the ergonomic assessment strategies have been refined to accommodate various working scenarios whilst utilising more sophisticated techniques for risk estimation. In order to ascertain the reliability and accuracy of the ergonomic assessments, there has been increasing adoption of advanced industrial engineering technologies such as direct measurement (DM) tools [18] [19] [20] . The DM tools involve quantification of exposure parameters through sensors mounted on the relevant body segments, for example, motion capture systems for posture identification, sEMG for muscle activity analysis and EEG for cognitive load assessments. However, due to technical and feasibility constraints posed by manufacturing shop floors, DM tools require a limited sample of work which can be considered to represent the ergonomic aspects of a complete work shift, and the sample exposure is weighted to estimate the overall exposure throughout a work shift. This approach is easily applicable to routine work, considering a few work cycles as the representative sample for ergonomic assessment, owing to relatively short cycle times.
+
+However, DM ergonomic assessment in non-routine manufacturing processes becomes markedly complicated due to the absence of a repeating segment of work. The variation in both sequence and content of the underlying tasks within non-routine manufacturing processes omit any representative work sample to be utilized for ergonomic assessments [14] [15] [16] . Manual material handling (MMH) presents a good example of non-routine work. MMH activities involve variability in sequence and content, lower degree of standardisation in operating procedures, and dynamic decisions among other factors that introduce unstructuredness in the process flow [21] [22] [23] . Despite the complexity in the assessment process, the nature of activities demands highly reliable and accurate ergonomic risk estimation since MMH activities are physically taxing, and thereby, substantially impact the safety considerations. In case of non-routine work and other complex working scenarios, due to the absence of such a work sample, task-based ergonomic assessment approach provides a feasible and practical solution [24] .
+
+In the task-based approach, the details regarding all the activities scheduled in a work shift are collated through process flow SOPs, structured interviews, work logs, surveys etc. to shortlist ergonomically critical activities [24, 25] . These critical activities are separately utilised for ergonomic assessment to calculate the exposure scores instead of the complete process flow to comply with the feasibility constraints in data collection.
+
+The bypassed work elements, such as the projected time duration (both continuous or intermittent) of these activities in a complete work shift, the nature of loading (dynamic or static loading), postural support available to the workers and so on, are taken into account with the application of correction factors on the calculated exposure scores to estimate the overall risk. On the contrary, an assessment involving continuous observation throughout the complete work shift is referred to as cumulative load assessment [21, 26] .
+
+Even though the task-based approach is a very commonly practiced, feasible solution for application of DM ergonomic assessment in non-routine, complex or highly dynamic work, there has been theoretical concerns regarding validity of results [15, 27, 28] . This is attributable to the elevated probability that multiple work elements get overlooked, considering the assessment is focused on a subset of the work, with the remaining elements being addressed through approximation. To attain effective ergonomic risk estimation it is essential to address any potential research-practice gap prevalent in assessment methodologies [29] [30] [31] [32] [33] . Stanton and Young [33] have argued that reliability alone is not sufficient and an extra effort to ensure validity of measurements is critical in ergonomics as methods can be reliable without being valid. Hence, the DM ergonomic assessments conducted through task-based approach, although delivering reliable estimates, makes it worthwhile to evaluate whether the estimated risks realistically replicate the actual ergonomic exposure.
+
+In epidemiological research, validity concept has been broadly classified into four types i.e. face validity, construct validity, content validity, and criterion validity.
+
+Chronologically, face validity is the preliminary type that pertains to the extent to which an ergonomic assessment approach appears, at face value, to measure what it claims to measure, as judged by non-experts or participants [34] . In extension to the face validity, construct validity refers to the degree to which an assessment approach accurately measures the specific theoretical constructs it aims to evaluate [35, 36] . Subsequently, content validity evaluates the extent to which an ergonomic assessment covers the relevant aspects of those specific constructs [37] . And finally, criterion validity assesses how well the results of an ergonomic assessment correlate with other established methods [38] . Therefore, in this context, task-based approach satisfies face validity as it is extensively accepted to be measuring the intended construct of ergonomic exposure in a work-shift with consideration of ergonomically critical activities. However, the extent to which this approach of separate evaluation of critical activities aligns with the theoretical framework of a holistic ergonomic assessment should be examined through construct validity. Construct validity serves as the cornerstone for establishing the relevance and accuracy of an assessment's measurements in relation to the underlying theoretical constructs it aims to evaluate [36, 39, 40] .
+
+In epidemiology various methods are utilised to evaluate construct validity such as Q-sort, correlation analysis, confirmatory factor analysis (CFA), exploratory factor analysis (EFA) and multitrait-multimethod (MTMM) matrix [40] [41] [42] [43] [44] . MTMM matrix is the most utilized means of construct validity evaluation since it derives insights from both convergent validity (similarity within assessment of same traits) and discriminant validity (dissimilarity between assessment of different traits) observed in the assessment of multiple traits utilizing multiple assessment methods [41, 45, 46] .
+
+In the context of task-based approach, ascertaining construct validity is particularly important since this approach is employed to facilitate more reliable technologies for ergonomic assessments within complex and physically demanding environments necessitating robust risk calculation. Yet, a potential discrepancy may emerge due to the fundamental theory of assessment of critical activities in isolation, rather than within the broader context of the entire task [15, 27, 28, [47] [48] [49] . Consequently, if such an approach does not provide an authentic representation of workers' actual exposure levels, leveraging advanced industrial engineering technology for its reliability becomes futile, undermining efforts to achieve valid exposure outcomes. Hence, this paper is an effort towards supporting robust ergonomic assessment within challenging industrial processes by exploring construct validity of the task-based approach for ergonomic assessment in non-routine manufacturing tasks utilising multitraitmultimethod (MTMM) matrix.
+
+
+================================================================================
+Relevance to occupational safety
+================================================================================
+
+The study is relevant to occupational safety since non-routine manufacturing processes such as MMH activities are known to culminate into various work-related musculoskeletal disorders (WMSDs) such as carpal tunnel syndrome (CTS), lower back and rotator cuff injuries etc. in absence of effective ergonomic interventions. For ensuring the effectiveness of interventions, the validity of assessments in addition to reliability forms a significant precursor. Hence, with rapid advancements in industrial engineering technologies and complexities in manufacturing processes, it becomes necessary to revisit the validity concerns regarding practical measurements in ergonomics, especially for assessment approaches utilizing room for approximations. Addressing this researchpractice gap is significant to ensure risk estimations from the measurement approaches in conjunction with the novel tools are trustworthy for making important decisions regarding manufacturing process planning and workplace design to prevent critical occupational safety issues.
+
+
+================================================================================
+Literature survey
+================================================================================
+
+Practical implementation approaches such as task-based assessment of ergonomic parameters, in order to accommodate feasibility constraints of the advanced assessment tools, often work with data collection for significantly limited time duration, number of subjects etc. Moreover, in several cases task-based assessment is conducted in simulated environment to avoid the challenges posed by highly dynamic manufacturing floors, along with disturbances such as electromagnetic interference (EMI), mechanical vibrations, acoustic noise, thermal fluctuations, and airborne particulates that can compromise sensor accuracy and data integrity. Subsequently, the findings of constrained ergonomic assessments go through various approximations to become generalizable to the broader set of population, actual process flow and real work environment. However, effective evaluation of ergonomics in epidemiology depends on a lot of complexities and becomes more challenging as room for approximation increases. For instance, Granata et al. [22] talk about how individuals performing same task can still differ in experiencing the same loads and van Diee¨n et al. [50] show that different people react differently to the resulting ergonomic interventions which is crucial to consider when the assessment involves fewer subjects. Kanis [51] argue that measurements of human performance can accumulate dispersion due to human characteristics such as getting bored, tired or gaining knowledge and experience etc. and studied the dispersion patterning to limit test-retest trials in experimental design. Similarly, Dempsey and Mathiassen [15] present a detailed description of evaluation of manufacturing processes and hence the methods of studying these processes. This detailed account very efficiently describes the various types of task analysis and other approximations specific to non-routine work. Concerns regarding the validity of some approximations have also been discussed concluding with the need for deeper explorations. Dempsey [21] elaborates the crucial correction factors to consider when applying task-based approach specifically in MMH activities regarding time duration and frequency of critical activities. Kumar [52] explains mode of MSDs and establishes that lower back pain can be caused by prolonged history of varied exposures.
+
+It is therefore not solely the peak stresses that are of significance which are typically the focus in task-based estimates. Svendesen et al. [53] compares task-based ergonomic exposure estimates with estimates based on occupation and the effect of increasing number of subjects on the precision of task-based estimates. The study concludes taskbased estimates as marginally better than occupation based estimates but with insignificant increase in precision with increase in number of subjects.
+
+On a tangential note, the debate regarding the significance of reliability and validity of measurements in ergonomics had received ample attention in past years.
+
+Stanton and Young [33] presented an account on the importance of reliable and valid ergonomic findings for overall profit to a firm. Annett [54] proposed a dichotomy of ergonomic studies, classified into analytical and evaluatory, and proposed the validity requirements such as construct and predictive validity corresponding to each type.
+
+Similarly, several studies presented discourse on the importance of maintaining reliability and validity of ergonomic research results in practical realm by revisiting validity concerns in light of advancements in ergonomics [55] [56] [57] [58] . However, since 2016, there has been a notable decline in academic research on the validity front for the fundamentals of measurement approaches in ergonomics. With the advent of dramatic technological developments, the adoption of high end measurement techniques and increasing complexity in manual tasks mandates revisiting the basic principles such as validity assurance for measurement approaches in ergonomics in order to attain concrete results in practice.
+
+On similar lines, Vigoroso et al. [59] highlight the need for clearer methodologies within assessment approaches under human factors and ergonomics to better integrate safety in industrial practices. Hence, with the availability of very few research studies on the theoretical considerations involved in the approximations required by the task-based approach, and yet widespread practical implementations in order to feasibly incorporate reliability enhancing data collection tools, a crucial research-practice gap was identified.
+
+Addressing WMSDs requires not only accurate measurement of relevant ergonomic risk parameters but also the use of an assessment approach that ensures the alignment of the outcome with the intended constructs, thereby establishing construct validity. To the best of the authors' knowledge, no empirical study has been conducted for studying the construct validity of task-based approach. Hence, this study explores the construct validity of task-based ergonomic assessment approach using two case studies of non-routine manufacturing tasks.
+
+
+================================================================================
+Methodology
+================================================================================
+
+This study evaluates the construct validity of task-based ergonomic assessment of nonroutine work using Multitrait-multimethod (MTMM) matrix in conjunction with direct measurement using inertial motion capture technique as well as self-reported method using Borg's RPE rating scale. The methodology followed for construct validity evaluation and follow-up analysis is depicted in Figure 1 . The MTMM matrix involves measurement of multiple traits using multiple methods in order to ascertain convergent and discriminant validity of the method or approach in question. For the ergonomic assessment, two traits were measured 1) MSD risk score and 2) perceived exertion using two methods 1) task-based assessment and 2) cumulative load assessment.
+
+Xsens MVN Awinda motion capture system was used as the direct measurement tool to calculate MSD risk score and Borg's RPE self-reporting scale was used to quantify the perceived exertion in two case studies.
+
+
+================================================================================
+Participant Selection and Task Design
+================================================================================
+
+The experiment was structured around two distinct case studies to comprehensively explore the construct validity of task-based approach using different process flows and work environments. The experimental protocol was approved by the institutional ethics committee (approval number: 6-31082018) and informed written consent was obtained from the participants prior to experimentation.
+
+
+================================================================================
+Case Study -1
+================================================================================
+
+The initial case study involved the collection of data from a group of 36 individuals (20 males and 16 females) in the age range of 23 -32 years, not directly associated with factory work, in a laboratory simulated manufacturing task. This subject selection, although driven by availability, additionally helped in the inclusion of various aspects of non-routine work such as unstructuredness due to the participants' lack of professional expertise, leading to elemental actions executed in varied, non-standardized ways, variable sequence of activities, dynamic decisions, occasional omissions or missteps, further contributing to the variability in task performance.
+
+The task involved assembly and disassembly of an aircraft wingbox along with MMH activities including lifting, lowering, turning and carrying of structural components such as spar cap and web panels as shown in Figure 2(a ). The participants were provided with the content and tools to execute the activities involved in the task and they were free to follow any sequence of activities.
+
+
+================================================================================
+Case Study -2
+================================================================================
+
+To validate and contextualize the findings from the first case study, subsequent investigation targeted professional manufacturing factory workers. Data collection occurred within the CEFC smart factory, ensuring a direct observation from an actual shop floor.
+
+The observed sample of work involved various activities in the process flow of pneumatic cylinder assembly in the smart factory such as order placement on the Manufacturing Execution System (MES), disassembly of required parts, kitting operations, AGV and robot monitoring, control and troubleshooting, quality inspection and so on as shown in Figure
+
+
+================================================================================
+Data collection
+================================================================================
+
+In order to observe task-based assessment in conjunction with both direct measurement as well as self-reporting tools, the following data was collected:
+
+(1) Direct measurement: Inertial motion capture using MVN Awinda MoCap system to obtain posture specific data during the task execution.
+
+(2) Self-report: Borg's RPE scale was used after task completion to quantify perceived exertion.
+
+Data collection was carried out in two distinct sessions for each participant for ergonomic assessment using cumulative load assessment method and task-based assessment method separately.
+
+
+================================================================================
+Cumulative load assessment:
+================================================================================
+
+The entire task was observed using both the aforementioned techniques of data collection.
+
+Each participant completed the whole process flow donned with the inertial motion capture suit setup and responded to the Borg's RPE survey directly after task completion.
+
+
+================================================================================
+Task-based assessment:
+================================================================================
+
+Critical activities in both the case studies were identified based on literature survey and industrial best practices regarding similar tasks in the manufacturing shop floors. The participants performed these critical activities with the application of inertial motion capture suit and filled out the Borg's RPE survey after completion of each critical activity.
+
+The postural data collected using inertial motion capture system was used to calculate MSD risk score estimated using Rapid Upper Limb Assessment (RULA) exposure criterion. Table 1 includes the time weighted RULA scores calculated for each participant using methods of cumulative and task-based assessment in both the case studies.
+
+Borg's RPE ratings used to quantify perceived exertion for each participant during methods of cumulative and task-based assessment for both the case studies are also tabulated in Table 1 .
+
+
+================================================================================
+Multi-trait Multi-method matrix
+================================================================================
+
+The statistical analysis for exploring construct validity was done using MTMM matrix.
+
+MTMM matrix was chosen as it supports the evaluation of both convergent as well as discriminant validity by examining the inter-relationship between various traits calculated using the different methods.
+
+In this study, the two methods being compared are cumulative load assessment and task-based assessment. Two traits calculated using the collected data are MSD risk score using postural data from the motion capture system and perceived exertion quantified using self-reported Borg's scale.
+
+The following four types of inter-relations were quantified using Pearson's correlation coefficients and p values in order to form the MTMM matrix:
+
+(1) Same traits calculated using same methods
+
+(2) Same traits calculated using different methods (3) Different traits calculated using same methods, and (4) Different traits calculated using different methods The correlation coefficients for both the case studies are tabulated in the form of MTMM matrices in Table 2(a) and Table 2(b). 3.3.1.1. Interpretation of MTMM matrix P31 11.0 5.62 14.3 5.30 P32 10.5 4.03 13.8 3.94 P33 10.8 4.45 14.3 4.04 P34 11.0 4.29 13.5 3.99 P35 10.3 3.98 12.8 3.92 P36 11.0 3.98 14.0 3.91
+
+Campbell and Fisk [41] developed Multitrait-Multimethod (MTMM) Matrix, a tool for evaluation of construct validity in applied research through assessment of convergent and discriminant validity. Convergent validity provides the extent to which theoretically similar traits are empirically interrelated. Similarly, discriminant validity provides the extent to which theoretically dissimilar traits are empirically not interrelated.
+
+Subsequently, Campbell and Fisk [41] put forward the following main criteria for the interpretation of MTMM matrix to ascertain convergent and discriminant validity for any method being studied.
+
+(1) The coefficients in reliability diagonal should be consistently the highest in the MTMM matrix. This ensures that the individual traits are internally consistent.
+
+(2) The coefficients in validity diagonal should be significantly different from zero preferably medium to high strength of correlation. This ensures same traits are correlated sufficiently and forms evidence of convergent validity.
+
+(3) In a heteromethod block, validity coefficient should be higher than all other values in its corresponding row. This ensures that same traits measured through different methods are correlated stronger than different traits measured through different methods and forms evidence of discriminant validity.
+
+(4) Similarly, in a heteromethod block, validity coefficient should be higher than all other values in its corresponding column. This ensures that different traits measured through same methods even are not as strongly correlated as same traits measured through different methods and forms evidence for discriminant validity.
+
+(5) A validity coefficient should be higher than all coefficients in the heterotraitmonomethod triangles. This essentially emphasizes that trait factors should be stronger than methods factors.
+
+
+================================================================================
+Paired t-test:
+================================================================================
+
+Paired t -test was conducted for more clarity on the similarity or difference in the ergonomic exposures calculated using task-based and cumulative methods beyond correlations (i.e. strength and direction of relationships) by comparison of the mean ergonomic exposures using the 2 methods. This is particularly important in case of ergonomic assessment scores since the organizational decisions on the requirement of ergonomic interventions largely depend on the levels of ergonomic exposures risk rather than absolute risk scores. Hence, similar direction and high strength of relationship alone are not sufficient but the exposure scores calculated using task-based as well as cumulative method should fall in the same action levels as per the ergonomic assessment criteria in order to lead to similar decisions on intervention requirement in the workplace which can be ensured by comparison of mean exposures.
+
+
+================================================================================
+Qualitative analysis:
+================================================================================
+
+Content analysis involving task execution videos and ergonomic risk data derived from inertial motion capture system was conducted for deeper interpretation of the results of MTMM matrix and t-test by comparing the full spectrum of exposure scores calculated using the 2 methods at a frequency of 60Hz for each participant against the corresponding activities being performed. The activities responsible for mismatch in the exposure scores, the underlying reasons and frequency of occurrences are elaborated in the Discussion section (Section 5).
+
+
+================================================================================
+Construct validity
+================================================================================
+
+The resulting MTMM matrices for both the case studies shown in Table 2 satisfy the 1 st criterion of interpretation included in section 3.4.1.1 as all the coefficients in the reliability diagonal are moderate to high in the range of 0.600 to 0.849 for case study-1 and in the range of 0.641 to 0.903 for case study-2. This suggests that the individual traits are internally consistent and suitable for further investigation.
+
+
+================================================================================
+Convergent validity:
+================================================================================
+
+In order to ascertain convergent validity, the inter-relationship between same traits measured using different methods should be strong. Therefore, following inferences regarding convergent validity can be drawn from resulting MTMM matrix referring to the 2 nd criterion of interpretation of MTMM matrix from Section 3.3.1.1. From Table 2 (a), it is evident that the strength of correlation between same-trait different-method data in case study -1 is low in the range of (0.149 -0.243) with statistical significance (pvalues < 0.001).
+
+0.114 t 5.206 df 9 p (2-tailed) 0.0006
+
+
+================================================================================
+Discussion
+================================================================================
+
+In the context of this empirical study, it is noteworthy to mention that the reliability coefficients for each method employed were observed to be moderate to high (0.6 -0.9).
+
+Despite the robust reliability of individual methods, the absence of convergent validity and only moderate evidence of discriminant validity remain significant findings. The high reliability coefficients acknowledge the consistency and repeatability of each method within its specific context. However, inadequacy of convergent and discriminant validity suggests a lack of construct validity and requires deeper understanding of the interrelationships observed, their strengths and potential reasons.
+
+From qualitative content analysis utilizing task performance videos and ergonomic risk data obtained from motion capture system, the comparison of cumulative load and task-based methods revealed three main factors contributing to this mismatch in exposure estimation.
+
+
+================================================================================
+Unplanned activities overlooked in task-based assessment
+================================================================================
+
+Due to the inherently dynamic nature of non-routine work, the manufacturing operators may encounter unplanned activities that are not accounted for in the predefined process flow arising spontaneously due to emergent issues during the work shift. Since the taskbased approach relies on prior identification of ergonomically critical activities from the process flow, there is a strong likelihood of not taking into account, the unplanned activities which may pose ergonomic risks.
+
+Consequently, three such unplanned activities were observed in case study-1, whereas case study-2 projected four unplanned activities. These activities are depicted in Figure 3 , along with the details regarding the percentage of participants encountering these unplanned activities as well as the ergonomic risk levels associated with the corresponding activity execution.
+
+Fig. 3 . Unplanned activities, percentage of participants and associated RULA scores For instance, in case study-1, the activities of 'retrieving misplaced components' and 'component stabilisation' posed 'very high risk levels' for 41.7% and 48.7% of the total participants respectively, implying that almost half of the total participants faced high ergonomic risks due to these unplanned activities. While 33.3% and 38.5% of total participants faced medium risk performing the respective activities, whereas 25% and 12.8% participants did not encounter these respective activities.
+
+
+================================================================================
+Low-salience activities overlooked in task-based assessment
+================================================================================
+
+Task-based approach entails selection of an optimal set of ergonomically taxing activities considering feasibility constraints in data collection. Consequently, several activities although included in process flow, yet less noticeable or assumed to be not much ergonomically critical, often get overlooked. For instance, Wu and Chung [60] have acknowledged that amongst the MMH activities, 'holding' activity is often overlooked as compared to 'lifting' and 'lowering' activities which are considered primarily ergonomically taxing and empirically ascertained a significant effect of holding mode on the overall perceived ergonomic exposure. In the present study, two such low-salience activities have been observed in both the case studies which posed significant ergonomic risks to the participants. These activities are depicted in Figure 4 with details regarding risk levels. For instance, the activity of 'AGV monitoring' involved 'very high risk levels' for 80.6% and 'medium risk levels' for 19.4% of the total participants in case study 2. All four of the identified low-salience activities across both case studies, overlooked in task-based method, being 'carrying', 'tightening fasteners', 'order placement', and 'AGV monitoring', are the kind of activities that lack a degree of standardisation in operating procedure as per postural considerations, and consequently such activities may be generally classified as noncritical from ergonomic assessment standpoint in task-based approach.
+
+
+================================================================================
+Same activities resulting in different exposure scores
+================================================================================
+
+In both the case studies, the assessment of same activities (i.e., the selected critical activities) was also observed to culminate in different exposure scores with the utilization of cumulative load and task-based load assessment. Figure 5 depicts the mean and standard deviation of resulting exposure scores for the same activities from both the assessment methods. It is evident from Figure 5 that task-based approach resulted in lower average risk scores in both the case studies. While task-based approach entails execution of the critical activities in isolation, the cumulative load assessment involves the complete process flow involving execution of the same critical activities as a part of an overall goal alongside several intermediate non-critical activities. Consequently, video-based content analysis of the task execution involved in both the assessment methods elucidated two major reasons for lower ergonomic risk scores calculated using task-based method.
+
+(1) Lack of operational context:
+
+In controlled, task-based assessments, activities are performed in isolation, without the context of the overall operational workflow. This abstraction eliminated the broader production goals from the participants' focus and allowed them to focus more on individual activities rather than the overall objective, which in turn heightened their awareness of postural challenges. In contrast, within cumulative load assessment involving the actual process flow, the participants were typically task-oriented, more focused towards the production outcomes, often prioritizing efficiency and throughput over ergonomic self-regulations. This contextual disconnect can be a potential reason for the observed underestimation of ergonomic risks.
+
+(2) Discontinuity in elemental actions:
+
+With the omission of non-critical activities within task-based assessment, the elemental actions connecting the sequential process steps were observed to be modified. Precisely. the discontinuity between elemental actions during interactivity transitions, stemming from the omission of non-critical activities in taskbased assessment, was observed to artificially increase the operational leeway by alleviating some of the postural constraints, inevitable in the actual process flow.
+
+This was observed to modify the execution patterns and assumed postures as the same activities were performed in isolation resulting in lower ergonomic risk scores. Consequently, it can be seen from figure 5 that mean RULA scores for almost all the critical activities identified across both the case studies were higher for cumulative load assessment. Moreover, the cumulative load assessment results also show comparatively higher standard deviation (Figure 5) whereas task-based assessment results show zero variance for most of the critical activities. This suggests higher repeatability in task-based assessment, however, it also highlights loss of information from the actual operational scenario as captured in the cumulative load assessment. Also, inconsistent differences between calculated cumulative load and task-based exposure values suggests the presence of random error rather than systematic error which results in insufficiency of the standard correction/approximation factors utilized in task-based assessments to obtain a closer-toreality exposure calculation. This finding can be better contextualized in conjunction with empirical studies on muscular activity analyses. For example; Yi et al. [61] measure pulling strengths in a pallet truck handling operation, concluding a role of maximum endurance time (MET) on the development of muscular fatigue in such MMH activities and hence, work/rest allowance in job design. Therefore, a task-based assessment considering the pulling activity as critical in isolation may overlook the cumulative fatigue effects in the absence of MET consideration within the complete work cycle.
+
+
+================================================================================
+Conclusion and future scope
+================================================================================
+
+This paper addresses a crucial research-practice gap by exploring the construct validity of task-based approach to ergonomic assessment given its extensive application in manufacturing industries for leveraging reliability boosting methods of data collection, especially in complex working scenarios such as non-routine work or unfavourable shopfloor conditions. However, theoretical proof to support validity of results for encouraging continued use of this approach is scarce. The paper explains the imperative for reliable and valid ergonomic assessment in the context of non-routine work, the various impediments to the assessment process, corresponding assessment approaches along with the correction factors employed in order to achieve an exposure score true to reality.
+
+Hence, based on the utility of task-based assessment method for practical implementation of reliability enhancing data collection techniques such as direct measurement tools, the paper strives to gain insights on the validity of results.
+
+Using the MTMM matrix method, the experimental data suggests a complete lack of convergent validity and a weak discriminant validity which overall indicates inadequate construct validity for the task-based assessment approach. Deeper investigations into the interrelationships between same traits being measured using taskbased approach and cumulative load analysis revealed three contributing factors for this inadequacy being overlooked low-salience activities, overlooked unplanned activities additional to the standard process flow, and lack of context and continuity in task execution within task-based assessment approach. Amongst the three observed factors contributing to the lack of construct validity, the overlooking of low-salient activities can be managed through modifications in the sampling strategy enabling a meticulous selection of critical activities for assessment. This makes it a controllable factor to some extent. On the contrary, the remaining two factors are uncontrollable. For instance, overlooking of unplanned activities beyond the predefined process flow, nonetheless come into picture due to the unstructuredness of non-routine work. Similarly, lack of contextual coherence and discontinuity in elemental movements are inevitable when critical activities are to be executed in isolation with the omission of intermediate activities within the process flow.
+
+Findings not only include the lack of convergence in the task-based and cumulative load assessment results, but the implications for practical ergonomic risk estimation explored with paired-t test comparison also suggests a significant difference in the estimated risk and action levels as per RULA criterion which can lead to misinformation regarding ergonomic interventions at workplace and inefficiency in preventing WMSDs. A potential limitation of this study could be the exclusive use of RULA criterion for evaluating risk level discrepancies subsequent to direct measurement data collection. The criterion was selected given its widespread application in risk assessments for most manufacturing tasks. However, it could be worthwhile to explore whether risk and action level discrepancies persist with the utilization of alternative risk estimation criteria such as REBA, NIOSH, EAWS or OWAS.
+
+The interrelationship study also suggested that the deviation observed in the results of task-based approach from actual exposure is random in nature and hence the inefficiency of standard correction factors in the experimental results was justified. In conclusion, these findings suggest a need for cumulative load assessments even while leveraging highly reliable assessment techniques such as direct measurement, to ensure the validity of exposure estimation. Consequently, the need for enhancement of advanced industrial engineering technologies such as the direct measurement techniques ensuring applicability to diverse manufacturing processes such as non-routine, highly dynamic, complex or collaborative work, whilst reducing the prerequisite of work-sampling involved in ergonomic assessments is highlighted. Therefore, future scope indicates exploration of constraints within practical implementations of direct measurement ergonomic assessments in diverse manufacturing processes facilitating cumulative load analysis of ergonomic exposures.
+
+
+================================================================================
+Disclosure statement
+================================================================================
+
+No potential conflict of interest was reported by the authors.
+
+
+================================================================================
+Discriminant validity:
+================================================================================
+
+Discriminant validity can be ascertained if the inter-relationship between same-trait different-method data is stronger than the inter-relationships between all types of different-trait data. Therefore, inferences regarding discriminant validity in both case studies considering the 3 rd and 4 th criteria of interpretation of MTMM matrix from Section 3.3.1.1, are as follows.
+
+From Table 2 (a), in case-study 1, the strength of correlation between same-trait different-method data (0.149 -0.243) is comparatively lower than the correlation between all different trait data measured using same as well as different method (0.353-0.502) with statistical significance (p-values < 0.001).
+
+From Table 2(b), in case-study 2 as well, different traits are seen to have stronger correlations whether measured using same or different methods (0.198 -0.457) compared to same traits measured with different methods (-0.211 -0.160) with an exception of moderate negative correlation (ρ = -0.487) in different traits measured using task-based method with statistical significance (p-values < 0.001).
+
+Hence, partial satisfaction of discriminant validity criteria with weak correlations in same traits suggests limited evidence of discriminant validity in case study-2, whereas in case study-1, no evidence of discriminant validity could be ascertained.
+
+
+================================================================================
+Paired t-test
+================================================================================
+
+Table 3 indicates a statistically significant difference between the TWA RULA scores, with cumulative load scores (M = 4.832, SD = 0.578) higher than scores calculated using task-based method (M = 4.166, SD = 0.377), t(35) = 6.973, p < 0.0001 in case study-1.
+
+Similarly, TWA RULA scores increase from (M = 3.909, SD = 0.259) to (M = 4.714, SD = 0.373) when calculated using task-based and cumulative load methods respectively (t(9) = 5.206, p = 0.0006) in case study-2. This suggests that TWA RULA scores when calculated using task-based method may lead to underestimation of the ergonomic risk levels as per RULA criterion. For instance, in case study-1, the TWA RULA scores for 20 out of 36 participants fall in the range of 5 -6 corresponding to 'medium risk level' using cumulative load calculations all of which fall in the range of 3 -4 using task-based calculations corresponding to 'low risk level'.
+

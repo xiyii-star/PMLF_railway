@@ -1,0 +1,285 @@
+
+================================================================================
+Title
+================================================================================
+
+Prediction of Maximum Temperature record in Spain 1960-2023 by the means of ERA5 atmospheric geopotentials
+
+
+================================================================================
+Abstract
+================================================================================
+
+ERA5 Reanalysis ECA&D Geopotential Maximum Temperature 300 hPa 500 hPa 700 hPa Compute Daily Records Binary Indicator
+
+
+================================================================================
+Introduction
+================================================================================
+
+There is an ongoing increase in the rate of extreme climatic events due to global warming. In particular, there is a rising frequency of temperature extremes such as heatwaves and record-breaking events (Om et al., 2022; Paredes-Fortuny & Khodayar, 2023; Saddique et al., 2020; Zhang & Sun, 2025) . These events have numerous consequences for ecosystems (Breshears et al., 2021) , agriculture (Büntgen et al., 2024) , and public health systems (Royé et al., 2021) , among others. Europe, specifically, has experienced one of the most pronounced warming trends in recent decades compared to other continents (Di Luca et al., 2020; Twardosz et al., 2021) , with Southern Europe and the Mediterranean sea considered climate hot-spots. In these regions, summer temperatures have triggered devastating events such as wildfires and "medicanes" (Dupuy et al., 2020; González-Alemán et al., 2019) .
+
+Although extremes are commonly defined through maxima over a time period or exceedances over a high threshold, record-breaking temperatures, particularly calendar-day records, i.e., the highest value observed on a specific calendar day at a given station, offer a valuable alternative approach for analyzing extreme behavior. Many meteorological services use these events as climate indices. For example, the U.S. National Oceanic and Atmospheric Administration (NOAA) and its National Centers for Environmental Information (NCEI) provide daily updates on record events across various periods: see https://www.ncdc.noaa.gov/cdo-web/datatools/records . Similarly, the Copernicus Climate Change Service (C3S), via the European Centre for Medium-Range Weather Forecasts on behalf of the European Commission, includes these records in its annual European State of the Climate (ESOTC) report; specifically, the 2019 ESOTC report (ESOTC, 2019) analyzed the frequency of calendar-day records and compared it with theoretical expectations under a stationary climate. In Spain, the annual report of the national meteorological service (AEMET, 2023) includes a section (1.1.3) dedicated to the evolution of calendar-day records, distinct from Section 1.1.4, which focuses on heatwaves defined by local thresholds. Moreover, the frequency of record-breaking events is one of the three indicators used to summarize temperature trends in the summary for policymakers of the report.
+
+From a methodological perspective, a major advantage of using record-breaking events is that, in a stationary climate (i.e., no global warming), their occurrence follows well-established, distribution-free probabilistic properties. This makes them a powerful metric for detecting deviations from stationarity and assessing the impacts of global warming (Cebrián et al., 2022) . Recent studies show that the frequency of calendar-day records observed across most of Peninsular Spain is inconsistent with a stationary climate. Castillo-Mateo et al. (2023b) found that during the decade 2012-2021, the number of record-breaking temperature events nearly doubled compared to what would be expected under stationary conditions, with the increase being particularly notable during summer. Castillo-Mateo et al. (2024) further revealed that deviations from stationarity are neither temporally nor spatially homogeneous. Their findings include upward trends over time, seasonal variation, persistence effects, and spatial influences such as proximity to the coast. Their analysis did not consider potential influences from geopotential covariates.
+
+The relationship between extreme temperatures and different atmospheric covariates has been studied in various regions. Capozzi et al. (2025) identified large-scale circulation patterns associated to the occurrence of summer heat waves in the Apennines. Huang et al. (2025) found that abnormal North Atlantic tripole sea surface temperature (SST) anomalies and the Indo-Pacific zonal SST gradient (IPG) were potential origins of the record-breaking extreme temperatures over northern China in October 2023. Qian et al. (2024) investigated the June 2023 record-breaking heatwave in North China and found that insolation and adiabatic heating, linked to anomalous atmospheric circulation (a high-pressure ridge at 500 hPa), played a key role. Ryu and Kang (2023) explored the influence of large-scale variability modes, such as the Pacific North America (PNA), North Atlantic Oscillation (NAO), and Pacific Decadal Oscillation (PDO), on extreme heatwaves in the U.S., using geopotential height and wind variables from the ERA5 database. These teleconnections significantly affected surface air temperatures during their negative phases, due to anomalous anticyclonic circulation patterns. In Spain, García-Valero et al. (2015) examined the impact of sea-level pressure, temperature, and geopotential variables at high atmospheric levels on extreme temperature events. In a similar research line, Castillo-Mateo et al. (2023b) analyzed record-breaking events at different pressure levels over the Iberian Peninsula but found no one-to-one correspondence between surface and upper-atmosphere records. However, to our knowledge, no previous studies have specifically assessed the potential relationship between record-breaking surface temperatures and geopotential covariates.
+
+Understanding and quantifying the influence of geopotential covariates on the occurrence of record-breaking temperatures is essential for conducting climate attribution studies and for developing statistical downscaling methods to project the future frequency of record-breaking temperatures under global warming scenarios. One might argue that such projections could be derived from daily temperature projections, but these often fail to accurately capture the behavior of temperature extremes and, in particular, record events, the most extreme observations. Therefore, generating reliable projections for record-breaking temperatures requires specific downscaling methods.
+
+In this context, the objective of this work is to develop a spatio-temporal model that can be used as a statistical downscaling tool for the occurrence of record-breaking daily temperatures. Specifically, we aim to develop a logistic model capable of characterizing the occurrence of calendar-day records in daily maximum temperature (T x ), using geopotential covariates from the ERA5 reanalysis over a gridded study area. We will provide the tools to select the relevant covariates, fit the model, assess its performance, and draw conclusions from it. We illustrate the procedure by analyzing a dataset of 36 daily temperature series across Peninsular Spain for the summer seasons from 1960 to 2023.
+
+The structure of this work is as follows: Section 2 describes the dataset, including the daily T x series over Peninsular Spain and the geopotential covariates (700, 500, and 300 hPa) over the region. Section 3 shows an exploratory data analysis of the current dataset. Section 4 details the spatio-temporal models considered, including the model selection procedure. Section 5 summarizes the findings from the selected model, and Section 6 provides conclusions and outlines future research directions.
+
+
+================================================================================
+Study area and dataset
+================================================================================
+
+The Spanish Iberian peninsula is a geographically diverse region. Its complex orography is defined by a central plateau, with the northern part averaging around 1000 meters above sea level and the southern part around 500 meters. The Ebro, Duero and Tajo river valleys, are situated within this plateau and the Guadalquivir valley lies in the south. The peninsula also features five main mountain ranges, with peaks exceeding 2000 meters. The Pyrenees form the northeastern border with France, the Cantabrian range lie in the northwest near the Atlantic ocean, the Iberian system occupies the northeast with a northwest-southeast orientation, the Central system divides the Central plateau, and the Baetic range is located in the southeast.
+
+Despite its relatively small area, spanning latitudes 36 to 43.8 • N (a north-south distance of approximately 1000 km) and longitudes 9.3 • W to 3.
+
+• E, the Iberian peninsula exhibits significant climatic variability over short distances due to its complex topography. The main driver of maximum temperature variation is seasonality, particularly the changes in potential daily solar radiation. During winter, atmospheric circulation over the Atlantic induces a succession of cyclonic and anticyclonic systems over the center and western parts of the peninsula. In contrast, summer is characterized by frequent anticyclonic conditions, leading to reduced cloud cover and increased solar radiation.
+
+The temperature dataset, downloaded from the European Climate Assessment & Dataset (ECA&D; Klok and Klein Tank, 2009) , contains 36 daily maximum temperature series T x across peninsular Spain for the period 1960-2023, see Figure 1 . The selection criteria for these series included a percentage of missing values lower than 0.5%, and ensuring a good representation of the climatic heterogeneity in the study area (Castillo-Mateo et al., 2023b) . In this work, we will focus on the calendar-day series derived from the original daily temperature series during the summer months, from June to August (JJA). This results in 92 time series (one per day) across years for each location. Notably, the dataset includes four centennial observing stations recognized by the World Meteorological Organization (WMO): Barcelona-Fabra, Madrid-Retiro, Daroca, and Tortosa ( https://wmo.int/activities/centennial-observing-stations ).
+
+Given the 92 series of maximum daily temperature at each location, denoted by Y t,ℓ (s i ) for t ∈ {1, . . . , T } and day ℓ ∈ {1, . . . , L} at station s i , the occurrence of calendar-day records is identified by the binary indicators
+
+For t = 1, all the observations are a record.
+
+The ERA5 series are downloaded from the ERA5 hourly data on pressure levels from 1940 to present collection (Hersbach et al., 2023) at the Copernicus Climate Data Store ( https://cds.climate.copernicus.eu ). We consider daily geopotential height series at time 12:00 (denoted as G), measured in m 2 /s 2 , at pressure levels of 700 hPa, 500 hPa, and 300 hPa for the period 1960-2023. The data were extracted at grid points within the spatial domain [45 • N, 10 • W, 35 • N, 5 • E], covering the Iberian Peninsula, using a resolution of 1 • ×1 • , resulting in a total of 11 × 16 grid points, see Figure 1 . We denote the geopotential series at each grid point as Gp [i,j] , where p refers to the pressure level and the subscripts i and j represent the latitude and longitude coordinates of the grid point; for example, G700 41N,1W refers to the geopotential height at 700 hPa at the grid point located at 41 • N, 1 • W.
+
+
+================================================================================
+Exploratory data analysis
+================================================================================
+
+The main goal of this exploratory data analysis (EDA) is to characterize the occurrence of record-breaking temperatures in terms of their temporal evolution, persistence, and spatial dependence. Additionally, we aim to investigate the predictive effect of three geopotential height levels for the occurrence of daily maximum temperature records (T x ). Specifically, we will examine similarities in the underlying trends, patterns in record occurrences, and the distribution of geopotential heights conditional on whether a temperature record has occurred.
+
+
+================================================================================
+Non-stationary behavior
+================================================================================
+
+One of the advantages of using record events is that their occurrence in a stationary series (i.e., a sequence of independent and identically distributed random variables) follows a known, distribution-free probabilistic behavior. Specifically, in a stationary series, the probability of a record at time t is given by p t = 1/t. To assess whether this term adequately captures the temporal evolution of the probability of record, or to identify deviations from stationary behavior, Figure 2 plots t × pt against t. Note that under stationarity, the expected value of this product is 1. The empirical estimate pt is computed by averaging across space and days within each year, the indicator variables of records:
+
+A LOESS smoother is included in the plot to highlight the underlying trend and deviations from stationarity. A clear non-stationary pattern emerges, with an increasing trend deviating from 1 starting around 1980.
+
+To identify potential spatial differences in the trend, the previous approach is applied to specific geographical areas.
+
+Figure 2 shows the selected regions and the corresponding LOESS curves of t × pt . The results indicate that the northern coastal regions (Galicia and Cantabrian coast) exhibit the smallest increase, whereas inland areas have shown the largest in recent years.
+
+0 2 4 6 1 (1960) 21 (1980) 41 (2000) 61 (2020) t (year) t × p ^t 0 1 2 3 4 1 (1960) 21 (1980) 41 (2000) 61 (2020) t (year) t × p ^t Zone A C E G L NP SP This graphical analysis can be complemented using specific tests to study deviations from stationarity in the occurrence of records (Castillo-Mateo et al., 2023a; Cebrián et al., 2022) . Castillo-Mateo et al. (2023b), found that, during the summer months, the tests revealed significant non-stationary behavior in the occurrence of records in the upper tail at most of the 36 stations analyzed in this study, with the exception of those located along the Galician and Cantabrian coasts.
+
+
+================================================================================
+Persistence of record-breaking events
+================================================================================
+
+Given the strong serial dependence of daily temperature, some persistence in the occurrence of records is to be expected, that is, the probability of a record on a given day may depend on whether the previous day was also a record. To explore this, we estimate the log-odds ratio which compares the probability of record given that the previous day was a record, p 11 tℓ = P (I tℓ = 1 | I t,ℓ-1 = 1) to the probability given that it was not, p 10 tℓ = P (I tℓ = 1 | I t,ℓ-1 = 0) using the expression:
+
+.
+
+The empirical log-odds ratio is computed for each year t and shown in Figure 3 . Values close to 0 indicate independence, while positive values suggest persistence. The estimates are clearly different from zero, increasing from nearly two at the beginning of the period to almost three by the end, indicating a strong and growing temporal persistence in record occurrences over the years.
+
+2 3 1 ( 1960 ) 21 ( 1980 ) 41 ( 2000 ) 61 ( 2020 ) t (year)
+
+
+================================================================================
+LORt
+================================================================================
+
+Figure 3: Log-odds ratio, LOR t , comparing the probability of record given that the previous day was a record, to the probability given that it was not. LOESS smooth in dashed line.
+
+
+================================================================================
+Co-occurrence of record-breaking events
+================================================================================
+
+The co-occurrence of record-breaking temperatures occurs when two or more locations experience a record temperatures on the same day ℓ and year t. To quantify the co-occurrence, we consider, for each day ℓ, the proportion of the 36 observatories having a record on the same day, P R tℓ = 1 36 36 i=1 I tℓ (s i ).
+
+Figure 4 shows these proportions for each day in JJA (June, July, and August) during the period 1984-2023. The early years, during which the probability of record is relatively high, are omitted to highlight the increasing frequency of record-breaking events. The highest values, approaching 0.8, are observed in recent years, even though the probability of a record in a single series is expected to decrease over time; this suggests that co-occurrence is increasing over time.
+
+To explore this possibility, we will study the probability that no record occurs at a given day, t ℓ, in the n = 36 stations, P ( n i=1 I tℓ (s i ) = 0). Assuming a stationary climate and independent stations, the probability is,
+
+for any day. Of course, the 36 available time series are not independent even in a stationary climate due to spatial proximity, but this theoretical probability serves as a useful benchmark to evaluate changes in the frequency of simultaneous record events over time. Figure 4 shows the empirical estimators of these probabilities, calculated as the proportion of days ℓ in a year for which n i=1 I tℓ (s i ) = 0, along with the benchmark under a stationary climate and independent stations. Note that while the reference probability approaches 1 as t → ∞, the estimated probability appears to level off, suggesting an increase in the co-occurrence of record events. Jaccard index. Another useful way to quantify co-occurrence between two series of records is by using the Jaccard index, a similarity coefficient for binary variables. The Jaccard index between two binary series over time indexes t and ℓ, I tℓ (s i ) and I tℓ (s k ), is calculated as
+
+.
+
+Jun Jul Aug Sep 1 9 8 4  1 9 8 6  1 9 8 8  1 9 9 0  1 9 9 2  1 9 9 4  1 9 9 6  1 9 9 8  2 0 0 0 2 0 0 2 2 0 0 4 2 0 0 6 2 0 0 8 2 0 1 0 2 0 1 2 2 0 1 4 2 0 1 6 2 0 1 8 2 0 2 0 2 0 2 2 2 0 2 4 0.0 0.2 0.4 0.6 0.8 0.00 0.25 0.50 0.75 1. 00 1984 1988 1992 1996 2000 2004 2008 2012 2016 2020  It measures the similarity between the two binary series by comparing the number of observations during which both stations simultaneously register an event (a record, in this case) to the number of observations during which at least one of the stations registers an event. This index quantifies similarity while avoiding the influence of zero-zero coincidences, which do not represent meaningful similarity. The value ranges from 0 (no simultaneous events) to 1 (identical event patterns).
+
+Figure 5 displays the Jaccard indices for series of records from all pairs of stations during the period 1984-2023, plotted against the distance (in km) between the stations. The expected value and 95% confidence intervals for the Jaccard index between two independent series under a stationary climate were estimated by simulation and are shown in the previous graph, with a mean estimate of 0.01. The plot reveals a strong spatial dependence that diminishes with distance: values are higher than 0.25 on average for distances less than around 100 km, and decrease as the distance increases. For the most distant locations, the binary series can generally be assumed to be independent. However, even among the farthest station pairs, most of the estimated Jaccard indices fall outside the confidence interval obtained under the assumption of records from independent and identically distributed series, providing evidence of deviations from a stationary climate.
+
+0.00 0.25 0.50 0.75 1.00 0 250 500 750 Geodesic dist. (km) Jaccard's similarity coef.
+
+
+================================================================================
+1984-2023
+================================================================================
+
+Figure 5 : The Jaccard index between record series of station pairs for the period 1984-2023 against the distance between stations. A LOESS smoother (in blue) illustrates the overall trend. The expected value and 95% confidence intervals of the Jaccard index for two independent series under a stationary climate (in red and gray) are shown as a reference.
+
+
+================================================================================
+Relationship between geopotential variables and daily maximum temperature 3.4.1 Comparing time trend
+================================================================================
+
+To compare the time evolution of the T x series and the three geopotential variables across the study region, we examine the average of the 36 T x series and the average of the geopotential variable series at the 11 × 16 grid points. These averages are computed from standardized signals, where standardization is based on the mean and standard deviation of each series during the 1981-2010 reference period. Figure 6 displays the LOESS trends of the resulting averages. A similar pattern, marked by an upward trend beginning just before the 1980s, is observed across all four variables, with T x displaying the steepest slope. Among the geopotential variables, G300 shows the most similar evolution to T x , and the trend appears to weaken with decreasing height. 1960) 21 ( 1980 ) 41 ( 2000 ) 61 ( 2020
+
+
+================================================================================
+Comparing evolution in the occurrence of records
+================================================================================
+
+In this section, we compare the evolution of the cumulative number of calendar-day records over time in T x and the three geopotential variables. As an illustration Figure 7 compares the series in the four corners of the grid covering the Iberian peninsula and the closest stations to those points: La Coruña, Barcelona-Fabra, Murcia and Huelva; together with the expected behavior in a stationary situation, t i=1 1/i. Supplementary Table 4 includes the N t statistics and p-values.
+
+Although a similar temporal evolution is observed across the four variables in each plot, the patterns are not equivalent, with Huelva, and specially Barcelona showing the highest differences. Additionally, there is no homogeneous spatial behavior among the patterns of the four variables. For example, while the highest deviation from stationarity in Barcelona is observed in T x , this variable shows the lowest deviation in Huelva and Murcia. The behavior is similarly inconsistent in the geopotential variables: in Huelva, the greatest deviation occurs in G300, whereas in A Coruña and Barcelona, G300 exhibits one of the lowest deviations. In summary, although there is a general relationship in the temporal evolution of record occurrences among the four signals, it is not a one-to-one correspondence.
+
+
+================================================================================
+Influence of geopotential variables in the occurrence of record-breaking temperatures
+================================================================================
+
+To study the power of geopotential variables to predict the occurrence of record-breaking temperatures, we compare the distribution of the variable given that a record has occurred in the maximum temperature or not. Figure 8 shows the boxplots of the geopotential heights at the 300, 500, and 700 hPa pressure levels during the period 1984-2023, conditioned on the occurrence or non-occurrence of maximum temperature records. The distribution of geopotential given the occurrence of a record is clearly shifted upward, and its variability is smaller compared to when no record occurs. The difference between the medians for the two conditioning cases is slightly larger in the variables at lower atmospheric levels.
+
+
+================================================================================
+Algorithm
+================================================================================
+
+An algorithm was developed to construct a global spatio-temporal model for the occurrence of T x records across the Iberian Peninsula. The algorithm comprises three main steps. First, local models are fitted to each station by selecting the optimal combination of atmospheric covariates and their derivatives. Second, the most prevalent covariates from
+
+2 4 6 1 (1960) 21 (1980) 41 (2000) 61 (2020) t (year) Mean number of records G300 G500 G700 Tx G-45N.10W vs. A CORUÑA 2 4 6 1 (1960) 21 (1980) 41 (2000) 61 (2020) t (year) Mean number of records G300 G500 G700 Tx G-45N.5E vs. BARCELONA-FABRA 2 4 6 1 (1960) 21 (1980) 41 (2000) 61 (2020) t (year) Mean number of records G300 G500 G700 Tx G-35N.10W vs. HUELVA 2 4 6 1 (1960) 21 (1980) 41 (2000) 61 (2020) t (year) Mean number of records G300 G500 G700 Tx G-35N.5E vs. MURCIA No Record Record 9300 9500 9700 G300 Ix m No Record Record 5700 5900 G500 Ix m No Record Record 3050 3150 3250 G700 Ix m Figure 8: Boxplots (without the outliers) of geopotential variables at the 300, 500, and 700 hPa pressure levels (in geopotential high meters) during the period 1984-2023, conditioned on the occurrence or non-occurrence of maximum temperature records.
+
+these local models are identified and used to build a global model driven solely by atmospheric data. Third, the resulting global model is enhanced by incorporating interactions with non-atmospheric covariates. These steps are summarized in Figure 9 .
+
+Step 1: A logistic regression model was optimized for each of the 36 stations, with the daily T x record indicator I t,ℓ (s i ) as the target variable at station s i . Predictors consisted of geopotential variables (G) from three pressure levels, including: (1) the nearest grid point, (2) its four surrounding grid corners, (3) their 1-day lagged terms, and (4) their second-order polynomial terms. Exploratory analyses justified this approach, revealing near-perfect correlations among adjacent grid points (Supplementary Figure 19 ), which allowed the use of a single representative point. These analyses also identified significant persistence effects and nonlinear trends (Figures 3 and 2 ), motivating the inclusion of lagged and polynomial terms. Hence, for each station, the algorithm evaluated 45 potential predictors via backward stepwise regression using the stepAIC function (R package MASS v7.3-60.0.1, Venables and Ripley, 2002) with k = 2 (default). Four model configurations were compared: (i) base G-terms only, (ii) G-terms plus lagged-1 terms, (iii) G-terms plus second-order polynomials, and (iv) G-terms with both lagged and polynomial terms. The configuration with the lowest AIC was selected as the optimal local model, automatically pruning unwarranted complexity when additional terms did not improve fit. This process produced 36 unique station-specific models.
+
+Step 2: A global model was constructed using concatenated data from all stations. Predictor selection was based on geopotential covariates with absolute standardized coefficients (|z|-scores) exceeding 2 (approximately equivalent to a two-sided p-value < 0.05) in at least one-third of the 36 optimal local models (i.e., ≥ 12 stations). These thresholds balanced predictor relevance with cross-station representativeness. The selected predictors were used to fit a global model, which underwent exhaustive feature selection via stepAIC with bidirectional elimination and an adjusted penalty parameter (k = 10.83). This stringent threshold (corresponding to the 99.9th percentile of the χ 2 distribution with 1 degree of freedom) mitigated potential overspecification that could arise from using the default k = 2 in large datasets. The resulting model (M1) contained only atmospheric predictors.
+
+Step 3: The global modeling framework was extended by augmenting M1 with interaction terms while maintaining the stringent stepAIC selection criteria (k = 10.83). Four enhanced models were developed: M2 introduced interactions between geopotential variables and geodetic covariates (latitude and longitude); M3 incorporated interactions with climatic covariates (1981-2010 T x mean and standard deviation); M4 included interactions with spatial covariates (altitude and coastal distance); and M5 combined all interaction types (geodetic, climatic, and spatial). All models preserved the rigorous feature selection protocol from Step 2 while systematically exploring distinct environmental dimensions, enabling the isolation of specific geophysical effects while controlling for potential overfitting.
+
+Table 1: Global model summaries by their type of covariates included and their interactions.
+
+Global models description
+
+
+================================================================================
+Model comparison and validation
+================================================================================
+
+To evaluate the models' predictive performance, the dataset was divided into training (≈80%) and testing subsets using a temporal split. The training set comprised the first 51 years of data, while the testing set contained the most recent 13 years. All model computation and feature selection procedures were performed exclusively on the training data. The resulting models were then applied to the testing set for prediction. Given the class imbalance in the record series (predominantly non-records), model validation employed Receiver Operating Characteristic (ROC) curve analysis. ROC curves plot the True Positive Rate (Sensitivity) against the False Positive Rate (1-Specificity) across all possible prediction thresholds. Model performance was quantified using the Area Under the Curve (AUC), which ranges from 0.5 (random guessing) to 1 (perfect classification), providing a comprehensive measure of predictive accuracy.
+
+The primary model selection criterion was the highest global Area Under the Curve (AUC). Secondary considerations included: (1) model parsimony (lower number of predictors), (2) Akaike Information Criterion (AIC) values, and (3) AUC performance specifically for coastal stations (located within 50 km of the sea). This multi-faceted approach ensured optimal balance between predictive performance and model simplicity while addressing potential geographic biases.
+
+To assess the model's capacity to reproduce record persistence, we compared observed and simulated probabilities of record run lengths during the validation period. For each station, we calculated the probability distribution of runs spanning: (1) single-day events, (2) two consecutive days, (3) three days, (4) four days, and (5) five or more days. Model predictions were evaluated against 10,000 randomly generated uniform probability series to produce binary event sequences. The analysis quantified persistence by computing station-averaged relative frequencies for each run-length category, comparing observed values against the simulated 95% percentile intervals. This approach evaluated the model's ability to capture temporal clustering of extreme records.
+
+The model's spatial performance was evaluated by comparing observed and simulated co-occurrence patterns of records across station pairs. We computed Jaccard Index (JI) scores for all station pairs during the validation period, comparing observed values against those derived from 10,000 randomly generated uniform probability series.
+
+
+================================================================================
+Models
+================================================================================
+
+This section evaluates the performance of local versus global models. Model selection was based on (1) validation-set performance (assessed using standardized metrics) and (2) structural parsimony. We further highlight the algorithm's key advantages over conventional approaches.
+
+
+================================================================================
+Local Models
+================================================================================
+
+Optimal local models were fitted for each station using stepwise regression. Figure 10displays the z-scores of retained coefficients, categorized by grid location (nearest/corners), pressure level (300/500/700 hPa), and term type (single/lagged/polynomial). The nearest grid point exhibits the strongest positive effects at 700 hPa across all term types. In contrast, corner points show distinct patterns: single terms dominate at 500-700 hPa, while lagged terms alternate between positive (500 hPa) and negative effects (300/700 hPa). Polynomial terms generally contribute weakly, except at 300 hPa in the south-east corner. These results highlight systematic pressure-level dependencies linked to Iberian topography.
+
+Additionally, Supplementary Table 5 summarizes the complexity and performance of each local model, reporting:
+
+(1) the number of parameters (k), (2) the area under the curve (AUC), and (3) the Akaike Information Criterion (AIC) for all stations. The models achieve substantial dimensionality reduction, with k values ranging from 15 to 35 (from an initial set of 45 potential predictors). AUC was computed using independent validation data (2011-2023), which includes exceptionally warm years, providing a rigorous out-of-sample test. All models significantly outperform random chance (AUC > 0.5), with most stations exhibiting excellent discrimination (AUC > 0.9) and others showing robust skill (AUC > 0.8). Notably, Gijón's model has the weakest performance (AUC = 0.67), suggesting local atmospheric drivers may deviate from the regional pattern captured elsewhere.
+
+
+================================================================================
+Global models
+================================================================================
+
+Using a threshold of absolute z-scores > 2 in at least one-third of stations (12 of 36), we identified 23 potential predictors for the global atmospheric model. Supplementary Table 6 demonstrates how alternative selection thresholds would affect the final covariate count. The selected predictors were then used to fit a global model, which underwent exhaustive feature selection via stepAIC, ultimately retaining 17 covariates. The stringent selection criteria ensure both model parsimony and atmospheric interpretability.
+
+The resulted global model M1 only accounts for atmospheric covariates. This model encompasses 14 geopotential variables which are depicted in Figure 11 (Supplementary Information 6.1 includes the model summary). Variables followed by 'lag' or preceded by 'poly' refer to the lag term or to the second-order polynomial of that variable, respectively. Note that variables with second-order polynomial implies two terms in the model. Each variable is represented by an arrow indicating the point where it is considered, showing the four corners of the grid of the Peninsula. The label 'STATION' refers to the variable at the closest grid point to each station analyzed. We can observe a higher representation of the variables at 300hPa in the lower latitudes, while the northern and local nodes only include predictors at 700 and 500hPa. This indicates a patent gradient between pressure levels and latitude. Regarding the variable relevance in the models, geopotentials at 700hPa in the nearest grid point, the single (t = 21.99) and its 1-lagged term (t = 20.47) showed a positive effect for the probability of T x records, while at the North-West (single: t = -20.68) and South-East (poly-1: t = -1.74; poly-2: t = -19.8) points showed negative effects. At 500hPa, the near grid point showed negative effect in the 1-lagged term (t = -11.72), while positive in the four corners of the grid (single terms: NW t = 14.39; NE t = 20.68; SW t = 24.73; SE t = 9.96) evincing the relevance of this pressure level at every input point grid. At 300hPa, we can observe a general negative effect in the South points (Single terms: SW t = -23.53; and 1-lagged terms: SW t = -9.77; SE t = -12.66) plus a convex effect at the South-East (poly-1: t = -10.84; poly-2: t = 24.15).
+
+Afterwards, the geopotential covariates of M1 were interacted with additional variables: geodetic (M2), climatic (M3), and spatial (M4), plus a model that sums all of them (M5). Table 2 shows performance metrics of the five global models. It presents the total AU C, the number of parameters (k), the AU C for stations located less than 50km from the coast (AU C < 50km), the AUC for stations situated more than 50km from the coast (AU C > 50km), and the Akaike Information Criterion (AIC). We observe that the model with the highest overall AUC and lowest AIC is M2. Also, the most complex model M5 after the global stepwise regression equals M2, suggesting that climatic nor spatial variables improve the geodetic information added to the atmospheric model. For stations located within 50 km of the coast, the model with the highest AUC is M3 but M2 achieves a near score, whereas for stations farther than 50 km inland M2 achieves the highest AUC.
+
+Table 2: Performance metrics of the five global models. The total AU C, the number of parameters (k), the AU C for stations located less than 50 km from the coast (AU C <50km ), the AU C for stations situated more than 50 km from the coast (AU C >50km ), and the Akaike Information Criterion (AIC) are presented. The AU C values were obtained during the validation period. Stations were sorted in the X-axis by distance to coast in ascending order, and the station name was abbreviated until the 6th character.
+
+Model k AU C AU C <50km AU C >50km AIC M1 18 0.8575 0.7760 0.9062 97808.39 M2 41 0.8787 0.7951 0.9253 95606.40 M3 37 0.8759 0.7965 0.9139 95995.68 M4 30 0.8677 0.7802 0.9105 96856.47 M5 41 0.8787 0.7951 0.9253 95606.40
+
+Considering both performance and simplicity, model M2 demonstrates the best overall performance, and we therefore select it as best model. Note that this model includes latitude-longitude interactions. Figure 12 shows the AUC performance of M2 for each station which are sorted by distance to the coast, along with the AUC for individual local models (denoted as M0) and the global model with only atmospheric data M1. We can consider the AUC achieved by the M0 models as the highest possible using geopotential variables without the need of spatial information, and M1 as a "rigid" or too simplistic model. Then, in this framework, we can observe how is the improvement of M2 related to M1 and how close is to achieve the local modeling scores. The models exhibit better performance at stations located more than 50km from the coast. In local models, it had previously been observed that AUC values were lower for stations within 50km of the coast. A possible explanation is that global models are better suited for inland stations, where environmental conditions are more homogeneous. This suggests that global models capture broad-scale patterns prevalent in regions farther from the coast, while coastal stations exhibit higher spatial and temporal variability. Furthermore, coastal regions are inherently more challenging to model due to factors such as high atmospheric variability, the influence of ocean currents, and the presence of "micro-climates" affecting near-shore stations.
+
+
+================================================================================
+Persistence validation
+================================================================================
+
+After selecting M2 as the best-performing model, we assessed its effectiveness in capturing the persistence of the response variable by comparing the observed frequencies of record runs with those estimated from model simulations. This analysis used data from all monitoring stations over the 2011-2023 test period and considered runs of length one, two, three, four, and five or more (i.e., ≥ 5). To determine the observed frequencies, we first identified sequences of record-breaking events at each station throughout the test period and computed their relative frequencies. The results were then averaged across all stations, with variability expressed as the 95% percentile interval. The model's performance was evaluated using 10,000 simulations. For each simulation, we generated a simulated binary time series 0.5 0.6 0.7 0.8 0.9
+
+
+================================================================================
+R G O S A L B A C E B A D A J O S O R I A D A R O C A Z A R A G O V A L L A D C A C E R E Z A M O R A C I U D A D S A L A M A N
+================================================================================
+
+Comparison of AUCs of final models conclusion that model M2 provides a reliable representation of the persistence of record-breaking maximum temperature events. 14 shows the validated M2 predictions for a period of extreme heat events (August 18-27, 2023) in the Iberian Peninsula, illustrated for four stations from distinct geographical areas. The predictions are depicted alongside the observed T x records and the scaled geopotential height at the nearest grid point. The model captures the increase in geopotential height, albeit with a slight temporal delay. Furthermore, M2 successfully reproduces discrete extreme events, such as the separated runs observed at the Sevilla station.
+
+
+================================================================================
+Concurrence validation
+================================================================================
+
+The concurrence of T max records for the selected model M2 was assessed using the Jaccard index between pairs of stations, computed from 10,000 simulation runs of predicted records. The average simulated scores were compared with the observed Jaccard index scores during the 2011-2023 validation period. Figure 15 shows the relationship between the observed and simulated scores. The correlation between them is 0.54,indicating a strong positive relationship. Although the magnitudes of the simulated scores are systematically lower, the model M2 correctly identifies which station pairs exhibit higher observed record concurrence.
+
+Additionally, we evaluated how the selected M2 predicts extreme heat events that affects a great spatial proportion. For instance, Figure 16 shows the M2 predictions for August 24th of 2023 which was a day where most of the stations showed a T x record. Taking as reference a true negative rate of 0.95, most of the stations with a record surpassed that prediction threshold. Also, in the right-bottom plot we can observe that the M2 predictions captures a North-South gradient, which agrees with the observed values.
+
+
+================================================================================
+Spatial application
+================================================================================
+
+The predicted probabilities of record-breaking events generated by the selected model are analyzed spatially across a grid covering the Iberian Peninsula, focusing on specific dates across multiple years. To illustrate this, a sequence of maps is produced, each representing the estimated probability of a record occurring on the same calendar day in different years. These visualizations serve to highlight the model's effectiveness as a tool for spatial prediction of extreme temperature events. As a representative example, Figure 17 shows the M2 predictions for August 10, and maps are created for each year from 2012 to 2023, all within the validation period.
+
+Figure 17 presents these maps, arranged chronologically from left to right and top to bottom. A striking observation is seen in the map for August 10, 2023, where the model assigns probabilities exceeding 0.6 in certain areas. Under the assumption of a stationary climate, the probability of a record in year 2023 (i.e., t = 64) would be expected to be approximately p = 1 64 ≈ 0.016. The much higher values predicted by the model suggest a significant deviation from this stationary baseline.
+
+These spatial forecasts underscore the model's utility in identifying regions with elevated risk of record-breaking events. For instance, in 2012, the highest predicted probabilities are concentrated in the central part of the Peninsula; in 2013, they appear predominantly in the North-West; in 2019, in the South-East; and in 2023, high probabilities are widespread across the Peninsula, with the South-West showing particularly elevated values. 0.075 0.100 0.125 0.150 0.0 0.2 0.4 0.6 Observed M2-Simulated Validation: 2011-2023 Jaccard's Index Figure 15: Scatterplot of the observed vs. M2-simulated Jaccard Indices for each pair of stations.  This work describes an algorithm for building a model to predict T x record events using atmospheric fields (geopotential height) and spatial covariates. The method employs a local-to-global approach to reduce the dimensionality of the atmospheric predictors, condensing several hundred variables into fewer than twenty while maintaining comparable prediction performance. The algorithm further interacts the selected geopotential predictors with spatial and climatic covariates to improve prediction accuracy, particularly in coastal zones. This methodology yielded its best performance when geopotential covariates were interacted with geodetic information derived from the latitude and longitude of the target stations. The model achieved high predictive accuracy on out-of-sample data (AUC = 0.8787), with excellent performance at inland stations (AUC = 0.9253) and fair accuracy at coastal stations (AUC = 0.7951). Additional validation confirmed the model's ability to reproduce the observed persistence and spatial dependence of record events. In summary, we have developed a methodology for constructing a global spatio-temporal model that successfully predicts T x records across the Iberian Peninsula using a parsimonious subset of predictors, thereby enhancing both performance and interpretability.
+
+
+================================================================================
+Future work
+================================================================================
+
+The proposed model could be modified in order to generate projections for records, as a statistical downscaling tool. The estimated model ability to downscaling will be analyzed, in order to use AR6 model outputs as input in the model and to establish projections over Iberian peninsula to horizon 20 years. This type of tools is able to produce projections for future heatwaves or extreme temperatures in Spanish cities (Abaurrea et al., 2007; Abaurrea et al., 2018) .
+
+
+================================================================================
+Supplememtary information: Prediction of Maximum
+================================================================================
+
+Temperature record in Spain 1960-2023 by the means of ERA5 atmospheric geopotentials Elsa Barrio 1 1,* , Jesús Abaurrea 1 , Jesús Asín 1 , Jorge Castillo-Mateo 1 , Ana Carmen Cebrián 1 , Zeus Gracia 1 , 1 Department of Statistical Methods, University of Zaragoza. * e.barrio@unizar.es Extended Exploratory data analysis Relationship between geopotential variables and daily temperature
+
+
+================================================================================
+Local models
+================================================================================
+
+Table 5: Number of parameters (k) and performance metrics (AU C, AIC) for each local model corresponding to each station. AIC was computed in the train period  and the AU C in the test period (2011) (2012) (2013) (2014) (2015) (2016) (2017) (2018) (2019) (2020) (2021) (2022) (2023) . Stations are sorted by distance to the coast in ascending order.
+
+Station k AU C AIC Santander 20 0.89 2033 San Sebastián 17 0.92 1881 Almería 21 0.87 2325 A Coruña 25 0.82 2041 Barcelona-Airport 28 0.84 2352 Málaga 27 0.89 1961 Gijón 16 0.67 2160 Huelva 22 0.90 1873 Valencia 25 0.86 2227 Reus 21 0.81 2208 Castellón 29 0.86 2564 Barcelona-Fabra 20 0.86 2365 Bilbao 18 0.92 1967 Tortosa 22 0.83 2679 Santiago 15 0.93 1962 Murcia 26 0.89 1914 Vitoria 25 0.95 1871 Moron 19 0.95 1902 Sevilla 27 0.93 1711 Lleida 22 0.91 1976 Logroño 26 0.93 1950 León 23 0.94 1791 Ponferrada 15 0.95 1803 Burgos 22 0.96 2011 Albacete 17 0.92 1878 Badajoz 20 0.94 1971 Soria 34 0.94 1748 Daroca 23 0.94 1859 Zaragoza 28 0.90 2001 Valladolid 22 0.96 1812 Cáceres 29 0.95 1790 Zamora 23 0.95 1871 Ciudad Real 34 0.96 1763 Salamanca 25 0.94 1820 Navacerrada 26 0.95 1946 Madrid 27 0.94 1998 Table 6: Number of surviving covariates with different restrictions. n ≥ 9 n ≥ 12 n ≥ 18 z ≥ 1.6 37 30 19 z ≥ 2 31 23 15 z ≥ 2.6 19 16 8 z ≥ 3.2 12 6 4 25 Summary of only-atmospheric model (M1) Call: glm(formula = m1.frm, family = binomial(link = "logit"), data = global.df[idx.train, ]) Coefficients: Estimate Std. Error z value Pr(>|z|) (Intercept) -1.335e+02 8.634e+00 -15.467 <2e-16 *** g700. 1.101e-03 5.009e-05 21.988 <2e-16 *** g700.45N.10W -1.426e-03 6.898e-05 -20.675 <2e-16 *** poly(g300.35N.5E, 2)1 -1.818e+02 1.677e+01 -10.842 <2e-16 *** poly(g300.35N.5E, 2)2 1.301e+02 5.389e+00 24.148 <2e-16 *** g700..lag1 1.838e-03 8.980e-05 20.472 <2e-16 *** g300.35N.10W.lag1 -2.238e-04 2.291e-05 -9.769 <2e-16 *** poly(g700.35N.5E, 2)1 -3.142e+01 1.811e+01 -1.735 0.0827 . poly(g700.35N.5E, 2)2 -1.358e+02 6.858e+00 -19.799 <2e-16 *** g500.45N.10W 6.964e-04 4.840e-05 14.389 <2e-16 *** g300.35N.10W -9.787e-04 4.158e-05 -23.534 <2e-16 *** poly(g700.45N.5E, 2)1 -3.675e+02 1.818e+01 -20.211 <2e-16 *** poly(g700.45N.5E, 2)2 7.976e+01 4.065e+00 19.619 <2e-16 *** g500.45N.5E 1.186e-03 5.736e-05 20.677 <2e-16 *** g300.35N.5E.lag1 -3.767e-04 2.976e-05 -12.656 <2e-16 *** g500.35N.10W 1.551e-03 6.273e-05 24.730 <2e-16 *** g500..lag1 -7.235e-04 6.176e-05 -11.715 <2e-16 *** g500.35N.5E 1.353e-03 1.359e-04 9.956 <2e-16 *** ---Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 (Dispersion parameter for binomial family taken to be 1) Null deviance: 107882 on 168911 degrees of freedom Residual deviance: 97772 on 168894 degrees of freedom AIC: 97808 Number of Fisher Scoring iterations: 6 1.3 1.4 1.5 1.6 1.7 1.8 1.25 1.35 1.45 1.55 1.65 1.75 1 0.6 0.7 0.8 0.9 1.1 1.2 1.3 1.4 1.5 0 1 0.2 0.4 0.6 0.8 1.2 1.4 -0.2 36°N 38°N 40°N 42°N 44°N 8°W 6°W 4°W 2°W 0° 2°E 4°E Longitude Latitude Contours g.300 g.500 g.700 18th of August 2023 2 1.5 1.6 1.7 1.8 1.9 2.1 1.55 1.65 1.75 1.85 1.95 2.05 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1 0.6 0.7 0.8 0.9 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 36°N 38°N 40°N 42°N 44°N 8°W 6°W 4°W 2°W 0° 2°E 4°E Longitude Latitude Contours g.300 g.500 g.700 29th of August 2023 2 1.7 1.8 1.9 2.1 2.2 2.3 1.75 1.85 1.95 2.05 2.15 2.25 2 1.6 1.7 1.8 1.9 2.1 1.55 1.65 1.75 1.85 1.95 2.05 2 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 36°N 38°N 40°N 42°N 44°N 8°W 6°W 4°W 2°W 0° 2°E 4°E Longitude Latitude Contours g.300 g.500 g.700 20th of August 2023 2 1.6 1.7 1.8 1.9 2.1 2.2 2.3 2 1.4 1.5 1.6 1.7 1.8 1.9 2.1 2.2 2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.1 36°N 38°N 40°N 42°N 44°N 8°W 6°W 4°W 2°W 0° 2°E 4°E Longitude Latitude Contours g.300 g.500 g.700 21st of August 2023 2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.1 2 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.1 2 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 36°N 38°N 40°N 42°N 44°N 8°W 6°W 4°W 2°W 0° 2°E 4°E Longitude Latitude Contours g.300 g.500 g.700 22nd of August 2023 2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 36°N 38°N 40°N 42°N 44°N 8°W 6°W 4°W 2°W 0° 2°E 4°E Longitude Latitude Contours g.300 g.500 g.700 23rd of August 2023 1.3 1.4 1.5 1.6 1.7 1.8 1.35 1.45 1.55 1.65 1.75 1.85 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.25 1.35 1.45 1.55 1.65 1.75 1.85 1 0.9 1.1 1.2 1.3 1.4 1.5 1.6 1.7 36°N 38°N 40°N 42°N 44°N 8°W 6°W 4°W 2°W 0° 2°E 4°E Longitude Latitude Contours g.300 g.500 g.700 24th of August 2023 1 0.4 0.5 0.6 0.7 0.8 0.9 1.1 1.2 1.3 1.4 1.5 1.6 1 0.5 0.6 0.7 0.8 0.9 1.1 1.2 1.3 1.4 1.5 1 0.5 0.6 0.7 0.8 0.9 1.1 1.2 1.3 1.4 1.5 1.6 36°N 38°N 40°N 42°N 44°N 8°W 6°W 4°W 2°W 0° 2°E 4°E Longitude Latitude Contours g.300 g.500 g.700 25th of August 2023 0 1 0.2 0.4 0.6 0.8 1.2 1.4 -0.2 0 1 0.2 0.4 0.6 0.8 1.2 1.4 0 1 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.1 1.2 1.3 36°N 38°N 40°N 42°N 44°N 8°W 6°W 4°W 2°W 0° 2°E 4°E Longitude Latitude Contours g.300 g.500 g.700 26th of August 2023 0 1 0.2 0.4 0.6 0.8 1.2 1.4 1.6 0 1 0.2 0.4 0.6 0.8 1.2 1.4 -0.2 0 1 0.2 0.4 0.6 0.8 -0.2 -0.4 36°N 38°N 40°N 42°N 44°N 8°W 6°W 4°W 2°W 0° 2°E 4°E Longitude Latitude Contours g.300 g.500 g.700 27th of August 2023
+
+
+================================================================================
+Summary of atmospheric-geodetic model (M2)
+================================================================================
+
+Call: glm(formula = m2.frm, family = binomial(link = "logit"), data = global.df[idx.train, ])
+
+
+================================================================================
+Number of Fisher Scoring iterations: 6
+================================================================================
+
+Alternative global model
+

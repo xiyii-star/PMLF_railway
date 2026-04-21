@@ -1,0 +1,348 @@
+
+================================================================================
+Title
+================================================================================
+
+What is the source of the PTA GW signal?
+
+
+================================================================================
+Abstract
+================================================================================
+
+The most conservative interpretation of the nHz stochastic gravitational wave background (SGWB) discovered by NANOGrav and other Pulsar Timing Array (PTA) Collaborations is astrophysical, namely that it originates from supermassive black hole (SMBH) binaries. However, alternative cosmological models have been proposed, including cosmic strings, phase transitions, domain walls, primordial fluctuations and "audible" axions. We perform a multi-model analysis (MMA) to compare how well these different hypotheses fit the NANOGrav data, both in isolation and in combination with SMBH binaries, and address the questions: Which interpretations fit the data best, and which are disfavoured? We also discuss experimental signatures that can help discriminate between different sources of the PTA GW signal, including fluctuations in the signal strength between frequency bins, individual sources, and how the PTA signal extends to higher frequencies.
+
+
+================================================================================
+I. INTRODUCTION
+================================================================================
+
+The Pulsar Timing Array (PTA) collaborations NANOGrav [1, 2] , EPTA (in combination with InPTA) [3] [4] [5] , PPTA [6] [7] [8] and CPTA [9] have recently announced the discovery of a stochastic gravitational wave background (SGWB) at frequencies in the nHz range, with a strength and frequency dependence similar to that expected from a population of supermassive black holes (SMBH) binary systems. This discovery opens new perspectives in the studies of GW sources, complementing the mergers of stellar-mass black holes discovered by the LIGO-Virgo-KAGRA collaborations [10] [11] [12] . Measurements of the nHz SGWB are at an early stage, and it is important to verify to what extent it is consistent with the SMBH binary model. Indeed, the first measurements seem to indicate that the frequency dependence of the SGWB observed by the PTAs may differ somewhat from that predicted in the simplest version of the SMBH binary model, according to which the binaries evolve by losing energy primarily through GW emission [5, 13] .
+
+α john.ellis@cern.ch β malcolm.fairbairn@kcl.ac.uk γ gabriele.franciolini@uniroma1.it δ gert.hutsi@kbfi.ee ϵ antoniojunior.iovino@uniroma1.it ζ marek.lewicki@fuw.edu.pl η martti.raidal@cern.ch θ juan.urrutia@kbfi.ee ι ville.vaskonen@pd.infn.it κ hardi.veermae@cern.ch Two classes of interpretation of this apparent discrepancy have been proposed. One is that the SMBH binaries may also be losing energy through some other mechanism, presumably through interactions with their environments, that would reduce the period over which they emit GWs in the frequency range measured [13] [14] [15] [16] [17] [18] [19] . A more radical interpretation is that the GWs are being emitted by some cosmological source whose origin is in fundamental physics. Candidate sources that have been considered include a network of cosmic (super)strings [20] [21] [22] [23] [24] [25] [26] [27] [28] [29] [30] , a first-order phase transition in the early Universe [31] [32] [33] [34] [35] [36] [37] [38] [39] [40] [41] [42] [43] [44] [45] , domain walls [46] [47] [48] [49] [50] [51] [52] [53] [54] [55] [56] , primordial fluctuations ,"audible" axions [89, 90] and other more exotic scenarios [91] [92] [93] [94] [95] [96] [97] [98] [99] [100] [101] [102] [103] . If any such mechanism is in operation, one may expect there also to be an admixture of GWs from astrophysical SMBH binaries. 1  In this paper, we perform a Multi-Model Analysis (MMA), comparing the qualities of fits to the NANOGrav 15-year (NG15) data invoking SMBH binaries, driven either by GWs alone or together with environmental effects, with each of the proposed fundamental physics sources. We also explore fits postulating combinations of SMBH binaries with each of the fundamental physics mechanisms. Our MMA adopts a common statistical approach to all the proposed sources based directly upon the NANOGrav probability density function (PDF) in each frequency bin. Furthermore, in order to help disentangle cosmological and astrophysical sources, we highlight some experimental features that could in the future be used to distinguish between them. These include fluctuations in the GW signal between different frequency bins (including the possible observation of individual GW sources) and the behavior of the SGWB spectrum at higher frequencies. For example, whereas SMBH models predict observable fluctuations that increase at higher frequencies, generic fundamental physics sources would not predict large bin-by-bin fluctuations, and some predict an extended spectrum that would be detectable at higher frequencies, whereas others predict a sharp fall-off above the range where PTAs are sensitive.
+
+The structure of this paper is as follows. In Section II we introduce the astrophysical SMBH binary model, including the possibility of energy loss through environmental effects, and discuss the observability of bin-tobin fluctuations and individual binary sources. Then, in Section III we introduce the different cosmological models we consider, based on fundamental physics scenarios, and present likelihood contours for each of the scenarios with and without a SMBH binary background, taking into account other relevant observational constraints. In Section IV we compare the qualities of the fits within the various model scenarios, and we conclude in Section V. Some technical details are gathered in the appendix.
+
+
+================================================================================
+II. SUPERMASSIVE BLACK HOLES
+================================================================================
+
+The default interpretation of the SGWB postulates a population of tight astrophysical SMBH binaries. We estimate the SMBH binary population as in [14] : We use the extended Press-Schechter formalism [106] [107] [108] , which depends on the rate R h of coalescences of galactic halos of masses M 1,2 , the stellar mass-BH mass relation arising from observations of inactive galaxies [109, 110] and the observed stellar mass-halo mass relation [111] . The merger rate of SMBHs of masses m 1,2 is
+
+where we incorporate a probability p BH for the pair of SMBHs to approach each other sufficiently closely to merge [112] and p occ relates the BH mass to the halo mass including the observed scatter [14] . The interactions with their environments that allow the binaries to overcome the "final parsec problem" are not fully understood [113] , and we regard p BH as a phenomenological parameter to be determined using the PTA data. For simplicity, we assume p BH to be constant.
+
+
+================================================================================
+A. GW-driven binaries
+================================================================================
+
+The spectrum of the GW signal from the SMBH population in general includes large fluctuations due to the small number of dominant and deviates from the naive power-law approximation that predicts [114] the spectral index γ = 13/3. Following the analysis of Ref. [14] , we compute the PDFs of the GW signal from SMBH binaries in the frequency bins used in the NG15 analysis and calculate their overlaps with the posterior PDFs ("violins") from the Hellings-Downs-correlated free spectrum analysis of the NG15 data [1] . Assuming that the evolution of the SMBH binaries is driven solely by energy loss due to GW emission, we find p BH = 0.07 +0.05 -0.07 , which is consistent with an earlier analysis of IPTA data [112] , but the quality of the best fit is poor.
+
+
+================================================================================
+B. Environmental effects
+================================================================================
+
+It is natural to consider the possibility that environmental effects could affect the evolution of SMBH binaries while they are emitting GWs in the nHz frequency range. We parametrize the binary energy loss via environmental effects as [14]
+
+where t env and t GW are the timescales for energy loss via environmental effects and GWs, respectively, f ref is a reference frequency, M is the binary chirp mass, and α and β are phenomenological parameters. We take β = 0.4 foot_0 and treat p BH , α and f ref as parameters to be constrained using PTA data. This three-parameter model provides a significantly better fit to the NG15 data than the singleparameter GW-only model, with -2∆ℓ = -11.3 relative to the GW-driven SMBH model. 3 The posterior probabilities for the three parameters, computed in Ref. [14] , are shown in Fig. 1 . The best fit is at
+
+Throughout the rest of the paper, this best-fit environmentally driven SMBH scenario sets the baseline to which other models are compared. We note that our analysis assumes circular orbits that emit GWs at twice the orbital frequency. The eccentricity of the orbits would affect the GW spectrum by introducing higher harmonics, increasing the total power emitted in GWs and modifying the frequency spectral index [115] . 4 However, big eccentricities e > 0.9 would lead to an attenuation of the background due to the acceleration of the binary inspiral [117] . The GW signal from SMBHs could also be affected by modifications to small-scale structures compared to standard ΛCDM, which could lead to the earlier formation of galaxies and SMBHs. The observation of high-redshift galaxies with surprisingly high stellar masses by the JWST [118] [119] [120] [121] [122] provides a potential hint for this possibility [47, 64, [123] [124] [125] [126] [127] [128] . 3 We estimate the log-likelihood for observing the data ⃗ d given a model characterised by ⃗ θ by
+
+where the sum runs over the first 14 NG15 bins and P ex,j and P th,j denote the probability distributions of Ω in bin j in the NG15 data and in the given model. 4 There is no indication of eccentric binaries in current (O3) LIGO/Virgo/KAGRA (LVK) data [116] .
+
+
+================================================================================
+C. Fluctuations in the GW spectrum
+================================================================================
+
+As already mentioned, the SMBH signal may exhibit significant fluctuations between frequency bins, which appear because around half of the signal strain is produced by O(10) sources. Since the spectral fluctuations in the SGWB for every cosmological BSM model are expected to be negligible, the appearance of fluctuations would be a smoking gun for an astrophysical component in the signal.
+
+Spectral fluctuations can be quantified by the second finite difference
+
+where the step size δf can, for instance, be taken to correspond to the width of a bin. The probability of an upward fluctuation in the ith bin can be estimated as 5
+
+where f i is the bin frequency and we choose
+
+with ι = 0.2. This choice of threshold can help distinguish SMBH binaries from cosmological GW sources, which are expected to produce smooth spectra. We find that for all of the cosmological sources discussed in the next Section the probability (7) is zero in all NG15 bins. When the GW signal arises from an admixture of cosmological sources and SMBH binaries the probability of fluctuations will be smaller than in the pure SMBH model. The optimal threshold Ω th that can filter out cosmological models depends on the frequency binning -while for smooth cosmological signals, the finite difference (5) decreases with increased spectral resolution (since ∆ 2 Ω(f ) ∝ δf 2 as δf → 0), it can be sizeable for SMBH binaries as long as their frequency changes less than δf during the observational period.
+
+In Fig. 2 we show the probability (7) for the best-fit parameters of the SMBH binary model with environmental effects. We find that P ≈ 0.3 across all the bins and the probability of not having fluctuations that exceed this threshold in any of the 11 bins considered in Fig. 2 is roughly P fluct,i ≈ 1.3%, while the expected number of upward fluctuations in the NG15 bins is i P fluct,i ≈ 4 for both the NG15 data and the SMBH binary model. The NG15 data indicates that the 8th bin at f ≈ 16 nHz shows an upward fluctuation at the 91% CL. 5 Neglecting correlations between bins, this probability is given by
+
+where P i denote the theoretical Ω GW distributions in individual bins (see [14, 112] ).
+
+
+================================================================================
+D. Detecting individual binaries
+================================================================================
+
+A nearby SMBH binary will stand out from the background as a resolvable binary. Intriguingly, the model predicts that the most probable frequency for an individual binary to be detectable is ∼ 4 nHz [14] , where there is evidence for an upward fluctuation in both NANOGrav and EPTA data [129, 130] . If the SMBH binaries are driven by GW emission only the probability of observing such an event in the present NANOGrav data is less than∼ 5%, but such an event is easier to accommodate when environmental energy loss is included in the SMBH binary model, where the probability is ∼ 23%. In Fig. 3 we show contours of the minimal merger efficiency, p min BH , for which the probability of finding such an event is larger than 5% for different values of the environmental parameters α and f ref . 6
+
+
+================================================================================
+III. COSMOLOGICAL SOURCES
+================================================================================
+
+In this Section, we discuss SGWB predictions in various cosmological scenarios invoking particle physics beyond the Standard Model (BSM). In these scenarios, the GWs are produced in the early Universe and their present 6 In addition to bin-to-bin fluctuations and resolvable binaries, other characteristic features of the SMBH models include the possibilities of observable circular polarization [112, 131] and anisotropies [132] .
+
+where T denotes the temperature at which the GWs were produced and Ω GW (T ) their abundance at that moment, a is the scale factor and H the Hubble rate, the subscript 0 refers to their present day values, and g * and g * s are the effective numbers of relativistic energy and entropy degrees of freedom. The present frequency corresponding to the scale entering the Hubble horizon at temperature T is
+
+For short-lasting, so-called causality-limited GW sources, the GW spectrum at f ≪ f H scales as Ω GW (f ≪ f H ) = Ω CT (f ) ∝ f 3 , assuming radiation domination [133, 134] . This behavior is affected by deviations from pure radiation domination, e.g., around the QCD phase transition.
+
+We use the results tabulated in Ref. [59] for the causality tail, Ω CT (f ).
+
+
+================================================================================
+A. Cosmic (super)strings
+================================================================================
+
+Cosmic strings are one-dimensional topological defects that are predicted in many BSM scenarios [135] [136] [137] . Once produced, strings reach a scaling solution where their density is a small fraction of the total cosmological density while the excess energy goes into production of closed loops that then decay into GWs. This process continues throughout the evolution of the Universe and results in a very broad and relatively flat spectrum. We focus here on (super)strings that may arise from string theory [138, 139] or during confinement in pure Yang-Mills theories [140, 141] . Their main phenomenological difference from the standard case is a lower intercommutation probability p, which diminishes the loop production and increases the resulting string density and GW signal amplitude by a factor p -1 [142, 143] .
+
+Our calculation of the spectrum closely follows [20] . We start with the velocity-dependent one-scale model [144] [145] [146] [147] [148] , which we use to compute the correlation length of the network L and mean string velocity v by solving the equations
+
+[-12, -11] where
+
+and c ≃ 0.23 is the loop chopping efficiency [146] .
+
+Following recent numerical simulations [149] [150] [151] [152] [153] [154] we focus on large loops as the main GW sources. We include a prefactor F ∼ 0.1 to describe the fraction of energy in these loops and a factor f r = √ 2 accounting for the energy going to peculiar velocities of loops [155] and not contributing to radiation.
+
+Loops cut from the network oscillate losing energy to GWs which reduces their length over time:
+
+Where we use α L ≈ 0.37, the total emission power Γ ≈ 50 [143, 152, 156] and t i is the time at which the given loop was created.
+
+Calculation of the spectrum involves the integration of emissions from all contributing loops:
+
+where
+
+The formation time of the loops has to be found solving Eq. ( 13 ) and restricting to loops emitting at frequency f
+
+[0.22, 0.77] 1 .5 3 .0 4 .5 6 .0 α [1.8, 4.
+
+8] 8 1 6 2 4 3 2 fref/nHz [17, 35] -1 2 .4 -1 2 .0 -1 1 .6 -1 1 .2 -1 0 .8 log 10 (Gµ) [-12, -11] 0 .2 0 .4 0 .6 0 .8 pBH -2 .5 -2 .0 -1 .5 -1 .0 log 10 (p) 1 .5 3 .0 4 .5 6 .0 α 8 1 6 2 4 3 2 fref/nHz -1 2 .4 -1 2 .0 -1 1 .6 -1 1 .2 -1 0 .8 log 10 (Gµ) LV K des ign LV K O3 -2 .5 -2 .0 -1 .5 -1 .0 log 10 (p) [-2, -0.5] FIG. 5. As in Fig. 4, for a (super)string fit to NG15 data including also SMBH binaries with environmental effects.
+
+a(t0) . The Heaviside function assures that we integrate from only the time t F when the network first reaches scaling after its production. We ensure that the total emitted power equals Γ with the function ζ = k -4/3 , where we assume that the GW emission is dominated by cusps. Finally, we sum over the emission modes using
+
+and the prescription from ref. [157] that allows us to sum over a very large number of modes, which is necessary to compute the spectrum accurately [157] [158] [159] .
+
+In fig. 4 we show the posterior distributions for the string tension, Gµ, and the intercommutation probability, p, together with the constraints from current (O3) LIGO/Virgo/KAGRA (LVK) data [160] and the design sensitivity of future LVK data [161] [162] [163] , assuming that the SMBH background is negligible. The best pure (super)string fit not in conflict with current LVK data has
+
+with -2∆ℓ = 1.5 compared to the SMBH baseline model including environmental effects. Fig. 5 shows results from a combined fit including the possibility of a SMBH background. The best fit, in this case, is at
+
+with -2∆ℓ = -0.7. Each model individually can give a comparable fit, and indeed we find that a combined fit with significant contributions from both gives a noticeably better fit, although the improvement is not very
+
+[-0.79, 0.22] -1 . 6 -0 . 8 0 . 0 0 . 8 log 10 (T * /GeV) 0 . 4 0 . 8 1 . 2 1 . 6 log 10 (β/H) PBH overproduction 0 . 4 0 . 8 1 . 2 1 . 6 log 10 (β/H) [0.38, 0.98] FIG. 6. The posterior probability distribution of the phase transition fit to the NG15 data. The constraint from the production of PBHs is shown in grey.
+
+significant statistically. A significant contribution from SMBH binaries also results in a non-negligible probability of finding a candidate event at f ∼ 4 nHz, which in this case is 5%.
+
+
+================================================================================
+B. Phase transitions
+================================================================================
+
+Cosmological first-order phase transitions generate GWs in bubble collisions and by motions of inhomogeneities in the fluid [164, 165] . Given the large amplitude of the NANOGrav signal, we focus on very strong transitions that accommodate this feature naturally. We assume that the energy of the transition dominates over the background, so that its strength α ≫ 1, in which case its value does not play an important role in the calculation of the signal. It was recently shown in [166] that in such a case the energy budget of the transition does not play an important role, as fluid-related sources [167] [168] [169] [170] [171] [172] [173] [174] [175] and the contributions from bubble collisions [176] [177] [178] [179] [180] [181] [182] [183] [184] [185] behave very similarly.
+
+The resulting GW spectrum is a broken power-law that may be parametrized as
+
+where β is the timescale of the transition, T * is the temperature reached after the transition, a = b = 2.4, c = 4, A = 5.1 × 10
+
+-2 and the peak frequency f p = [0.2, 0.75] 1 .5 3 .0 4 .5 6 .0 α [1.5, 4.1] 8 1 6 2 4 3 2 fref/nHz [14, 33] -1 .6 -0 .8 0 .0 0 .8 log 10 (T * /GeV) [-0.67, 1.3] 0 .2 0 .4 0 .6 0 .8 pBH 0 .4 0 .8 1 .2 1 .6 log 10 (β/H) PBH overproduction 1 .5 3 .0 4 .5 6 .0 α PBH overproduction 8 1 6 2 4 3 2 fref/nHz PBH overproduction -1 .6 -0 .8 0 .0 0 .8 log 10 (T * /GeV) PBH overproduction 0 .4 0 .8 1 .2 1 .6 log 10 (β/H) [0.94, 2]
+
+FIG. 7. As in Fig. 6 for a phase transition fit to NG15 data including also SMBH binaries with environmental effects.
+
+0.7f H (T * )β/H [166] . The function
+
+models the transition of the spectrum to the causality tail at scales larger than the horizon at the transition time [133] . The parameter δ determines how quickly the spectrum evolves towards the causality tail and could be determined by a simulation of the strong phase transition taking expansion into account. We fix δ = 1, having verified its value does not have a large impact on the results.
+
+In Fig. 6 we show the posteriors of phase transition fit to the NG15 data while Fig. 7 includes also the background from SMBH binaries. The best fit to a pure phase transition signal is for
+
+resulting in -2∆ℓ = -2.3 compared to the SMBH baseline model. Including SMBHs with environmental effects, we find that the best fit is dominated by the phase transition signal with p BH ≈ 0. Searching for points capable of providing the candidate event at 4 nHz by requiring its probability to be ≥ 5% we find the best-fit point
+
+which gives -2∆ℓ = 0.2. Strong first-order phase transitions can also lead to the formation of primordial black holes (PBHs) if they are [-0.2, 0.072] -0 . 6 -0 . 3 0 . 0 0 . 3 0 . 6 log 10 (T ann /GeV) -1 . 6 -1 . 2 -0 . 8 -0 . 4 log 10 (α ) ∆N eff -1 . 6 -1 . 2 -0 . 8 -0 . 4 log 10 (α ) [-1.1, -0.76] FIG. 8. The posterior probability distribution of the DW fit to the NG15 data. The dashed line indicates the ∆N eff bound, which constrains the possibility of DWs annihilating completely into dark radiation.
+
+sufficiently slow [186] [187] [188] [189] [190] . In Figs. 6 and 7 we show the constraint β/H ≳ 4 from overproduction of PBHs [189] . 7  We see that most of the 1σ region of the fit including only the phase transition signal is allowed by this constraint. However, as pointed out in [42] , it is interesting that the NG15 fit is compatible with a large PBH abundance. These PBHs would be around the stellar mass range, where their abundance is constrained by optical lensing [191] [192] [193] [194] [195] [196] , GW observations [197] [198] [199] [200] [201] [202] and accretion [203] [204] [205] [206] [207] [208] [209] (for a review see e.g. [210] ). Nevertheless, a subdominant PBH abundance, O(0.1)% of DM, might be related to the BH binary mergers detected by LVK [197] [198] [199] [200] [201] [202] [211] [212] [213] [214] and can be further probed with future GW observatories [215] [216] [217] [218] .
+
+
+================================================================================
+C. Domain walls
+================================================================================
+
+Domain walls (DWs) [219] are topological defects produced when a discrete symmetry in some BSM scenario is broken after inflation. During the scaling regime when the DW network expands together with its surroundings, the energy density is ρ DW = c σH [220, 221] , where σ is the tension of the wall and c = O(1) is a scaling parameter. DWs emit GWs until they annihilate at a temperature T = T ann [222] [223] [224] [225] . The peak frequency of the resulting GW spectrum is given by the horizon size at 7 A slightly stronger bound, β/H ≳ 6, was found in [190] .
+
+[0.25, 0.77] 1 .5 3 .0 4 .5 6 .0 α [1.4, 3.8]
+
+8 1 6 2 4 3 2 fref/nHz FIG. 9. As in Fig. 8 for a domain wall fit to the NG15 data including also SMBH binaries with environmental effects.
+
+the time of DW annihilation, f p = f H (T ann ), and at frequencies f ≫ f p the spectrum scales as f -1 . We approximate the GW spectrum at the formation time T = T ann as [220, 226] Ω DW (f, T ann ) = 3ϵα 2 * 8π 1 4
+
+where ϵ = O(1) is an efficiency parameter and α * ≡ ρ DW (T ann )/ρ r (T ann ) is the energy density in the domain walls relative to the radiation energy density ρ r at the annihilation moment. Following the results of numerical simulations [220] , we fix ϵ = 0.7 and δ = 1.
+
+The parameters of the DW model are the relative energy density in DWs, α * , and the temperature at which they annihilate, T ann . Since the DWs can constitute a big fraction of the total energy density, it is necessary to check that their annihilation respects the constraints imposed by Big Bang Nucleosynthesis (BBN) and the Cosmic Microwave Background (CMB). If the DWs annihilate completely into dark radiation, the energy density can be expressed as the equivalent number of neutrino species [226] : ∆N eff = ρ DW (T ann )/ρ ν (T ann ) = 13.6 g * (T ann ) -1 3 α * , which is constrained by BBN (∆N eff < 0.33) [227] and CMB (∆N eff < 0.3) [228, 229] . On the other hand, if the DWs annihilating into SM particles, BBN imposes T ann > (4 -5) MeV [230] and CMB T ann > 4.7 MeV [231] (see [232] for a review).
+
+We have performed scans over the parameters of the DW model to fit the NG15 data. The posterior probability distributions for the DW model without a SMBH contribution are shown in Fig. 8 , and the best fit is at T ann = 0.85 GeV , α * = 0.11 ,
+
+and has -2∆ℓ = -3.1 compared to the SMBH baseline model. These parameter values are allowed both if the DWs annihilate into SM particles. If they instead annihilate into dark radiation, the best fit is in tension with ∆N eff bound. However, the 1σ region of the posterior distribution extends to smaller values of α * that are allowed by the ∆N eff bound. Fig. 9 shows a full set of posterior parameter distribution functions and two-parameter correlations for the fit to a combination of DWs and SMBH binaries. The best fit of the combined model is dominated by the DW contribution with p BH ≈ 0. Imposing a lower bound on p BH from Fig. 3 , the best fit is T ann = 1.12 GeV , α * = 0.074 , p BH = 0.51 , f ref = 22 nHz , α = 2.6 ,
+
+with -2∆ℓ = -0.5.
+
+Similarly to first-order phase transitions, the annihilation of the DW network can lead to the copious formation of PBHs [233, 234] . The PBH formation may be so efficient that it excludes the parameter region preferred by the NG15 data [49] . However, further studies are needed to confidently estimate the PBH formation from DW networks.
+
+
+================================================================================
+D. Scalar-induced GWs
+================================================================================
+
+Primordial scalar curvature fluctuations can source a SGWB at the second order of perturbation theory [235] [236] [237] [238] [239] [240] [241] [242] . A scalar-induced GW (SIGW) background that can be probed by PTAs requires sizable curvature perturbations that enter the horizon around the QCD phase transition. This scenario has received a lot of attention  since the initial observation of a stochastic common-spectrum process by NANOGrav [264] and several studies have recently appeared that update the available parameter space in the light of the most recent PTA data releases [57, 59, 60, 63, 68, 69, 71, 76, 80, 84, 89] . The most stringent constraint on a SIGW scenario for PTAs arises from the overproduction of PBHs associated with large peaks in the primordial curvature power spectrum [57, 59, 260] . Relieving the tension would require PBH production to be suppressed by specific nongaussianities [57] or modifications to cosmology at the time of the QCD phase transition [76] .
+
+The present-day SIGW background would have a spectrum given by Eq. ( 9 ), where [265] [266] [267] [268] Ω GW (T ) = 1 3
+
+[7.7, 8.6] -1 . 6 -1 . 2 -0 . 8 -0 . 4 0 . 0 log 10 A PBH overproduction [-0.88, -0.094] 6 . 6 7 . 2 7 . 8 8 . 4 log 10 (k * /Mpc -1 ) 0 . 6 1 . 2 1 . 8 2 . 4 3 . 0 ∆ -2 . 0 -1 . 5 -1 . 0 -0 . 5 log 10 A 0 . 6 1 . 2 1 . 8 2 . 4 3 . 0 ∆ [0.2, 1.3] FIG. 10. The posterior probability distribution of the SIGW fit to the NG15 data. The black shaded region indicates where fPBH > 1, while the black dashed lines bracket the 1σ ranges in the marginalised direction.
+
+where u = (t + s)/2, v = (ts)/2 and the transfer function J 2 (u, v) depends on the cosmological background [269, 270] . The relevant calculations are reported in Appendix A, including higher-order corrections to the SIGW signal that arise in the event of non-Gaussian curvature perturbations.
+
+A broad class of primordial curvature spectra can be characterized by a log-normal (LN) shape of the form
+
+The SIGW model therefore has three relevant parameters: the characteristic scale k * /Mpc -1 , the peak amplitude A, and the width ∆. 8 The distributions of their posterior values and two-parameter correlations for fits to the NG15 data assuming only scalar-induced secondorder GWs are shown in Fig. 10 . The best-fit values of the SIGW model parameters are: log 10 (k * /Mpc -1 ) = 7.7 , log 10 A = -1.2 , ∆ = 0.21 (28) for which -2∆ℓ = -2.1.
+
+We also show in Fig. 10 the regions of parameter space where PBHs are overproduced. We compute their abundance following the prescription given in Refs. [271] [272] [273] [274] .
+
+[0.25, 0.79] 1 .5 3 .0 4 .5 6 .0 α [1.4, 4.1] [14, 32] 6 .4 7 .2 8 .0 8 .8 9 .6 log 10 (k * /Mpc -1 ) [7.8, 10] -2 .4 -1 .8 -1 .2 -0 .6 log 10 A PBH overproduction [-3, -1.2] 0 .2 0 .4 0 .6 0 .8 pBH 0 .6 1 .2 1 .8 2 .4 3 .0 ∆ 1 .5 3 .0 4 .5 6 .0 α 8 1 6 2 4 3 2 fref/nHz 6 .4 7 .2 8 .0 8 .8 9 .6 log 10 (k * /Mpc -1 ) -2 .4 -1 .8 -1 .2 -0 .6 log 10 A 0 .6 1 .2 1 .8 2 .4 3 .0 ∆ [0.2, 3.2]
+
+FIG. 11. As in Fig. 10 for a SIGW fit to NG15 data including also SMBH binaries with environmental effects.
+
+In order to compute the abundance more precisely we also include the effects of the QCD phase transition and the shape of the power spectrum in the parameters, following Refs. [202, 275, 276] . As already pointed out in [57] , the tension between the NANOGrav data and a scenario with the SIGW signal alone can be relaxed in models where large non-Gaussianities suppress the PBH abundance, or if the PBH formation take place during non standard cosmological phases deviating from radiation domination [76, 80, 83] . Our results differ from those in Refs. [60, 68, 69, 71, 80, 89] . This discrepancy comes from several limitations of the analyses in these papers, such as the omission of critical collapse and the nonlinear relationship between curvature perturbations and density contrast, the adoption of a different value for the threshold (independently from the curvature power spectrum), and the use of a different window function, without properly recomputing the threshold values [277] . 9  Fig. 11 shows a full set of posterior parameter distribution functions and two-parameter correlations for the fit to a combination of scalar-induced second-order GWs and SMBH binaries. The preferred values of the SIGW model parameters are similar to those in the SIGW-only fit, but their distributions are significantly broader, as 9 When computing the PBH abundance in this work we have adopted the best prescription available following Ref. [57] and references therein. We mention that Ref. [278] (see, however, also [279] ) suggested that super-horizon threshold conditions may lead to an overestimation of the abundance, due to non-linear effects not included in the linear transfer function.
+
+was to be expected. The best-fit parameters of the combined model are log 10 (k * /Mpc -1 ) = 7.6 , log 10 A = -1.2 , ∆ = 0.30 , p BH = 0.06 , f ref = 26 nHz , α = 4.1 .
+
+(29) The best-fit parameters describing the SIGW sector in the mixed scenario are very similar to those reported in Eq. ( 28 ), where SIGWs alone are assumed to explain PTA observations. This is because the SIGW model provides a better fit, and dominates the signal where the likelihood peaks. However, neither of the two models dominates over the other beyond the ∼ 2σ level, maintaining the large degeneracy of most parameters in the posterior distributions shown in Fig. 11 .
+
+Imposing a lower bound on p BH forcing the SMBHs model to produce the candidate event at 4nHz with probability larger than 5%, we find instead that the astrophysical channel is required to dominate, and the best fit parameters are log 10 (k * /Mpc -1 ) = 6.3 , log 10 A = -2.2 , ∆ = 0.21 , p BH = 0.70 , f ref = 24 nHz , α = 3.8 .
+
+(30) with a maximum likelihood similar to the SMBHs-only scenario (with enviromental effects included), resulting in -2∆ℓ = -0.4.
+
+
+================================================================================
+E. First-order GWs
+================================================================================
+
+Another mechanism for generating a cosmological SGWB is during inflation via first-order GWs (FOGWs) [280, 281] . We consider canonically normalized single-field slow-roll models, which predict a primordial tensor power spectrum that, in the relevant range of frequencies between the CMB and PTA scales, can be approximated by a pure power-law [282] :
+
+where f CMB = 7.7 × 10 -17 Hz, A s = 2.1 × 10 -9 [228] , n t is the tensor spectral index and r is the tensor-to-scalar ratio. The transfer function that connects the radiationdominated era to reheating can be approximated as [283, 284] T
+
+where f end and f rh ≤ f end correspond, respectively, to the end of inflation and to the end of reheating. For simplicity, we assume that the cut-off scale is f end ≫ f rh = f H (T rh ). In this way, the analysis is independent of the choice of the cutoff. The FOGW scenario is parametrized by the inflationary parameters n t and r, and the reheating temperature T rh . As seen in the left panel of Fig. 12 , their values are very tightly correlated, and their best-fit values are T rh = -0.67 GeV , log 10 r = -14 , n t = 2.6 (33) for which -2∆ℓ = -2.0.
+
+A constraint on the possible values of these parameters is given by the SGWB contribution to the radiation energy budget characterized by ∆N eff , i.e. its contribution to the effective number of relativistic species. ∆N eff is constrained by BBN and CMB probes, and an approximate upper limit is given by ∆N eff ≲ 0.3 [227, 228] . The GW spectrum, integrated from BBN scales to the cutoff frequency f end , must not exceed an upper limit that is set by the allowed amount of extra relativistic degrees of freedom at the time of BBN and recombination. This contribution is given [285, 286] 1.8 × 10 5
+
+where we set f BBN ≃ 10 -12 Hz, which is the frequency at horizon re-entry of tensor mode around the onset of BBN at T ≃ 10 -4 GeV [287] . For a slope compatible with the NANOGrav data, the signal cannot extend to excessively high frequencies, as doing so would violate constraints imposed by BBN [288, 289] . For these reasons, we limit our analysis to the range T rh ∈ [0.01, 10] GeV. As can be seen from Fig. 12 , if the reheating temperature is ≲ 0.3 GeV the preferred signal changes the
+
+[0.26, 0.77] 1 .5 3 .0 4 .5 6 .0 α [1.4, 3.7] tilt moving from n t to n t -2. This is because, for such values of the temperature, the cut-off of the signal is at a lower frequency than the last NANOGrav bin, and the GW spectrum in the PTA band is composed of tensor modes that re-entered the horizon during reheating after inflation. When deriving the constraint from the bound on ∆N eff , we find that n t and r are strongly correlated, and the equation that relates these quantities can be approximated by n t = -0.14 log 10 r + 0.58.
+
+Using this last relation we constrain the parameter space as shown in Figs. 12 and 13 .
+
+Our results are in perfect agreement with Refs. [58, 282] . Fig. 13 shows a full set of posterior parameter distribution functions and three-parameter correlations for the fit to a combination of FOGWs and SMBH binaries. The best fit of the combined models results in -2∆ℓ = -1.9 with p BH ≃ 0. Thus, the FIGW contribution is dominant, and the best-fit parameter of the FIGW sector coincides with those reported in Eq. ( 33 ), assuming no SMBH contribution. Imposing a lower bound on p BH to produce the candidate SMBH merger at 4nHz, we find instead
+
+with resulting in -2∆ℓ = -0.1.
+
+[-13, -10]
+
+The posterior probability distribution of the "audible" axion fit to the NG15 data. The shaded region is excluded by super-radiance constraints.
+
+
+================================================================================
+F. "Audible" axions
+================================================================================
+
+In models in which an axion or an axion-like particle has a weak coupling to the SM, thanks to a coupling to a light dark photon, a SGWB can be produced [290] [291] [292] [293] [294] [295] [296] . After the axion begins to roll, it induces a tachyonic instability for one of the dark photon helicities, causing vacuum fluctuations to grow exponentially. This effect generates time-dependent anisotropic stress in the energymomentum tensor, which ultimately sources GWs. In this scenario, the condition of having a coupling with a dark photon and not with the SM photon is due to the fact that the latter undergoes rapid thermalization that would destroy the conditions required for exponential particle production. 10 The GW formation ends when the tachyonic band closes at temperature [290]
+
+where α is the coupling with the dark photon, θ is the initial misalignment angle, and m a is the mass of the axion. As shown in [291] , assuming that between the beginning of the axion oscillations and the end of the GW formation, the effective number of degrees of freedom does not 10 GWs can also be produced in kinetic misalignment scenarios (in which the axion field has a nonzero initial velocity) also in the absence of dark photons. As shown in [291] the resulting signal in this scenario is, however, in general too small to be observable in the foreseeable future.
+
+[0.27, 0.77] 1 .5 3 .0 4 .5 6 .0 α [1.4, 3.7] change, the GW spectrum at temperature T * can be fitted by
+
+where f a is the decay constant of the axion and the peak frequency of the spectrum is
+
+Compared to the fit in [291] , we have added the function S H (f, f H ) that accounts for the causality tail of the spectrum at frequencies f < f H (T * ) and is given by Eq. ( 20 ) with a = 1.5. We set the parameter δ in S H (f, f H ) to δ = 1. Typical values for the initial misalignment angle are of θ ∼ O(1) [297, 298] and Eq. ( 38 ) holds only for θ ∼ 1 and α ≥ 10, the range of values where the particle production process is efficient [299] . For simplicity, we fix θ = 1 and α = 20 in the analysis. We show in Fig. 14 the posteriors of the "audible" axions two-parameter fit to the NG15 data. The best-fit values are achieved at
+
+corresponding to -2∆ℓ = -1.6 relative to the baseline.
+
+Differently from the analysis performed in ref. [89] we find a larger possible range for the masses of the axions below super-Planckian f a values. Part of this region is currently ruled out by the super-radiance constraints [300] [301] [302] . The discrepancy between our analysis and that in 10 -8 2×10 -9 2×10 -8 5×10
+
+6 f [Hz] Ω GW h 2 NG15 SMBH w env. effects Cosmic SuperStrings Phase Transtion Domain Walls Audible axions First-order GWs Scalar-induced GWs FIG. 16. Comparison of the best fits to the NG15 data for SMBH binaries with environmental effects and in the indicated BSM cosmological models.
+
+[89] is twofold. First, the analysis in Ref. [89] is based on both NANOGrav and EPTA data, with the latter dataset favoring larger amplitudes at higher frequencies. Heavier axions move the main peak to higher frequencies without changing the amplitude of the main peak. As a consequence, including the EPTA dataset leads to stronger bounds on more massive axions compared to our analysis. Lastly, when the peak of the signal is at frequencies much higher than the PTA range, which occurs for the larger masses in Fig. 14 , the causality tail dominates the signal compared to the Ansatz used to characterize the signal in [89] .
+
+Fig. 15 shows a full set of posterior parameter distribution functions and two-parameter correlations for the fit to a combination of "audible" axions and SMBH binaries. The best fit of the combined fit is at the same point as without the SMBH, p BH ≈ 0, so the inclusion of the SMBH binaries does not improve the fit. If we impose the posteriors from the candidate event at 4nHz, then the best-fit shifts to
+
+and same axion parameters, corresponding to -2∆ℓ = -0.3.
+
+
+================================================================================
+IV. MODEL COMPARISONS
+================================================================================
+
+Fig. 16 compares the best fits in the models we have studied in the frequency range measured by NANOGrav. We see that the cosmological models all capture to some extent the frequency dependence measured in the NANOGrav range, as does the astrophysical SMBH bi-nary scenario if environmental effects are included. This model, the cosmic (super)string scenario and "audible" axions fit the data less well than phase transitions, domain walls, scalar-induced GWs and first-order GWs, as seen quantitatively in Table I , which collects the numerical results for our best fits in the astrophysical SMBH model with and without environmental effects and in the BSM cosmological scenarios we have studied. The bestfit values of the model parameters are shown in the second column, and the values of the Bayesian inference criterion ∆BIC relative to the baseline SMBH model with the environmental effects are shown in the third column. The numbers in the parenthesis in the third column indicate the Bayesian inference criterion of the fit combining the cosmological model with the SMBH model including the environmental effects. These fits give significantly larger values of ∆BIC because they include more parameters. The combined fit is better than the SMBH model alone only in the case of phase transitions and domain walls.
+
+Finally, the fifth fourth of Table I tabulates some prospective signatures of the models considered that could help discriminate between them. As discussed above, PTAs should be sensitive to bin-to-bin fluctuations if the observed SGWB is due to SMBH binaries. Moreover, there should be observable anisotropies in the SGWB [132] and circular polarization could be observable [112, 131] . Also, future PTA data could reveal individual binary sources. We see from the fits combining the cosmological models with the SMBH model with environmental effects that the 1σ ranges for the SMBH parameters are relatively broad. A consequence of this is that it is possible to find a mixed scenario where the For clarity, we include only the first four and the eighth bins which are the most narrow and have the largest impact on fit quality. The green band extends the "violins" in the PTA range to higher frequencies, and shows the mean GW energy density spectrum from SMBH binaries heavier than 10 3 M⊙ for pBH = 0.25 -1. Individual SMBH binaries are expected to be measurable in this frequency range. The FOGW spectrum is expected to be cut off at some frequency between the ranges where PTAs and interferometers are sensitive.
+
+fit is better than in the pure SMBH model but that can still accommodate observable individual binary sources.
+
+Fig. 17 extends the model comparisons to the higher frequencies accessible to other experiments including LISA [303] [304] [305] , The Einstein Telescope (ET) [306, 307] , AION [308, 309] , AEDGE [309, 310] , the Nancy Roman telescope (ROMAN) [311] and the design sensitivity of LVK [161] [162] [163] . We see that LISA should be able to detect individual SMBH binaries, albeit with lower masses (O(10 6 -10 9 ) solar masses) than those responsible for the NANOGrav signal (≳ O(10 9 ) solar masses [112] ), at larger rates if environmental effects are important [14] . Similarly, proposed experiments in the mid-frequency band such as AION and AEDGE would be sensitive to mergers of BHs with masses O(10 3 -10 6 ) solar masses. On the other hand experiments such as LVK and ET are not sensitive to mergers of BHs with masses ≳ 10 3 solar masses. In contrast, all these experiments should be able to detect GWs from cosmic (super)strings, even in the case of modified cosmological evolution [20] . On the other hand, the SGWB from a cosmological phase transition, SIGWs, FOGWs or "audible" axions would be unobservable in any higher-frequency detector, whereas the SGWB from domain walls might be observable by LISA between 10 -3 -10 -2 Hz, but probably not by AEDGE and other detectors operating at frequencies ≳ 10 -2 Hz.
+
+
+================================================================================
+V. CONCLUSIONS
+================================================================================
+
+The recent PTA data from NANOGrav and other PTA Collaborations have established the existence of a SGWB in the nHz range, but its interpretation remains an open question. Binary SMBH systems are the default astrophysical interpretation but remain to be established as the sources of the PTA signals. Many cosmological models invoking generic aspects of BSM physics have also been proposed as prospective sources. We have presented in this paper a comprehensive Multi-Model Analysis (MMA) that applies a common approach to assess the relative qualities of fits in these models, both with and without the inclusion of a SMBH binary background. We find that these models are capable of fitting the NANOGrav data at least as well as SMBH binaries alone (significantly better if environmental effects on the evolution of the binaries can be neglected). Future PTA datasets may be able to distinguish between the cosmological and astrophysical scenarios, e.g., by observing bin-to-bin fluctuations, anisotropies, circular polarization or individual sources. Observations at higher frequencies will also be invaluable: some cosmological scenarios predict a turndown of the frequency spectrum that precludes measurements by LISA, whereas astrophysical models suggest that BH
+
+Results from Multi-Model Analysis (MMA) Scenario Best-fit parameters ∆BIC Signatures GW-driven SMBH binaries pBH = 0.07 6.0 FAPS, LISA, mid-f , LVK, ET GW + environment-driven pBH = 0.84 Baseline FAPS, LISA, mid-f , LVK, ET SMBH binaries α = 2.0 (BIC = 53.9) f ref = 34 nHz Cosmic (super)strings Gµ = 2 × 10 -12 -1.2 FAPS, LISA, mid-f , LVK, ET (CS) p = 6.3 × 10 -3 (4.6) Phase transition T * = 0.34 GeV -4.9 FAPS, LISA, mid-f , LVK, ET (PT) β/H = 6.0 (2.9) Domain walls Tann = 0.85 GeV -5.7 FAPS, LISA?, mid-f , LVK, ET (DWs) α * = 0.11 (2.2) Scalar-induced GWs k * = 10 7.7 /Mpc -2.1 FAPS, LISA, mid-f , LVK, ET (SIGWs) A = 0.06 (5.8) ∆ = 0.21 First-order GWs log 10 r = -14 -2.0 FAPS, LISA, mid-f , LVK, ET (FOGWs) nt = 2.6 (6.0) T rh = -0.67 GeV "Audible" axions ma = 3.1 × 10 -11 eV -4.2 FAPS, LISA, mid-f , LVK, ET fa = 0.87 MP (3.7)
+
+FAPS ≡ fluctuations, anisotropies, polarization, sources, mid-f ≡ mid-frequency experiment, e.g., AION [308] , AEDGE [310] , LVK ≡ LIGO/Virgo/KAGRA [161] [162] [163] , ET ≡ Einstein Telescope [312] (or Cosmic Explorer [313] ), signature ≡ not detectable TABLE I . The parameters of the different models are defined in the text. For each model, we tabulate their best-fit values, and the Bayesian information criterion BIC ≡ -2ℓ + k ln 14, where k denotes the number of parameters, relative to that for the purely SMBH model with environmental effects that we take as the baseline. The quantity in the parentheses in the third column shows the ∆BIC for the best-fit combined SMBH+cosmological scenario. The last column summarizes the prospective signatures.
+
+mergers may be observable by LISA and mid-frequency experiments, and cosmic (super)strings predict that a SGWB background should be detectable by LISA and higher-frequency experiments.
+
+The discovery of nHz GWs may be linked to the biggest bangs since the Big Bang, namely mergers of SMBHs, or be providing evidence for new fundamental physics that is inaccessible to laboratory experiments. Time and more data will tell.
+
+FIG. 18 . Contributions to the SIGW spectrum from the leading orders in perturbation theory, where we have factored out the relevant combination of the amplitude A and non-Gaussianity FNL. This plot assumes a log-normal curvature power spectrum centered at k * that is characterised by a width σ = 0.4.
+
+In accordance with Refs. [317, [321] [322] [323] [324] , the higher-order terms in (A1) can be expressed as
+
+and
+
+The time-averaged integrated transfer functions J(u, v) were derived in Refs. [269, 270, 317, 321, 324] , and are J(s i , t i )J(s j , t j ) = 9 8
+
+s 2 j t 2 i + s 2 i -6 t 2 j + s 2 j -6 (t 2 is 2 i ) 3 t 2 js 2 j 3 t 2 i + s 2 i -6 ln t 2 i -3 3s 2 i -2 t 2 is 2 i t 2 j + s 2 j -6 ln t 2 j -3 3s 2 j -2 t 2 js 2 j + π 2 Θ t i -√ 3 Θ t j -√ 3 t 2 i + s 2 i -6 t 2 j + s 2 j -6 .
+
+Assuming a log-normal curvature power spectrum of the form (27) , as done in Section III D, we can compute the different contributions to the SGWB, factoring out the overall scaling with the spectral amplitude A and the non-linear parameter F NL , as shown in Fig. 18 . The presence of higher-order corrections to the SIGW spectrum could be inferred from a modulation of the peak close to k ≈ k * , if the combination AF 2 NL is sufficiently large. On the other hand, the shape of the low-frequency tail at k ≪ k * is maintained, i.e.,
+
+where Ã and k = O(k * ) are parameters that depend mildly on the shape of the curvature power spectrum.
+
+[7.5, 8.9] -
+
+-0 .5 log 10 A [-1.5, -0.55] 0 .6 1 .2 1 .8 2 .4 3 .0 ∆ [0.2, 2] 6 .4 7 .2 8 .0 8 .8 9 .6 log 10 (k * /Mpc -1 ) -8 -4 0 4 8 FNL -2 .0 -1 .5 -1 .0 -0 .5 log 10 A 0 .6 1 .2 1 .8 2 .4 3 .0 ∆ -8 -4 0 4 8 FNL [-10, 10] [0.24, 0.77] 1 .5 3 .0 4 .5 6 .0 α [1.4, 4.2] 8 1 6 2 4 3 2 fref/nHz [13, 31] 6 .4 7 .2 8 .0 8 .8 9 .6 log 10 (k * /Mpc -1 ) [7.7, 10] -2 .4 -1 .8 -1 .2 -0 .6 log 10 A [-3, -1.4] 0 .6 1 .2 1 .8 2 .4 3 .0 ∆ [0.2, 3.2] 0 .2 0 .4 0 .6 0 .8 pBH -8 -4 0 4 8 FNL 1 .5 3 .0 4 .5 6 .0 α 8 1 6 2 4 3 2 fref/nHz 6 .4 7 .2 8 .0 8 .8 9 .6 log 10 (k * /Mpc -1 ) -2 .4 -1 .8 -1 .2 -0 .6 log 10 A 0 .6 1 .2 1 .8 2 .4 3 .0 ∆ -8 -4 0 4 8 FNL [-10, 10] As the PTA observations could only be compatible with the infra-red tail of a SIGW, due to the preference for a positive tilt of the spectrum, we conclude that higher-order corrections do not affect significantly the results presented in the main text, while, in full generality, current GW observations are not able to break the degeneracy in the (A, F 2 NL ) plane. As a by-product of our analysis, at odds with the claim in Refs. [65, 89] , we conclude that current data are not able to constrain the presence of non-Gaussianities at PTA scales, beyond the reach of large-scale structure and CMB probes. This is because large values of F NL remain possible, provided the curvature power spectral amplitude is sufficiently small. This is confirmed by the posterior distributions shown in Fig. 19 , where we report results for
+
+
+================================================================================
+ACKNOWLEDGMENTS
+================================================================================
+
+The work of J.E. was supported by the United Kingdom STFC Grants ST/T000759/1 and ST/T00679X/1 . G.F. acknowledges the financial support provided under the European Union's H2020  ERC, Starting Grant agreement no. DarkGRA-757480 and under the MIUR PRIN programme , and support from the Amaldi Research Center funded by the MIUR program " Dipartimento di Eccellenza " (CUP: B81I18001170001 ). This work was supported by the EU  Horizon 2020 Research and Innovation Programme under the Marie Sklodowska-Curie Grant Agreement No. 101007855 and additional financial support provided by " Progetti per Avvio alla Ricerca -Tipo 2 ", protocol number AR2221816C515921 . M.L. acknowledges the financial support provided by the Polish Returns Programme under agreement PPN/PPO/2020/1/00013/U/00001 and the Polish National Science Center grant 2018/31/D/ST2/02048 . The work of G.H., V.V. and H.V. was supported by the European Regional Development Fund through the CoE program grant TK133 and by the Estonian Research Council grants PRG803 and PSG869 . The work of V.V. has been partially supported by the European Union 's Horizon Europe research and innovation program under the Marie Sk lodowska-Curie grant agreement No. 101065736 . A.J.I. acknowledges the financial support provided under the " Progetti per Avvio alla Ricerca Tipo 1 ", protocol number AR12218167D66D36 , and the " Progetti di mobilità di studenti di dottorato di ricerca ". non-Gaussian SIGW-only fits (left panel) and for non-Gaussian SIGWs together with SMBH binaries (right panel). In both panels, the posterior distribution for F NL is flat over the entire prior range.
+
+
+================================================================================
+Appendix A: Second-order induced gravitational waves with non-Gaussianities
+================================================================================
+
+We summarize here the formulas used to compute the spectrum of SIGWs when non-Gaussianities are included, referring the reader to Refs. [314] [315] [316] [317] [318] [319] [320] [321] for more details. We assume that the curvature perturbation can be written in terms of its Gaussian component, as
+
+The non-linear parameter is often normalised as F NL = (3/5)f NL . The higher-order corrections to the GW power spectrum can then be written as
+
+where each contribution scales as
+
+n and the first order is given in Eq. ( 26 ). The energydensity fraction spectrum of SIGW at the current epoch is then given by Eq. ( 9 ).
+
+
+================================================================================
+-1
+================================================================================
+
+10 0 10
+

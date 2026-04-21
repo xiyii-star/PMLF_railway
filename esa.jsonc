@@ -1,0 +1,8 @@
+{
+  "name": "evonarrator-web",
+  "assets": {
+    "directory": "./frontend/out",
+    "notFoundStrategy": "singlePageApplication"
+  }
+}
+  

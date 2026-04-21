@@ -1,0 +1,456 @@
+
+================================================================================
+Title
+================================================================================
+
+Two-Dimensional Tail-Biting Convolutional Codes
+
+
+================================================================================
+Abstract
+================================================================================
+
+The multidimensional convolutional codes are an extension of the notion of convolutional codes (CCs) to several dimensions of time. This paper explores the class of twodimensional convolutional codes (2D CCs) and 2D tail-biting convolutional codes (2D TBCCs ), in particular, from several aspects. First, we derive several basic algebraic properties of these codes, applying algebraic methods in order to find bijective encoders, create parity check matrices and to inverse encoders. Next, we discuss the minimum distance and weight distribution properties of these codes. Extending an existing tree-search algorithm to two dimensions, we apply it to find codes with high minimum distance. Word-error probability asymptotes for sample codes are given and compared with other codes. The results of this approach suggest that 2D TBCCs can perform better than comparable 1D TBCCs or other codes. We then present several novel iterative suboptimal algorithms for soft decoding 2D CCs, which are based on belief propagation. Two main approaches to decoding are considered. We first focus on a decoder which extends the concept of trellis decoding to two dimensions. Second, we investigate algorithms which use the code's parity check matrices. We apply conventional BP in the parity domain, but improve it with a novel modification. Next, we test the generalized belief propagation (GBP) algorithm. Performance results are presented and compared with optimum decoding techniques and bounds. The results show that our suboptimal algorithms achieve respectable results, in some cases coming as close as 0.2dB from optimal (maximumlikelihood) decoding. However for some of the codes there is still a large gap from the optimal decoder.
+
+
+================================================================================
+I. INTRODUCTION
+================================================================================
+
+The class of two-dimensional convolutional codes (2D CCs) and 2D tail-biting convolutional codes (2D TBCCs ), in particular, is a little-researched subject in coding theory. This fact is partly due to the difficulties entailed in representing, encoding and decoding these codes, and partly due to the existence of efficient coding methods (Turbo codes, LDPC codes), which have attracted the interest of researchers in recent years. Nonetheless, 2D CCs are interesting from several aspects. Firstly, these codes generalize the notion of convolutional codes (CCs) in a non-trivial manner, which allows us to broaden the theory behind CCs in general. Secondly, since little research exists in this field, the encoding properties of 2D CCs are largely unknown. Researching these codes will allow us to determine if they have suitable applications, for example, for encoding 2D data (such as images), and as medium size regular error correcting codes.
+
+Multidimensional convolutional codes (m-D CCs, where m stands for the dimension) extend the notion of 1D CCs [1] to m-D information sequences and generator polynomials. However, in contrast to the one-dimensional case, little research has been done in the field of m-D CCs. Significantly, Foransini and Valcher [2] and Weiner [3] have laid out the algebraic theory for m-D CCs. Lobo et al. [4] have also investigated the subject, concentrating on a sub-family of these codes dubbed "Locally Invertible m-D CCs". Charoenlarpnopparut et al., [5] also contributed to the field by suggesting a method for realizing a 2D CC encoder, and constructing its parity check matrix .
+
+Despite the progress made in the field by the above authors and other researchers, the subject of m-D CCs still contains many open problems. These problems include: optimal design of m-D CCs for specific applications, and the lack of a design procedure; efficient realization of encoders and decoders; and the study of the performance of these codes. Of these problems, two especially stand out: a) What is the encoding power of m-D CCs? and b) How to efficiently decode m-D CCs? These two problems are the main concern of this paper.
+
+In order to limit the scope of the problem, we chose to focus particularly on 2D tail-biting CCs (2D TBCCs). Tail-biting [1] is a well-known technique to efficiently convert CCs into block codes. By using a cyclic convolution operation rather than the linear convolution used by "normal" CCs, two benefits are gained: First, the overhead incurred by the linear convolution (the so-called "tail") is avoided, and thus fewer code bits need to be transmitted for the same coding gain. Second, the cyclic convolution induces invariance to shifts of the codeword, which ensures that all code bits enjoy equal protection (whereas in linear convolution code, bits near the "tail" enjoy a lesser degree of protection).
+
+Of the papers cited above, none deals directly with m-D TBCCs. In this paper we extend the notion of tail biting codes to m-D CCs, and derive some algebraic properties for them focusing on rate 1/n codes. We show: how to test whether an encoder is bijective; how to test whether it has a polynomial inverse; and how to construct a polynomial inverse matrix and a parity check matrix in case such matrices exist. By construction, 2D TBCCs are cyclic in 2D if every n-tuple of outputs is considered as a single code symbol. In addition, it is easy to show that 2D TBCCs are quasi-cyclic in 1D for certain orderings of the 2D sequence in 1D. Then we use a tree-search algorithm to find the distance properties of some sample codes, and compare the implied asymptotic performance with comparable codes.
+
+As for decoding m-D CCs, Marrow and Wolf [6] have shown that the existing Viterbi algorithm can be extended to decode two dimensional ISI by transforming the problem to a 1D code, this can be extended to m-D CCs. However, the complexity of the algorithm then becomes exponential with the size of the encoded word. This is very undesirable. Weiner [3] and Lobo [4] proposed hard-decision algorithms, for some sub-families of 2D CC but do not give performance results.
+
+In this paper we take a different approach. Like other codes, 2D TBCCs can be described using factor graphs [7] , [8] . We discuss two options for creating such a graph. The first construction is carried out in the information sequence domain, and resembles the trellis construction commonly used to decode 1D CCs. Unfortunately, the two dimensional trellis lacks the Markov property essential to the operation of the Viterbi algorithm, thus applying the BP on this graphs leads to a suboptimal algorithm. The second construction is based on the Tanner graph of the code, similar to the decoders used for LDPC codes [9] , [10] . LDPC codes are commonly decoded using the loopy belief propagation (LBP) algorithm, which relies on the fact that the Tanner graph of these codes has few short loops. In such a case, the graph is sufficiently close to a tree, so the LBP algorithm effectively approximates the maximum likelihood (ML) decoding algorithm. Contrary to LDPC, the Tanner graph of 2D TBCCs has many short loops. This violates the tree approximation, and therefore the LBP algorithm is not expected to perform close to the ML solution for 2D TBCCs. Nevertheless, we tested the performance of the LBP algorithm on 2D TBCCs, and in some cases it worked surprisingly well.
+
+We suggest a modification of the LBP allowing for statistical changing of check equations to improve the convergence of the LBP. Many other cases were decoded more successfully by the more advanced generalized belief propagation (GBP) [11] , [12] . The results of the GBP decoder were further improved by a new method of constructing the regions in the GBP. The gap between ML decoding and suboptimal decoding is still too high for some of the codes, suggesting a room for additional decoding algorithm research.
+
+
+================================================================================
+II. 2D TAIL-BITING CONVOLUTIONAL CODES
+================================================================================
+
+A 2D CC of rate 1/n operates by convolving a 2D information sequence u[k 1 ,k 2 ], where k j =0,1,...,N j -1, j=1,2. with a set of (typically small) 2D sequences {g i [k 1 ,k 2 ]}, i=1,2,...,n, k j =0,1,...,K j -1, j=1,2
+
+and the vectors N=(N 1, N 2 ) and K=(K 1 ,K 2 ) are called information support and kernel support respectively.
+
+For finite-support information sequences, the convolution operation has to be terminated. One option is to pad the sequence with zeros along each dimension, which results in n(N 1 +K 1 -1)(N 2 +K 2 -1)-N 1 N 2 additional coded bits, known as tail bits. This means that although the nominal code rate is 1/n, the actual code rate is smaller
+
+An illustration of this loss is shown on the left hand of Figure 1 . One way to avoid this rate loss is tail-biting, where the linear convolution operation is replaced with a cyclic convolution
+
+When using the cyclic convolution in 2D, the edges of the information sequence are "glued" together. This is similar to taking a square piece of paper, and first rolling it lengthwise to a cylinder.
+
+Then the ends of the cylinder are brought together to form a torus. This geometrical interpretation is shown in Figure 1 . This structure implies that when treating each n-tuple of outputs, called a code fragment, as one symbol, the code is insensitive to shifts in any of the two dimensions.
+
+
+================================================================================
+III. ALGEBRAIC PROPERTIES
+================================================================================
+
+In this section we derive some useful algebraic properties of 2D TBCCs, primarily following [3] and [4] . We focus on rate 1/n codes, but many results are easily extended to rate k/n codes.
+
+Under this transform, the cyclic convolution operation in eq. ( 3 ) becomes
+
+where I is the ideal generated as:
+
+Thus, all elements of the codeword v=(v 0 ,v 1 ,...,v n-1 ) belong to the quotient ring R[x,y]/I. This implies that a 2D TBCC is a module of order n over the quotient ring R[x,y]/I. We can now use the notation I to denote the ideal as above; R to denote R[x,y]; and R to denote R[x,y]/I, unless noted otherwise.
+
+If we define
+
+, then converting eq. ( 5 ) to a vector form, we can see that the 2D TBCC encoder induces a map,
+
+For the encoder to be useful, this map has to be bijective or one-to-one. That is, for any two different
+
+Since the code is linear, the above statement is equivalent to requiring .
+
+Definition: A rate 1/n encoder G(x,y) is non-degenerate iff there is no input other than u(x,y)=0 such that v(x,y)=0. Alternatively G is degenerate if there exists an input u(x,y)≠0 such that v(x,y)=0.
+
+Proposition: Let J be the ideal generated by the kernel polynomials {g 1 (x,y),…,g n (x,y)}. Then a rate 1/n tail-biting convolutional encoder G(x,y) is non-degenerate iff
+
+where I:J = { f | for gJ, f•gI }.
+
+Proof: The proposition II:J holds for any two ideals I, J. On the other hand, if G(x,y) is degenerate, then there exists fI such that f•g j I for all j=1,2,…,n. This means that for this f, f•JI.
+
+Therefore, it follows that fI:J. Hence, if G is degenerate, then I:J≠I. Inverting the statement, if
+
+
+================================================================================
+Parity Check Matrices
+================================================================================
+
+We first consider the concept of parity check matrices, and their application to the decoding of codes.
+
+Definition: A parity check matrix H(x,y) for a generator matrix G(x,y) of a code C satisfies the following condition: for any n-tuple of polynomials v(x,y)=[v 1 (x,y),…,v n (x,y)], v(x,y)H T (x,y)=0 iff v is a valid codeword of C.
+
+A corollary of this definition is the well known identity: G•H T =0.
+
+Proposition: If (g 1 (x,y),…,g n (x,y)) have no common divisors except for units, then G(x,y) has a parity check matrix   1 nn  H(x,y) of the form,
+
+Proof: Let u(x,y)R/I and v(x,y)=u(x,y)G(x,y). Then by construction of H(x,y):
+
+On the other hand, let vIm{G} and suppose that v•H=0. Then, for g 1 , g j , j=2,...,n we have, v 1 g j + v j g 1 =0. We can write v i as v i =g i u+r i . Where r i does not divide g i then, . Now, since g 1 and g j are polynomials and r j does not divide g j , then r 1 /r j must be a polynomial, which means that g 1 |g j , which contradicts the assumption that g 1 and g j have no common divisors except for units. Therefore vIm{G}■ A more general procedure for constructing parity check matrices for codes of rate k/n is given in [5] , which uses Groebner bases.
+
+
+================================================================================
+Inverse Encoders
+================================================================================
+
+A decoder can be split conceptually into two parts: (a) a codeword estimator which produces an estimate v of the codeword v, followed by (b) a pseudo-inverse encoder that recovers the input estimate û from v .
+
+Definition: A matrix G # (x,y)=[q 1 (x,y),...,q n (x,y)] in R which satisfies
+
+is said to be a pseudo-inverse encoder of G(x,y).
+
+In the case where α=β=0, G # is a true inverse encoder (û=u), while for α,β≠0, G # is a pseudoinverse encoder (û=x α y β u). In general, G # may consist of rational functions (i.e., quotients of polynomials). While the pseudo-inverse in R can also be used in , the converse is not always true.
+
+The following proposition sets a criterion to determine whether there exists a polynomial G # for a given encoder:
+
+Proposition: A rate 1/n convolutional encoder has a polynomial pseudo-inverse encoder G # (x,y) in R iff the ideal g 1 ,g 2 ,...,g n  contains the monomial x α •y β , since this means that there exist polynomials {q i (x,y)}, i=1,...,n, such that (10) This gives by definition the pseudo-inverse, G # (x,y)=[q 1 (x,y), q 2 (x,y),..., q n (x,y)]. The existence of a monomial in an ideal can be easily checked by constructing the Groebner basis for the ideal and checking if it contains a monomial. While this proof is trivial, the proof of the converse is not, and is given in full in Appendix A. The polynomials {q i } are found as a by-product of the Buchberger algorithm for constructing Groebner bases, given in [6] .
+
+From now on we shall refer to an encoder which is polynomially pseudo-invertible in R simply as an invertible encoder.
+
+
+================================================================================
+IV. CODE SEARCH
+================================================================================
+
+The BEAST algorithm (bidirectional efficient algorithm for searching trees) was formulated in [14] for 1D CCs, both in their zero-terminated and tail-biting forms. The algorithm searches for all codewords with weight w. For this aim, forward and backward trees are constructed for each possible starting (and termination) state of the encoder. The trees are kept small in size, so that only paths up to a certain weight and length are stored. Then the forward and backward trees are searched for path pairs that are compatible, i.e., that the forward and backward trees terminate in the same state; their combined length is equal to the length of the information sequence; and that their combined code weight is equal to the desired weight w. By searching for w=0,1,2,… etc., the weight spectrum of the code is achieved. Knowing the weight spectrum allows us to calculate the union bound [1] , which is an upper bound on the word error probability of a maximum-likelihood decoder over the AWGN channel, where bipolar modulation is assumed R min 0 0 ( ) 2
+
+The extension of the algorithm to two dimensions is not trivial. The 1D BEAST constructs a tree of the code which consists of states and branches. In the 2D case, we shall define a concept that binds together the concepts of state and branch.
+
+Let (g 1 , g 2 ,..., g n ) be the kernel polynomials of a 2D TBCC of rate 1/n. Let the kernels have maximum support K 1 ×K 2 . Then each code fragment at position (k 1 , k 2 ), v[k 1 ,k 2 ] is uniquely determined by K 1 ×K 2 information bits out of the sequence u which we call a constraint region.  Let us now define compatibility between two constraint regions in a certain direction if they contain the same bits in their overlap region. Here and in the rest of this paper, we will assume modulo N j in all index calculations.
+
+Definition: Let R 1 ={r 1 (k 1 ,k 2 )} and R 2 ={r 2 (k 1 ,k 2 )} be two constraint regions, k 1 =0,...,K 1 -1,
+
+A path in the 2D trellis is defined by a set of adjacent compatible constraint regions. To construct a forward path in a 2D trellis is a path we start with the constraint region r(0,0) and proceed in a downthen-right fashion. That is, we advance first in the down direction by laying a sequence of downcompatible regions r(1,0), r(2,0),..., r(N 1 -1,0). Once the last row has been reached, we go back to row 0 and advance in the right direction and lay region r(0,1). We then continue in the down direction, laying regions that are down-compatible and right-compatible with previous regions.
+
+To construct a backward path in the 2D trellis, we start with the constraint region r(N 1 -1, N 2 -1) and proceed in the same manner as with the forward path, except that we advance in an up-then-left fashion. That is, we lay up-compatible regions until the first row has been reached. We then wrap around, perform one step left, and continue in the up direction.
+
+The length of the path is simply the number of constraint regions it contains. The weight of the path is the sum of the weights of all code fragments associated with the path"s constraint regions. A pair of forward and backward paths are compatible with each other if: a. The sum of their lengths corresponds to the length of the information sequence. b. All the constraint regions contained along the boundary of the forward path are compatible with their corresponding regions on the boundary of the backward path (where by boundary of a path we mean the bits at the fringes of the path).
+
+The 2D BEAST algorithm is now defined in the same way as the 1D algorithm, except that states are replaced with constraint regions and that forward and backward paths must now be compatible along their entire mutual borders, rather than terminate in the same state as in the 1D case.
+
+An example of the 2D BEAST algorithm is shown in Figure 2 for a 2D TBCC with kernel support 2x2 over information support 6x6. Diagrams (a)-(c) show the construction of the forward tree. We start by overlaying the kernel on the top-left corner of the information sequence. We then grow the paths by sliding the kernel down. Since there are four possible compatible regions, our forward tree now contains four possible paths. We continue sliding the kernel down, growing the tree, until we reach the last row of the sequence. We then wrap around to the top (b), and slide the kernel right. If there is still at least one path that has not exceeded the allowed weight, we can then continue sliding the kernel down. In this example, we show a forward path that exceeds the allowed weight and is terminated in (c). Diagrams (d)-(f) show the construction of the backward tree. This time we start at the bottom-right corner (d) and slide up, until the first row is reached, and then left (c) and up again. The backward path terminates in diagram (f). In Diagram (g) we show the overlapping between the forward and backward paths. The paths have to be compatible, so their overlapping bits are the same. They also have to satisfy the boundary conditions (not shown) imposed by the tail-biting: The leftmost and rightmost columns must be the same as the topmost and bottommost rows. If a pair of paths satisfies all these conditions, we can list its combined weight w as a valid codeword of weight w.
+
+The problem with this formulation of the algorithm is that the search for compatible pairs of forward-backward paths can be quite cumbersome, since paths are not binned according to their starting state (as opposed to the formulation in the 1D case, where forward and backward paths start and terminate respectively, at the same state). However, the search can be reduced if each path that is constructed is also binned according to its "initial state", which is determined by the K 2 -1 leftmost columns for a forward column path and the K 2 -1 rightmost column for a backward path. A pair of compatible forward and backward paths must have the same initial state due to the cyclic convolution. Therefore, we do not need to check for compatibility forward and backward paths which have different initial states, and pairs of potentially compatible paths can be binned according to their initial state in order to speed up the search for compatible pairs. From a complexity point of view, there is no difference between the 2D and the 1D cases. In each step the tree is appended with two new branches, and then trimmed to a desired size. In fact, the complexity required in order to build the forward and backward trees is about the same if we take 1D TBCC and 2D TBCC and is only marginally dependent on the constraint size.
+
+V.
+
+
+================================================================================
+CODE SEARCH RESULTS
+================================================================================
+
+We used the results presented above to search for 2D TBCCs with high minimum distance over various information sequence sizes. As an example, we present results for the search of codes with kernel supports K=2×2 and K=3×3 over information sequences with support N=6×6. The code search was carried out in two parts:
+
+First, a CoCoA [6] program was used to find all non-degenerate codes of rate ½ with a given kernel support. The codes were further categorized as invertible or non-invertible.
+
+Next, the BEAST algorithm was applied to the list of non-degenerate codes in order to find the first few elements of the weight distribution of each code. We use the resulting weight distributions to produce union bound asymptotes for the codes.
+
+In Table I we list the codes with the largest minimum distance found with K=(2,2), along with their inverse encoders. Code #1 is considered to be the best of all the codes, since it has the largest minimum distance (d min ) and the fewest number of words whose weight equals d min . This code is also invertible. Code #2 is the second best code, having the same d min =6, but with a higher multiplicity.
+
+Code #3 is the best systematic code. The union bound asymptotes for these codes are plotted in Figure 3 .
+
+In Table II we list the best codes found with K=3×3. Code #4, the best of all the codes, is not invertible. Code #5 is the best invertible code, having the same d min =12, but with a higher multiplicity.
+
+And code #6 is the best systematic code. The union bound asymptotes for these codes are plotted in Figure 4 . In Table III we give for comparison the weight spectrum of two 1D CCs of rate ½ and k=36:
+
+A. 1D TBCC with generators (13, 17) . This code has K=4, and d min =6.
+
+B. 1D TBCC with generators (561,753). This code has K=9, and d min =12.
+
+These codes are the best known 1D CCs under the restrictions of rate and constraint size [1] . Before we compare the spectrums of the 1D TBCCs with the 2D TBCCs, we wish to stress that it is hard to establish a solid basis for this comparison. One possible basis is the memory size, the 1D equivalent to the region that is to be multiplied with the kernel. Using this criterion, code A is to be compared to the 2x2 codes and code B to the 3x3 code. One can see from Table III that the 2D-TBCC codes have fewer words with minimum weight, which translates to better performance. This criterion, however is valid when considering structural properties but not when considering practical decoding complexity.
+
+While the 1D codes has decoding algorithm with complexity exponential with the memory size, the decoding complexity of the 2D codes is dependent on the decoding algorithm used, and in the best case (the LBP) is linear in the memory size. When comparing decoding complexities, the LBP decoding of the 3x3 codes is approximately similar to the decoding complexity of code A and much lower than the complexity of code B. Then, even our suboptimal decoding algorithm on code #6 can win the performance of code A with approximately the same complexity. Considering further improvements to the decoding algorithm possible, we believe that the 2D codes will be much better than the 1D codes for same complexity.
+
+The codes are also compared to the sphere packing lower bound (SPLB) of codes with k=36, n=72.
+
+This lower bound is given by
+
+Taking Word error rate (WER) of P W =10 -3 as the reference point, it can be seen that for K=2×2 the best code is ~1.4 dB and that the best systematic code is ~2.5dB away from SPLB. For K=3×3, the best code found is only ~0.31dB away from the bound, while the best invertible code is ~0.34dB and ~0.35dB away. The best systematic code has d min =8, and is ~0.64 dB from the SPLB at P w =10 -3 . However this gap increases for lower P w because of its smaller minimum distance.
+
+TABLE I. BEST CODES WITH K=2×2 OVER N=6×6 # Encoder Kernels Inverse Kernels d min A(d min +i) g 1 g 2 q 1 q 2 i=0 i=1 i=2 i=3 i=4 1 1 1 1 0 1 1 1 1 1 1 6 12 36 72 180 396 2 1 1 1 0 1 0 1 1 1 1 1 0 6 48 0 306 0 1440 3 1 0 0 0 1 1 1 1 1 0 5 36 84 72 180 504 TABLE II. BEST CODES WITH K=3×3 OVER N=6×6 # Encoder Kernels Inverse Kernels d min A(d min +i) g 1 g 2 q 1 q 2 i=0 i=1 i=2 i=3 i=4 4 110 110 001 N/A N/A 12 78 1116 4158 17016 60777 5 111 100 010 101 110 111 111 101 110 110 011 12 276 504 5382 13752 66987 6 100 000 000 1 0 8 36 0 288 0 1812 TABLE III. BEST 1D CCS WITH COMPARABLE CONSTRAINT SIZE Constraint size Encoder Kernels d min A(d min +i) g 1 g 2 i=0 i=1 i=2 i=3 i=4 4 13 17 6 36 108 180 396 900 9 561 753 12 648 0 8532 0 117351  VI.
+
+
+================================================================================
+INFORMATION PLANE DECODING
+================================================================================
+
+In this section we describe decoders that try to directly retrieve the original information word without trying to first reconstruct the codeword.
+
+
+================================================================================
+A. Optimal Decoding
+================================================================================
+
+The problem of optimal decoding of a 2D CC using a maximum-a-posteriori probability (MAP) or maximum likelihood (ML) criterion can be reduced to the problem of decoding a 1D CC over GF N (2).
+
+Optimal decoding (MAP or ML) of a 1D CC memory length K can be achieved with a trellis with 2 K-1 states, irrespective of the input data block length. Both the BCJR and Viterbi algorithms rely on the fact that 1D CC is a causal Markov process, where the conditioning on a single trellis stage effectively separates past and future events.
+
+In the 2D case, there is no immediate notion of causality, and we must condition on a bounding strip (B)
+
+to create two conditionally independent regions (A,C) such that P(A,C|B) = P(A|B)P(C|B). One convenient division is shown in Figure 5 .
+
+
+================================================================================
+Figure 5. Division of 2D plane to conditionally independent regions
+================================================================================
+
+Using this division, we can reduce the 2D CC decoding problem to a 1D CC decoding problem by taking each column (row) of the input sequence to be a single input to an equivalent 1D CC encoder, with memory consisting of the K 2 -1 previous columns. Thus, a single input to the encoder consists of bits (where k is the length of the information sequence), and the memory of the encoder consists of We can choose to decode along columns or rows in order to minimize the trellis complexity.
+
+Since the code is tail-biting, in order to achieve true optimal decoding, the Viterbi algorithm has to be activated 1 2 1 2 )N -k(K times, once for each possible starting / termination state. Then the optimal codeword is selected from the 1 2 1 2 )N -k(K outputs. All this makes optimal decoding very complex and inapplicable in practice except for very short codes. Thus, we must look for sub-optimal algorithms that yield an acceptable performance.
+
+
+================================================================================
+B. 2D-Trellis Decoder
+================================================================================
+
+The BCJR and max-log-map algorithms were shown in [7] , [8] to be respectively equivalent to the sumproduct and minimum-sum variants of the loopy belief propagation (LBP) algorithm. This equivalence usually shown by constructing a factor graph where variable nodes are assigned for each encoder state, the information bits and the received channel coded bits, all of which are connected together by factor nodes that represent the trellis structure.
+
+We can construct a similar graph for a 2D TBCC, and apply belief propagation algorithms to it. The resulting algorithm is similar to the BCJR algorithm. However, where the BCJR algorithm messages are passed forward and backward (hence it is also known as the forward-backward algorithm), messages in the 2D case are passed left, right, up and down. However, the performance and even the convergence of
+
+B A C 1 2 kN
+
+the LBP algorithm over this graph are not guaranteed but depend on the properties of the code. In the 1D case the forward-backward algorithm was shown to converge to the MAP solution in the case of tailbiting code even though there is one loop in the graph [7] . For the 2D case, the graph is dense with short loops, so the algorithm is heuristic and does not guarantee convergence to the MAP solution. In fact, for some cases the algorithm fails completely, as will be explained below.
+
+We define the code compatibility function as
+
+where , . Each region r(k 1 ,k 2 ) has four immediate neighbors: r(k 1 +1, k 2 +1), r(k 1 -1, k 2 ), r(k 1 , k 2 +1), r(k 1 , k 2 -1). We also define horizontal and vertical intersection compatibility functions between two neighboring regions as
+
+) And,         otherwise 0 ) 1 , ( with compatible -right is ) , ( if 1 ) 1 , ( ), , ( 2 1 2 2 1 1 2 1 2 2 1 1
+
+where down-and right-compatibility are defined as in Section IV. We use the shorthand notation C(k 1 ,k 2 ), I H (k 1 ,k 2 ), I V (k 1 ,k 2 ) to denote the functions that operate specifically on r(k 1 ,k 2 ). A section of the resulting graph is shown in Figure 6 .
+
+Using the region graph construction from the previous section, we can formulate a message-passing algorithm based on the BP equations. This algorithm is analogous to the 1D BCJR algorithms (using sumproduct message passing), but with the following notable differences. First, the algorithm has messages propagating in four directionsup, down, left and right. We assume the receiver is given a set of corrupted code bits, where are noise samples (e.g., AWGN). We now construct the update rules according to the factor graph message passing equations [8] , which are summarized in Table IV . Table IV. 2D Trellis Message Passing Equations From To Message C(k 1 ,k 2 ) R(k 1 ,k 2 )
+
+The 2D Trellis algorithm has a complexity that is linear with the input dimensions, but exponential with the support of the kernel. Thus the number of operations per bit is of order   We now formulate a necessary (but not sufficient) condition for the convergence of the algorithm. Let us begin by analyzing the relationship between a constraint region and the code fragment associated with it. First, we break the region into two sub-regions: The intersection with a neighboring region (for example on the left)
+
+The sub-regions denoted by S correspond to the notion of a state in the 1D trellis; those denoted by T correspond to the notion of a branch in the 1D trellis. Using this notation we can re-write the messagepassing equations of the intersection nodes as,
+
+L l j i s t Z s t H s t A y s t p t s A ' ) 1 ( , ) 1 ( , 1 ) 1 ( 1 , 1 , ) ( , ) , ' ( ) , ' ( ) , ' ( ) | , ' ( ) , (
+
+The code fragment may now be represented as a combination of the sub-regions S and
+
+for i=1,2,...,n. We can write this in shorthand vector form [ ,..., ] [ ,..., ]
+
+where s is the column stack of the sub-region S, t is the column stack of sub-region T, and {g'} and {g"} are column vectors corresponding to the relevant elements of the kernels {g}.
+
+For the algorithm to work, we want to know that only some of the possible sub-regions (not all of them) are mapped to a single code fragment. Since the code is linear, we only need to check that not all possible sub-regions T or S give c=0. Assuming that c=0, then
+
+We have to impose some constraints on  G and  G to ensure good message passing.
+
+Proposal (Necessary condition for 2D message passing): Non-trivial message passing occurs in a horizontal (vertical) direction if
+
+Proof: Consider messages passed in a certain direction, for example, to the right. Assume that Im{ } Im{ }   GG . Then for every s there exists a unique t such that 0    G s G t
+
+. Now let us look at the first iteration of the algorithm, assuming the all-zero codeword has been transmitted and received correctly. The region beliefs are initialized to
+
+where the last equation follows from the fact that only a unique t satisfies Gr=0 with any s, so any nonzero value of P(r|c=0) is summed only once. Since the code is linear, the same holds also for c≠0. This means that the messages passed in the right direction are constant, which means trivial message passing.
+
+For the algorithm to perform well we require that non-trivial message passing shall occur in at least one horizontal (left or right) direction and one vertical (up or down).
+
+
+================================================================================
+VII. PARITY-CHECK DECODERS
+================================================================================
+
+An alternative approach for soft decoding is to try to estimate the transmitted codeword, and then apply an inverse encoding operation to recover the original information word. This is depicted in Figure 7 . We refer to these algorithms as BP in the parity check domain.
+
+
+================================================================================
+Figure 7. Two Stage Decoding: Decoder and Inverse Encoder
+================================================================================
+
+For systematic codes, the original information is part of the codeword itself and can be easily extracted.
+
+For non-systematic codes, a non-trivial inverse encoding has to be performed. Unfortunately, in the case of a decoding error, the inverse encoding operation magnifies the number of errors such that a single erroneous code bit may cause many erroneous information bits. Decoding in the parity check domain requires the use of a parity check matrix or syndrome formers. We limit ourselves to discussing codes of rate 1/n, for which the syndrome formers are readily available.
+
+
+================================================================================
+A. Classical Loopy Belief Propagation
+================================================================================
+
+In this approach we construct a classical bipartite Tanner graph [10] normally used for decoding LDPC.
+
+This bi-partite graph is based on the parity check matrix of the code. Given the following rate 1/n code: G(x,y)=[g 1 (x,y), g 2 (x,y),…, g n (x,y)], one possible parity check matrix is given by equation ( 8 ). An example is shown in Figure 9 . Each square in the figure denotes a check equation and a circle denote the coded bits, empty and full for the two output bits, respectively.
+
+BP in the parity check domain is advantageous in several aspects. First, it converts the problem of decoding a 2D CC into the known Gallager BP algorithm [9] , widely used to decode LDPC codes. Next, the fact that messages are scalar LLRs instead of belief vectors reduces the amount of computations and memory required to store the messages. Finally, due to the regular structure of the graph, this decoder can be easily implemented in hardware. However, the graph constructed in this manner has many loops, and is not guaranteed to converge to the MAP/ML solution for any code.
+
+We further wish to integrate the inverse decoder into the decoder as mentioned above to reconstruct the information sequence u from the coded bits {v i }. For this purpose we create a Tanner graph of the inverse encoder matrix, and combine it with the code graph, as follows.
+
+Let us assume that the encoder has a pseudo-inverse G # (x,y), with delay
+
+Then we can write the following equation,
+
+This equation can be treated as an additional check equation and added to the Tanner graph. Note that the information nodes u can be looked at as if they were transmitted but then erased (i.e., have an initial LLR of zero). Since the erased nodes do not contribute anything to the decoding process, we do not have to incorporate equation (23) directly to the decoding network. Rather, it is more useful to use a decoding network based only on H, and construct a separate inverter network based on G # . The decoding network H receives corrupted LLRs at its input, and produces improved LLRs at its output. These improved LLRs are fed to the inverter network G # , where single belief propagation iteration acts as an optimal "soft combiner" of code bit LLRs, to produce information bit LLRs.
+
+From a complexity point of view, the LBP algorithm has a relatively low computational complexity.
+
+The number of operations is linear with the dimensions of the input, and polynomial with weight of the kernel matrix. Let
+
+be the combined weight of the generator polynomials.
+
+The graph has   2
+
+and 2 1 N nN variable nodes. The complexity is governed by the check nodes, with each check node connected to   g wt variable nodes. Therefore a check node is required to compute       1  g wt g wt messages at each iteration. Thus the complexity per information bit is     g wt O 2 . Note that by construction   12 wt g nK K  .
+
+
+================================================================================
+B. Modified Loopy Belief Propagation
+================================================================================
+
+The problem with the LBP is that in many cases the algorithm does not converge into a legal codeword.
+
+Therefore, we modified the algorithm to continue its search; relying on the fact that more than one syndrome former exists for each code. Let  
+
+x, y / z R I  be an arbitrary polynomial then 21 31 1 00 0 ( , ) 0
+
+is a syndrome former. Thus, we can easily create few syndrome formers ( , )
+
+convolving the original kernels with some small matrices  
+
+x, y k z such that the weight of the result will be low (see Example 1) . Then, we run the loopy BP with one change (see pseudo code below): if after some constant number of iterations the algorithm has not converged into a legal codeword, then we randomly replace a fraction of the rows of the current syndrome former with rows taken from one of ( , )   k xy H . We then let the algorithm continue with this new syndrome former, by initializing the messages related to the non-deleted rows with the messages from the previous iteration and initializing the new rows with the original LLR's received from the channel. If after a fixed number of steps the algorithm has not converged, we restart the algorithm with another randomly chosen syndrome former and the original LLR's. This random matrix is generated by mixing rows from all ( , )   k xy H
+
+. The modified LBP has often resulted in a much better performance compared to the LBP. As from a complexity point of view, the complexity is about the same as the LBP, and the average number of iterations is close to 1 in high SNR.
+
+This method of improving the LBP cannot be used for standard LDPC unless there is a method to create few parity check matrices that are as sparse as the original one.
+
+Example 1: Let us consider the following 2×2 code over 6×6 sequences
+
+The syndrome former is
+
+We choose   k z to be those generating the three lowest weight error pattern, weights 7,8,8 (see below).
+
+code for Modified LBP: Input: LLR from the channel  Let , i.e. the size of the resulting parity check matrix  Create , the matrix version of , where  For p=1:P(number of outer iterations)  = random T-ary vector of length R  o where c is the decoded output (at the current iteration) and is a matrix of messages from variables to checks: o For q=1:Q (number of inner iterations)  If  Output c  Else o ={1 in prob. p, 0 in prob. (1-p)}, o =( + ) mod T o o For i=0:R-1  If =1 and for each j s.t.   End if o End loop   End if o End inner loop  End outer loop
+
+
+================================================================================
+C. Generalized Belief Propagation
+================================================================================
+
+Generalized belief propagation [11] - [12] seeks to avoid the problems caused by loops in the graph by grouping nodes together into regions, and passing messages between these regions rather than individual nodes. The first stage of the algorithm is to construct a valid region graph, where a region is some subset of the factor graph containing variables and check nodes. We have followed the Kikuchi approximation construction described in [11] , with a modification that will be explained below.
+
+The standard Kikuchi approximation begins by defining the set of large regions in the graph, from which intersections will be constructed. A large region is defined to contain all variable nodes (which correspond to code bits) that are connected to a single factor node (the parity check equation in which the code bits participate). Denote the set of large regions as 1  , and this is layer 1 in the algorithm. The rest of the groups of regions in the next layers are defined recursively. The group of regions i  of the i"th layer is composed of all the intersections between the regions in 1 i  . This process continues until no more new intersections can be found.
+
+We have found that this construction performs very poorly in some cases, and in order to improve robustness we have introduced the following modification. After all the intersections have been found as above, we form more intersections between nodes of different layers, i.e., we allow the formation of new intersections from the entire set of existing regions However, we do not allow intersections to form between a region and any of its ancestors.
+
+The next example demonstrates the different constructions on a 2D TBCC.
+
+Example: Let us consider the following 2×2 code over 4×4 sequences  
+
+The syndrome former is
+
+We number the variable nodes (code bits) of the codeword from 0 to 31. According to the connectivity between variable and check nodes, we can form the following 16 large regions (represented as sets of The large regions will form the top layer of the region graph. From these regions we can form the following 16 intersection regions, which will form the middle layer of the region graph:
+
+R 16 =R 0 ∩R 7 ={3,19} R 20 =R 2 ∩R 5 ={1,17} R 24 =R 4 ∩R 11 ={7,23} R 28 =R 8 ∩R 15 ={11,27} R 17 =R 0 ∩R 13 ={12,28} R 21 =R 2 ∩R 15 ={14,30} R 25 =R 4 ∩R 8 ={4,20} R 29 = R 9 ∩R 12 ={8,24} R 18 =R 1 ∩R 4 ={0,16} R 22 =R 3 ∩R 6 ={2,18} R 26 =R 6 ∩R 9 ={5,21} R 30 =R 10 ∩R 13 ={9,25} R 19 =R 1 ∩R 14 ={13,29} R 23 =R 3 ∩R 12 ={15,31} R 27 =R 7 ∩R 10 ={6,22} R 31 =R 11 ∩R 14 ={10,26} The original construction would terminate here, since there are no new intersections to be found in the last layer! Construction II would continue by attaching a pair of single variable regions to each of the regions found in layer 2. However, the modified construction goes on to form a third layer in which we have 16 small regions, composed of single variable nodes, and formed by intersections of nodes from layer 1 and layer 2: R 32 =R 18 ∩R 0 ={0} R 36 =R 25 ∩R 5 ={4} R 40 =R 29 ∩R 8 ={8} R 44 =R 17 ∩R 13 ={12} R 33 =R 20 ∩R 1 ={1} R 37 =R 26 ∩R 5 ={5} R 41 =R 30 ∩R 9 ={9} R 45 =R 19 ∩R 13 ={13} R 34 =R 22 ∩R 2 ={2} R 38 =R 27 ∩R 6 ={6} R 42 =R 31 ∩R 10 ={10} R 46 =R 21 ∩R 14 ={14} R 35 =R 16 ∩R 3 ={3} R 39 =R 24 ∩R 7 ={7} R 43 =R 28 ∩R 11 ={11} R 47 =R 23 ∩R 15 ={15}
+
+Note that there are no single-variable regions that contain variable nodes 16 to 31.
+
+In Figure 8 the nine central largest regions of this graph are shown (the tail biting regions are omitted for clarity). It can be seen that for each region the two bottom left variable nodes coincide with the two top right variable nodes of an adjacent region. These intersections form the middle layer of the graph.
+
+A part of the resulting region graph is shown in Figure 9 . The "ancestry" of the variable nodes that are members of the central region is shown. The regions and connections that result from the modified construction are shown in a dashed line.
+
+0 16 1 17 2 18 3 19 4 20 5 21 6 22 7 23 8 24 9 25 10 26 11 27 12 28 13 29 14 30 15 31 6 10 9 {6,22} {9,25} {10,26} {6,9,10,22,25} {3,6,7,19,22} {9,12,13,25,28} {7,10,11,23,26} {10,13,14,26,29} {2,5,6,18,21} {5,8,9,21,24} R 38 R 41 R 42 R 31 R 30 R 27 R 6 R 7 R 10 R 13 R 9 R 11 R 14 Figure 9. Part of a GBP region graph of a 2D TBCC
+
+Having defined the region graph, we are now ready to apply the GBP algorithm that operates over it.
+
+We chose to use the variant named "Two-Way Algorithm" in [12] , which is called this way since in this algorithm messages are passed both from parent regions to their children and from children to their parents.
+
+The complexity of the GBP algorithm is governed by the size of its largest region. This region contains This is still better than the 2D trellis decoder which has complexity that is exponential with the size of the kernels, which is obviously larger than their weight. Of course GBP has also lower complexity than the Viterbi algorithm.
+
+
+================================================================================
+VIII. RESULTS
+================================================================================
+
+We have simulated the performance of the various soft decoding algorithms described above for selected codes over the AWGN channel. The simulated algorithms were: a. Viterbi algorithm, applied after reducing the problem to 1D. b. The 2D trellis algorithm described above.
+
+c. Classical loopy belief propagation (LBP), commonly used to decode LDPC codes.
+
+d. Modified LBP.
+
+e. GBP with modified graph construction as described above.
+
+We display the results for the sum-product variant of the above algorithms. However, other variants were also tested and display a similar performance. In Table V we summarize the performance of these algorithms for selected codes, and also list the codes minimum distance and inverse encoders (where they exist). The performance curves for these codes are plotted in Figure 10 to Figure 13 .
+
+The Viterbi algorithm performs very close to the union bound, and we use it as a reference point from which the degradation of the other, sub-optimal algorithms is measured. It can be seen that the different algorithms have varying degrees of success in decoding, depending on the tested code.
+
+The 2D trellis algorithm, showing a very small degradation of less than 0.5 dB, is very successful for codes with a kernel support of 2x2. For codes with a kernel support of 3x3 it maintains a degradation of around ~1.5dB. Of course, some codes are not decodable at all with the 2D trellis algorithm, as evidenced, for example, by code #3.
+
+The LBP algorithm, which usually performs much worse than the Viterbi, fails almost completely for code #2, though recovers by the modified version. However, for some codes, e.g., code #4, degradation is relatively low.
+
+Finally, the GBP algorithm also has a somewhat inconsistent behavior. While this algorithm rarely fails completely, and usually performs better than the LBP algorithm, it sometimes fails to improve upon it.
+
+In Figure 14 we display performance results of decoding of other codes, and compare them with the best results we got for our 2D TBCCs. The codes chosen for comparison are: One can see that the 2D TBCC has slightly better performance than the LDPC code, and is also slightly better than the 1D CC. Note, however, that the potential gain from using a better decoding algorithm is another 1.5dB.
+
+Table V. Performance of 2D TBCC Decoding Algorithms Encoder Kernels Inverse Kernels d min Viterbi E b /N 0 [dB] for P w =10 -3 Degradation [dB]
+
+g 1 g 2 q 1 q 2 2D-Trellis LBP Modified LBP GBP 1 1 1 1 0 1 1 1 1 1 1 6 4.25 0.36 1.96 0.20 0.40 2 1 1 1 1 1 0 0 1 0 1 1 1 1 1 1 0 1 0 1 1 12 3.35 1.74 5.30 1.40 1.67 3 1 1 0 1 1 0 0 0 1 1 0 1 1 1 1 1 1 1 N/A N/A 12 3.42 N/A 2.80 1.50 2.98 4 1 0 0 0 0 0 0 0 0 1 1 1 1 1 0 1 0 1 1 0 8 3.60 1.40 1.07 0.95 1.60 Figure 11. Code #2: Performance curves Figure 12. Code #3: Performance curves Figure 13. Code #4: Performance curves Figure 14. Comparison between different codes
+
+
+================================================================================
+IX. CONCLUSION
+================================================================================
+
+In this paper, we took a systematic approach to analyze 2D TBCCs, in order to address two of the main open problems in the field: establishing the encoding power of these codes, and finding practical decoding algorithms for them. By starting out from basic algebraic properties, we have established basic criteria to test whether a 2D TBCC encoder is non-degenerate, has a parity check matrix or is polynomiallyinvertible. These criteria give the designer of a 2D TBCC encoder the tools to determine its usefulness and to discard useless encoders. To further refine the set of useful encoders and to find the most powerful encoders within the set, we used the BEAST algorithm (extended to 2D). This enabled us to establish the coding potential of 2D TBCCs, and to conclude that they are at least as powerful, and in some cases better than codes of comparable rate and size (such as 1D CC counterparts, or block codes such as BCH and LDPC).
+
+In order to decode 2D TBCCs, we have applied several sub-optimal decoding algorithms, including conventional loopy belief propagation (LBP), modified LBP, modified generalized belief propagation (GBP), and a completely novel 2D trellis algorithm. For codes with small kernel support, most of these algorithms performed very well, and in some cases very close to the optimal decoding curve. As the kernel support increased, the performance of these sub-optimal algorithms deteriorated, but was still respectable in most cases. The LBP algorithm, which is least suited for these codes, generally displayed the worst performance, while the modified LBP, the GBP and 2D trellis algorithms were more or less consistent in their performance (0.2-0.5 dB away from the optimum for 2x2 kernels, 1-1.5 dB for 3x3 kernels). We conclude that while sub-optimal decoding algorithms can be successfully applied to 2D
+
+TBCCs, there is still room to improve the performance of these algorithms, as well as their complexity.
+
+Finally, we note that 2D CCs and TBCCs have yet to find practical application. The authors hope that the progress made in this paper will make 2D CCs and TBCCs more accessible to researchers, and further the study of this little-explored field.
+
+
+================================================================================
+ACKNOWLEDGEMENTS
+================================================================================
+
+The authors wish to thank Dr. Yaron Shani for his help with the algebraic concepts that appear in this paper, for the formulation and proof of the condition for non-degenerate encoders and for formulating the convergence condition of the 2D trellis algorithm. The authors further wish to thank Mr. Nadav Basson for his assistance in improving the paper.
+
+
+================================================================================
+APPENDIX A
+================================================================================
+
+In this appendix we prove that if an ideal I contains a monomial x α = x 1 α1 x 2 α2... x n αn (where x α is the monomial of minimal degree in the ideal), then the reduced Gröbner basis (RGB) of the ideal contains the monomial x α .
+
+Let us first consider some elementary properties of Groebner bases:
+
+1) Given an ideal I  k[x] and a monomial order >, the ideal of leading terms is the monomial ideal
+
+Explanation: A leading term LT(f) of a polynomial f is the term with the highest degree in f. The ideal LT(I) is the set of the leading terms of all polynomials in I.
+
+Explanation: The leading terms of the elements of G, span the ideal of leading terms of I. Additionally, G is a basis of I, which means the elements of g also span I.
+
+3) For every f  I, LT(f) divides by LT(g) of one element in G.
+
+a) LT(g) divides no term of any element of G\{g}.
+
+b) The leading coefficient of g, LC(g) = 1.
+
+5) Every ideal has a unique reduced Gröbner basis under >.
+
+6) If G is a Gröbner basis of I, then every f  I has a unique representation using G.
+
+Explanation: if we divide f by G using the long division algorithm then: a) the remainder is zero b) the quotients are the same regardless of the order of elements in G.
+
+We shall now use these properties in the complete proof. Let G be a reduced Gröbner basis of I and let
+
+x α be the monomial with smallest degree in I. Then from (3) it follows that x α divides by some the leading term element of G, which we denote by g 1 . From (4a) it follows that LT(g 1 ) divides no term of g i , where i≠1, and also that LC(g 1 )=1. Since x α is of minimal degree, it follows that LT(g 1 )= x α .
+
+Now assume that g 1 ≠ x α . Then we can write g 1 = x α +g 1 . Since G is a basis of I, it follows that there exist
+
+Switching sides, and adding and subtracting g 1
+
+And so we get
+
+Therefore from (6), g 1 has a unique representation using G. Since the leading term of g 1 does not divide by the leading term of g 1 , the coefficient of g 1 must be zero and therefore, f 1 =1. However, since G is an RGB, it follows from (4a) that none of the terms of g 1 divide by any of the leading terms of g 2 ,...,g n . Therefore f 2 =...=f n =0. Thus, g 1 =0, and g 1 = x α 
+

@@ -1,0 +1,129 @@
+
+# ============================================================================
+# 核心配置 - Pipeline 使用
+# ============================================================================
+
+# 滚雪球检索配置（高级检索模式 - 完整8步法）
+snowball:
+  enabled: true                     # 是否启用滚雪球检索（完整8步法）
+
+  # 种子检索策略配置
+  use_arxiv_seeds: true             # 是否使用arXiv优先种子检索策略（推荐）
+                                    # true: arXiv Categories + 关键词 -> OpenAlex映射 -> Concept验证
+                                    # false: 直接在OpenAlex搜索（传统模式）
+
+  seed_count: 1                 # 基石种子论文数量（建议5-15篇）
+  citations_per_seed: 2           # 每个种子选取的引用论文数（正向滚雪球）
+  references_per_seed: 2          # 每个种子选取的参考文献数（反向滚雪球）
+  recent_count: 5                  # 最新SOTA论文数量
+  recent_months: 12                 # 最新论文回溯月数（步骤7使用）
+
+  # 搜索关键词（可选，为空则不使用）
+  search_keywords: []               # 搜索关键词列表，例如: ["transformer", "attention", "BERT"]
+                                    # 空列表表示不使用关键词过滤
+
+  # arXiv分类（可选，为空则不使用）
+  arxiv_categories: []              # arXiv分类过滤，例如: ["cs.CL", "cs.AI", "cs.LG"]
+                                    # 空列表表示不使用分类过滤
+
+  # arXiv种子检索配置（use_arxiv_seeds=true时生效）
+  arxiv_years_back: 30              # arXiv种子回溯年数（5年，避免太新的论文）
+  arxiv_min_relevance: 0.5          # arXiv论文最小相关性分数（0-1）
+  use_llm_query: true               # 是否使用LLM生成更好的查询
+  min_citation_count: 5             # 最小引用数过滤
+
+  # LLM语义扩展配置（use_llm_query=true时生效）
+  llm_semantic_expansion: true      # 是否启用语义扩展（两阶段查询生成）
+  expansion_max_topics: 5           # 最多扩展主题数
+  expansion_max_keywords: 10        # 最多扩展关键词数
+
+  # 共引挖掘配置（步骤5）
+  cocitation_threshold: 3           # 共引阈值（被引用N次以上才认为重要）
+  max_cocitation_papers: 20         # 最多保留多少篇共引论文
+
+  # 第二轮滚雪球配置（步骤6 - 可选）
+  # 📊 第二轮滚雪球作用:
+  #    - 增强网络密度: 从第一轮论文中继续扩展，发现更多相关论文
+  #    - 多跳传播: 捕获距离种子论文2-3跳的间接相关论文
+  #    - 受控扩展: 通过 second_round_limit 控制规模，避免爆炸式增长
+  #    - 发现隐藏联系: 找到可能被第一轮漏掉的重要论文
+  enable_second_round: true         # 是否启用第二轮滚雪球（推荐开启）
+  second_round_limit: 5             # 第二轮每篇论文最多扩展的引用数（控制规模）
+  second_round_max_papers: 50       # 第二轮最多对多少篇论文进行扩展
+
+
+# LLM增强分析配置
+llm:
+  # 是否启用LLM增强分析
+  enabled: true                     # 设置为true启用LLM
+
+  # LLM服务提供商配置
+  provider: openai                  # 支持: openai, anthropic, local
+  model: gpt-4o-2024-11-20         # 模型名称gpt-4o-2024-11-20，deepseek-v3.2，gpt-3.5-turbo，glm-4.6
+  api_key: sk-yaIAjZfRYCEQe1NtCtlDpQTATjqyUCTRoV6aTiMSXdlejv8a
+  base_url: https://api.huiyan-ai.cn/v1  # API基础URL（可选）
+
+  # LLM生成参数
+  temperature: 0.3                  # 温度参数 (0-1)，越低越确定，减少幻觉
+  max_tokens: 4096                  # 最大生成token数 (gpt-4o最大16384，设置4096足够用于论文分析)
+  timeout: 60                       # API请求超时时间（秒）
+
+  # Embedding模型配置
+  embedding_model: all-MiniLM-L6-v2  # Embedding模型名称
+  use_modelscope: true              # 使用ModelScope镜像（国内推荐）
+
+  # RAG配置
+  max_context_length: 3000          # 传递给LLM的最大上下文长度
+  prompts_dir: ./prompts            # 提示词文件夹路径
+
+# DeepPaper Multi-Agent配置 (推荐)
+deep_paper:
+  enabled: true                     # 默认使用DeepPaper Multi-Agent系统
+
+  # 版本选择
+  use_version_2: true      # 是否使用DeepPaper 2.0 (false=使用1.0版本)
+  # DeepPaper 1.0: Navigator → Extractor → Critic → Synthesizer
+  # DeepPaper 2.0: LogicAnalyst + LimitationExtractor(with CitationDetective) + FutureWorkExtractor
+
+  # DeepPaper 1.0 配置
+  max_retries: 2                    # Critic Agent最大重试次数
+  max_context_length: 3000          # LLM上下文长度
+  save_individual_reports: false    # 是否保存每篇论文的单独Markdown报告到output/deep_paper/
+
+  # DeepPaper 2.0 特殊配置
+  use_citation_analysis: true  # 是否启用引用分析(CitationDetectiveAgent)用于Limitation提取
+  # 启用后会调用OpenCitations API获取引用论文，分析真实的peer评价
+
+
+# GROBID PDF解析配置
+grobid:
+  enabled: true                     # 是否启用GROBID（高精度PDF解析）
+  url: http://localhost:8070        # GROBID服务URL
+  # 本地部署: cd grobid && ./gradlew run
+  # Docker部署: docker run -d -p 8070:8070 lfoppiano/grobid:0.8.0
+  # 检查服务: curl http://localhost:8070/api/isalive
+  # 设置enabled: false则使用PyPDF2（准确率较低60-70%）
+
+# 图谱配置
+graph:
+  max_nodes_in_viz: 500             # 可视化最大节点数
+  enable_clustering: true           # 启用聚类分析
+  min_cluster_size: 3               # 最小聚类大小
+  layout_algorithm: "spring"        # 布局算法
+
+# 深度综述生成配置 (阶段6)
+deep_survey:
+  # 基础配置
+  enabled: true                     # 是否启用深度综述生成
+
+
+# 科研创意生成配置 (阶段7)
+research_idea:
+  # 基础配置
+  enabled: true                     # 是否启用科研创意生成
+  max_ideas: 10                     # 最多生成创意数量（默认20）
+
+  # Idea评估模式配置
+  idea_evaluation_mode:
+    enabled: false                   # 是否启用Idea评估模式
+    filter_year_after: 2023         # 过滤掉该年份之后的论文（包含该年份）

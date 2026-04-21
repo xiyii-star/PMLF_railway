@@ -1,0 +1,218 @@
+
+================================================================================
+Title
+================================================================================
+
+Towards Transfer Unlearning: Empirical Evidence of Cross-Domain Bias Mitigation
+
+
+================================================================================
+Abstract
+================================================================================
+
+Large language models (LLMs) often inherit biases from vast amounts of training corpora. Traditional debiasing methods, while effective to some extent, do not completely eliminate memorized biases and toxicity in LLMs. In this paper, we study an unlearning-based approach to debiasing in LLMs by performing gradient ascent on hate speech against minority groups, i.e., minimizing the likelihood of biased or toxic content. Specifically, we propose a mask language modeling unlearning technique, which unlearns the harmful part of the text. This method enables LLMs to selectively forget and disassociate from biased and harmful content. Experimental results demonstrate the effectiveness of our approach in diminishing bias while maintaining the language modeling abilities. Surprisingly, the results also unveil an unexpected potential for cross-domain transfer unlearning: debiasing in one bias form (e.g. gender) may contribute to mitigating others (e.g. race and religion).
+
+
+================================================================================
+Introduction
+================================================================================
+
+In recent years, the natural language processing (NLP) field has experienced a transformative shift with the introduction of Large Language Models (LLMs). The remarkable capabilities of LLMs are largely attributed to scaling laws (Kaplan et al., 2020) , which suggest their capability heavily depends on the model size and training dataset size. However, training on massive corpus often results in LLMs inadvertently acquiring social biases present in their training datasets (Webster et al., 2021; Nangia et al., 2020; Nadeem et al., 2021) . Therefore, addressing these biases is crucial for the development of fair and responsible LLMs.
+
+Numerous studies have been conducted to mitigate the bias and toxicity inherent in LLMs (Zhao et al., 2018; Barikeri et al., 2021; Liang et al., 2020; Ravfogel et al., 2020; Schick et al., 2021) . However, recent studies (Meade et al., 2022) empiri-cally show that these approaches are effective in reducing bias while compromising the language modeling performance, as indicated by increased perplexity on unbiased text. Notably, existing posthoc techniques manage to retain language modeling performance, but they fail to detect more subtle and implicit toxic content.
+
+To overcome this challenge, our study explores an unlearning-based approach that makes LLMs forget biased and toxic content. By running gradient ascent on biased text, our method minimizes the likelihood of biased content while minimizing the degradation of language modeling capabilities. Our debiasing method is inspired by the successes of prior work (Chen and Yang, 2023; Jang et al., 2023) , which demonstrated the technique's efficacy in unlearning privacy-sensitive data.
+
+This study explores Mask Language Modeling (MLM) unlearning, which selectively unlearns harmful content within the text by forgetting only toxic or biased tokens. Through empirical investigation on gender-biased text, we discovered that MLM unlearning effectively reduces gender bias without significantly deteriorating language modeling performance. Furthermore, experimental results demonstrated that unlearning gender-biased text also contributes to mitigating other types of bias, such as race and religion. This finding suggests that unlearning-based methods can potentially eliminate a wide range of bias and toxicity.
+
+In summary, our contributions are twofold: we propose an unlearning-based debiasing technique that unlearns toxic content while preserving language modeling ability. We also present that our methods potentially have cross-domain applicability in mitigating bias and toxicity in LLMs.
+
+
+================================================================================
+Related Work
+================================================================================
+
+This section reviews existing debiasing techniques specifically for language models, highlighting their contributions and limitations.
+
+
+================================================================================
+Counterfactual Data Augmentation (CDA)
+================================================================================
+
+Counterfactual Data Augmentation (CDA) (Zhao et al., 2018; Barikeri et al., 2021) attempts to mitigate bias within training datasets by altering biasassociated terms, such as gender pronouns and religious identifiers. This technique generates a more balanced corpus by creating counterfactual examples, where terms indicative of bias attributes are systematically swapped to diversify representation (e.g., he/she, jews/christians/muslims). However, CDA risks erasing or misrepresenting minority groups, such as those identifying with non-binary gender categories.
+
+
+================================================================================
+SENTENCEDEBIAS
+================================================================================
+
+SENTENCEDE-BIAS (Liang et al., 2020) adopts a sophisticated approach by identifying and neutralizing bias at the sentence level. This method first computes sentence embeddings to detect a bias subspace. Debiasing is then achieved by projecting sentences onto the bias subspace and subtracting this projection from the original embedding, thereby neutralizing gender bias. However, this approach can inadvertently remove essentially related concepts, as seen in sentences like "She gave birth to me," where gender specificity is crucial.
+
+
+================================================================================
+Iterative Nullspace Projection (INLP)
+================================================================================
+
+Iterative Nullspace Projection (INLP) (Ravfogel et al., 2020) follows a similar route, removing specific attributes from representations by training a linear classifier to predict the attribute and then projecting the representations into the nullspace of the classifier's weight matrix. Like SENTENCEDEBIAS, INLP risks removing pertinent information. Also, both SENTENCEDEBIAS and INLP, which involve altering the model's internal representations, will result in a degradation in the model's language modeling abilities (Meade et al., 2022) .
+
+
+================================================================================
+SELF-DEBIAS
+================================================================================
+
+SELF-DEBIAS (Schick et al., 2021) represents a novel, post-hoc strategy for bias mitigation, leveraging the model's internal knowledge for self-debiasing. This method first prompts the model to generate both biased and unbiased versions of text through specific preprompting like "The following text discriminates against people because of their gender", and then compares token generation probabilities to distill non-discriminatory outputs. While innovative, its efficiency is hampered by the necessity of generating dual outputs for each instance, and its reliance on external tools like the Perspective API for bias detection has been critiqued for missing subtle and implicit biases (Gehman et al., 2020) .
+
+A critical limitation of the aforementioned methods is that they focus on mitigating specific types of bias, often overlooking the interconnected and multifaceted nature of bias across domains such as gender, race, and religion. Our proposed debiasing technique distinguishes itself through its empirical validation of cross-domain generalizability. By demonstrating that unlearning gender-based biases also reduces biases in other domains, our approach offers a promising direction for comprehensive and universal debiasing solutions.
+
+
+================================================================================
+Bias and Toxicity Unlearning
+================================================================================
+
+In general, LLMs are trained to minimize a loss function through gradient descent, which updates the model parameters to maximize the likelihood of the actual data. Conversely, unlearning employs gradient ascent to maximize the loss function for specific undesirable patterns in the training data, thereby minimizing the likelihood of such patterns.
+
+
+================================================================================
+Masked Language Unlearning
+================================================================================
+
+Building upon these precedents, we propose Masked Language Modeling (MLM) Unlearning. This approach selectively unlearns harmful content within the text by forgetting only toxic or biased tokens, while preserving the language modeling capabilities. The loss function for MLM Unlearning is formulated as Equation 1:
+
+where x i denotes the toxic or biased token to be unlearned. P (x i |X \ x i ) represents the probability of the masked i-th word given the surrounding context X \ x i , where X is the set of tokens in the text. By minimizing the above loss function, models are trained to dissociate the masked word from a specific given context. Therefore, in the context of unlearning bias and toxicity, models are expected to effectively unlearn the associations between an attribute term (e.g. women) and harmful content. This method allows for unlearning only the problematic knowledge inherent in models, without significantly harming language modeling capabilities.
+
+
+================================================================================
+Experiment
+================================================================================
+
+This section contains content that may be offensive.
+
+
+================================================================================
+Unlearning Dataset
+================================================================================
+
+Our study uses the Dynamically Generated Hate Speech Dataset (DGHS; Vidgen et al., 2021) for unlearning. The examples of DGHS are collected through a combination of human and automated efforts to encompass a wide range of hate speech instances targeting various groups. We specifically extracted the subset that contains hate speech targeting women. The following examples illustrate the range of toxic content we seek to mitigate:
+
+1."Women have no backbones" 2."It was dead the moment you let the women vote, simple"
+
+To implement an MLM Unlearning, we utilized GPT-4 to identify words that could be considered toxic or indicative of bias within the given context. These identified words were then masked as follows.
+
+1."Women have no [MASK]" 2."It was dead the moment you let the [MASK] vote, simple"
+
+
+================================================================================
+Implementation Details
+================================================================================
+
+Recent work (Jang et al., 2023) pointed out that unlearning many examples at once might result in a large degradation of language modeling performance. Therefore, in the experiment, we set the batch size as 8 to let the model unlearn only a few examples at once. We run unlearning for 50 training steps with a learning rate of 1e -5 on GPT-2 (Radford et al., 2019)  foot_0 .
+
+
+================================================================================
+Evaluation Setup
+================================================================================
+
+To quantitatively evaluate our method, we used the following datasets that are not used for unlearning.
+
+
+================================================================================
+Wikitext-2
+================================================================================
+
+To assess the impact of our debiasing approach on the model's language capabilities, we employed the Wikitext-2 dataset (Merity et al., 2016) , consisting of high-quality Wikipedia articles. Perplexity served as our primary metric for evaluating language modeling performance.
+
+
+================================================================================
+CrowS-Pairs
+================================================================================
+
+We used CrowS-Pairs (Nangia et al., 2020) , a crowd-sourced collection designed to evaluate model biases across a variety of dimensions including gender, race, and religion. Each entry in CrowS-Pairs features a pair of sentences: one stereotypically biased and the other anti-stereotypical regarding the same context. See Appendix B.1 for an example.
+
+The bias score is calculated based on the model's preference rate for stereotypical sentences over their anti-stereotypical counterparts. An ideally unbiased model would exhibit a 50% preference rate, indicating no bias between the pair of sentences.
+
+
+================================================================================
+StereoSet
+================================================================================
+
+StereoSet (Nadeem et al., 2021) extends the methodology for bias measurement by incorporating a triadic structure for each evaluation instance: a stereotypical sentence, an antistereotypical sentence, and an unrelated sentence. This structure allows for a fine-grained assessment of stereotypical bias within language models. See Appendix B.2 for an example.
+
+The bias score is calculated based on the model's preference for stereotypical over anti-stereotypical responses, aiming for an ideal score close to 50%, indicating no bias. Additionally, the language modeling ability is assessed by the model's ability to choose semantically meaningful sentences (stereotypical or anti-stereotypical) over unrelated ones, aiming for scores approaching 100% to indicate strong language modeling capability.
+
+
+================================================================================
+Results and Discussions
+================================================================================
+
+In this section, we present the experimental results of our proposed method, and compare them with the debiasing results of CDA, SENTENCEDEIAS, INLP and SELF-DEBIAS as re-implemented and reported by previous study (Meade et al., 2022) . Note that our analysis relies on their reported results without independently re-implementing these methods. Therefore, due to variations in the baseline performances of the original GPT-2 model across different studies, we recommend referring to the relative improvement in scores rather than the absolute scores for a fair comparison.
+
+
+================================================================================
+Language Modeling Performance
+================================================================================
+
+Table 1 shows the perplexity on Wikitext-2 and the language model scores from StereoSet for our proposed method across increasing unlearning steps, alongside the results of previous methods. Our MLM Unlearning approach maintains language modeling performance comparable to, if not exceeding, that of previous methods. This finding highlights the balance our method achieves between debiasing effectiveness and preservation of language modeling abilities. Further analysis of perplexity results can be found in Appendix B.3.
+
+
+================================================================================
+Bias Score
+================================================================================
+
+Table 2 shows the bias score of our method and existing debiasing techniques on the CrowS-Pairs and StereoSet benchmarks. Note that our unlearning efforts were exclusively focused on gender bias, in contrast to the broader scope of bias (encompassing gender, race, and religion) addressed by the other methods. Despite this narrower focus, our approach has demonstrated parity in debiasing effectiveness across all bias domains. Specifically, our gender-specific debiasing efforts have shown unexpected generalization to other domains of bias, such as race and religion. This phenomenon suggests a potential for transfer unlearning, where debiasing in one area may inadvertently benefit others, a promising aspect that underscores the adaptability and broad applicability of our unlearning methodology. One plausible explanation for this transfer unlearning is that the embeddings of words like "women" and "Black" may occupy nearby regions in the embedding space due to shared contexts in the training data (i.e., both can be subjects of discrimination). Therefore, when the model minimizes the likelihood of generating "women" in a biased context via gradient ascent, it adjusts the embedding space in a way that also affects similarly biased terms like "Black."
+
+
+================================================================================
+Conclusion
+================================================================================
+
+In this study, we explored a Mask Language Modeling Unlearning technique aimed at reducing biases in LLMs by minimizing the connection between certain bias attributes and harmful content.
+
+Our experiments demonstrated that this method effectively mitigates bias without compromising the model's language modeling capabilities, as evidenced by performance on various benchmarks. Interestingly, we observed that debiasing in one specific domain (e.g., gender) inadvertently led to
+
+Model Bias Score (%) CrowS-Pairs Bias Score (%) StereoSet Gender GPT2 (Ours) 58.40 63.14 +10STEPS ↓0.77 57.63 ↓0.39 62.75 +20STEPS ↓1.91 56.49 ↓0.39 62.75 +30STEPS ↓2.29 56.11 ↓1.57 61.57 +40STEPS ↓1.91 56.49 ↓2.36 60.78 +50STEPS ↓2.29 56.11 ↓1.96 61.18 GPT2 (Meade et al., 2022) 56.87 62.65 +CDA 56.87 ↑1.37 64.02 +SENTENCEDEBIAS ↓0.76 56.11 ↓6.59 56.05 +INLP ↓3.43 53.44 ↓2.48 60.17 +SELF-DEBIAS ↓0.76 56.11 ↓1.81 60.84 Race GPT2 (Ours) 57.75 59.98 +10STEPS ↓1.55 56.20 ↓1.04 58.94 +20STEPS ↓2.71 55.04 ↓1.66 58.32 +30STEPS ↓2.91 54.84 ↓2.18 57.80 +40STEPS ↓2.91 54.84 ↓2.18 57.80 +50STEPS ↓2.71 55.04 ↓2.60 57.38 GPT2 (Meade et al., 2022) 59.69 58.90 +CDA ↑0.97 60.66 ↓1.59 57.31 +SENTENCEDEBIAS ↓4.26 55.43 ↓2.47 56.43 +INLP 56.69 ↑0.06 58.96 +SELF-DEBIAS ↓6.40 53.29 ↓1.58 57.33 Religion GPT2 (Ours) 67.62 56.96 +10STEPS 67.62 ↑1.27 58.23 +20STEPS ↓0.95 66.67 ↓2.53 54.43 +30STEPS ↓4.76 62.86 ↓2.53 54.43 +40STEPS ↓3.81 63.81 ↓3.80 53.16 +50STEPS ↓3.81 63.81 ↓3.80 53.16 GPT2 (Meade et al., 2022) 62.86 63.26 +CDA ↓11.43 51.43 ↑0.29 63.55 +SENTENCEDEBIAS ↓27.62 35.24 ↓3.64 59.62 +INLP ↓0.96 61.90 ↑0.69 63.95 +SELF-DEBIAS ↓4.76 58.10 ↓2.81 60.45 Table 2: Bias scores for debiased models. Note that our proposed unlearning method only debiased the model on gender, while previous methods debiased on gender, race, and religion.
+
+debiasing in others (e.g., race and religion), indicating a potential for transfer unlearning. This finding invites further investigation into questions like which bias domains are most transferable and whether previous methods like CDA exhibit similar cross-domain debiasing effects. For discussions of the major limitations of our study, please refer to Section A.
+
+
+================================================================================
+A Limitations
+================================================================================
+
+Our study has two significant limitations: the reproducibility of the mask rules set by GPT-4 and the invalid unlearning of tokens following the mask.
+
+
+================================================================================
+Mask Rules
+================================================================================
+
+As discussed in Section 4.1, we used GPT-4 to identify and mask bias-related keywords. This approach raises concerns about reproducibility and the sensitivity of experimental results to the specific words chosen for masking. To address this, future work should establish explicit mask rules, such as consistently masking specific bias-attribute words, to reduce reliance on heuristics and enhance reproducibility.
+
+
+================================================================================
+Invalid Unlearning
+================================================================================
+
+The target model in our experiment is GPT-2, a causal language model that predicts and generates tokens sequentially based on previous tokens. In our masked language unlearning settings, any words following the masked token are ignored. For example, in the sentence "It was dead the moment you let the women vote, simple", our method effectively removes the association between "It was dead the moment you let the" and "women". However, the remaining words after the mask become irrelevant in this context. This presents a major challenge that we aim to address in future research.
+
+
+================================================================================
+B.1 CrowS-Pairs Example
+================================================================================
+
+A data entry in the CrowS-Pairs dataset (Nangia et al., 2020 ) is illustrated below:
+
+1. Stereotypical: "The man was highly skilled in CAD engineering. He was considered one of the best engineers in his field" 2. Anti-stereotypical: "The woman was highly skilled in CAD engineering. She was considered one of the best engineers in her field"
+
+
+================================================================================
+B.2 StereoSet
+================================================================================
+
+A data entry in the StereoSet dataset (Nadeem et al., 2021) is shown below. Given a context with a blank to fill, the model is tested by measuring the likelihood of three choices:
+
+1. Context: "A mother is [BLANK]" 2. Choice 1 (Stereotypical): "A mother is caring" 3. Choice 2 (Anti-stereotypical): "A mother is mean" 4. Choice 3 (Unrelated): "A mother is ape"
+
+B.3 Perplexity Results 0 10 20 30 40 50 Unlearning Steps 40 60 80 100 120 140 160 180 200 Perplexity 29.94 81.77 122.11 30.01 90.34 139.20 30.23 99.31 158.22 30.44 107.14 174.89 30.60 112.92 187.28 30.66 115.26 192.41 Datasets Wikitext-2 DGHS Test DGHS Train Figure 1: Perplexity Results across Different Unlearning Steps
+
+Figure 1 shows the perplexity on Wikitext-2 and DGHS after applying our proposed method across increasing unlearning steps. Specifically, the DGHS-train comprises texts directly used for unlearning, whereas the DGHS-test set contains texts that were not seen by the model during unlearning. The results indicate a slight increase in perplexity on the Wikitext-2 dataset, affirming our method's efficacy in preserving the language modeling performance. Conversely, a substantial rise in perplexity for both the DGHS training and testing segments underscores the model's reduced inclination to replicate toxic and biased content against women. This difference highlights the effectiveness of our approach in reducing undesirable bias without undermining the model's overall language modeling abilities.
+

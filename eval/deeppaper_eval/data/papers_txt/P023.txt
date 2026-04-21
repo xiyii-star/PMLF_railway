@@ -1,0 +1,524 @@
+
+================================================================================
+Title
+================================================================================
+
+Influence of dimension on the convergence of level-sets in total variation regularization
+
+
+================================================================================
+Abstract
+================================================================================
+
+We extend some recent results on the Hausdorff convergence of level-sets for total variation regularized linear inverse problems. Dimensions higher than two and measurements in Banach spaces are considered. We investigate the relation between the dimension and the assumed integrability of the solution that makes such an extension possible. We also give some counterexamples of practical application scenarios where the natural choice of fidelity term makes such a convergence fail.
+
+
+================================================================================
+Introduction
+================================================================================
+
+In a few recent papers, several results have been shown linking the source condition for convex regularization introduced in [18] to the convergence in Hausdorff distance of levelsets of total variation regularized solutions of inverse problems, as the amount of noise and the regularisation parameter vanish simultaneously. Such a mode of convergence, although seldom used, is of particular interest in the context of recovery of piecewise constant coefficients as well as in the processing of images composed mainly of objects separated by clear boundaries. In these situations, Hausdorff convergence of level-sets can be seen as uniform convergence of the geometrical objects appearing in the data.
+
+To be more specific, in [20] such a convergence is obtained for the denoising problem in the entire plane with L 2 fidelity term, and in [24] the authors extend the result to bounded domains and to general linear inverse problems. These results have two common features. First, they are written in a Hilbert space framework, allowing to easily study the convergence of dual solutions. Second, the analysis is performed in the plane where this Hilbert framework corresponds to the optimal scaling where weak regularity for levelsets as well as good behavior at infinity can be proved, both of them being related to equi-integrability of these dual solutions locally or at infinity.
+
+In [16] , similar results are obtained in the setting of imperfect forward models, with measurements in L ∞ and where an L 1 norm term is added to the regularization. There, it is assumed that the operators are bounded from L 1 in a bounded domain (q = 1 in the notation below), a case that we do not treat since then boundedness in (L 1 ) * = L ∞ directly implies equi-integrability in L p for any p.
+
+Our aim is to extend this type of result to different choice of integrability and measurements made in more general Banach spaces. We will see that this extension requires some particular choices of these ingredients, and present some positive results as well as counterexamples.
+
+More precisely, we study convergence, as the positive regularization parameter α and the noise w simultaneously vanish, of level-sets of minimizers of inf u∈L q (Ω) 1 σ Au -f -w σ Y + αTV(u), (P α,w ) with q, σ > 1 and Ω ⊆ R d , d > 1. We assume q d/(d -1), which implies that the conjugate exponent q := q/(q -1) d. Here A : L q (Ω) → Y is linear bounded, where Y is a locally uniformly convex Banach space, with dual Y * which is also assumed to be uniformly convex and with modulus of uniform convexity of power type τ σ , where σ = σ/(σ -1) (see Definition 1 and Proposition 2). The power σ > 1 allows for natural choices of data term depending on the space Y , beyond the case of Hilbert space where σ = 2.
+
+
+================================================================================
+Preliminaries
+================================================================================
+
+A few results on geometry of Banach spaces. We begin by making precise our requirements for the measurement space Y .
+
+Definition 1. Let φ : Y → R be a convex function. We say that φ is locally uniformly convex if for any f ∈ Y , there exists a nondecreasing real function h f φ > 0 such that for every g ∈ Y with g = f and 0 t 1,
+
+The function φ is called (globally) uniformly convex [13, Chapter 5.3] if there exists a nondecreasing h φ > 0 such that for all f = g ∈ Y and 0 t 1 we have φ ((1 -t)f + tg)) (1 -t)φ(f ) + tφ(g) -t(1 -t)h φ ( f -g Y ) .
+
+(1.2) Furthermore, if two functions h φ , hφ satisfy (1.2), then the function s → max(h φ (s), hφ (s)) does too, so there is a largest such function that we denote by δ φ and call the modulus of uniform convexity of φ. If δ φ (ε) Cε p for some C > 0, p > 1 and all ε 0, we say that this modulus of uniform convexity is of power type p. Moreover, the function φ is said to be strictly convex when for all f, g ∈ Y with f = g and 0 < t < 1 we have φ ((1 -t)f + tg)) < (1 -t)φ(f ) + tφ(g).
+
+(1.3)
+
+Clearly, uniform convexity is stronger than local uniform convexity, which in turn implies strict convexity.
+
+The main quantitative result about uniformly convex functions that we will use is the following uniform monotonicity inequality for subgradients: Lemma 1. Let φ : Y → R be a convex function with modulus of uniform convexity δ φ , and denote by ∂φ(f ) ⊂ Y * the subgradient of φ at f . Then, if v f ∈ ∂φ(f ) and v g ∈ ∂φ(g) we have the uniform monotonicity inequality
+
+(1.4)
+
+Proof. Since v f ∈ ∂φ(f ) we can write for each 0 < t < 1
+
+in which we can divide by t and take the limit as t → 0 to obtain
+
+(1.5)
+
+Similarly, for v g we get 6) and using (1.5) in (1.6) we get (1.4) .
+
+The uniform convexity notions of Definition 1 give rise to analogous ones for Banach spaces through their norms [26, Def. 5.3.2, Thm. 5.2.5]: Definition 2. A Banach space Y is said locally uniformly convex (resp. (globally) uniformly convex, strictly convex) if ( 1.1) (resp. (1.2), (1.3 )) hold for f, g belonging to the unit sphere and φ is the norm of Y . The modulus of uniform convexity of Y is the corresponding δ • for such points.
+
+The uniform convexity of Y and Y * that we assume is arguably not a strong restriction, since it is satisfied by many natural spaces arising in the study of inverse problems for physical models (see [15, Prop. 11.12] for quotients, [2, Thm. 3.9 and Thm. 3.12] for duals of Sobolev spaces, [36, Example 2.47] for the power types and [23] for the precise moduli of L p ). Proposition 1. Let 1 < p < ∞, p = p/(p -1) and Ω ⊆ R d an open set.
+
+• The space of sequences ℓ p is uniformly convex, and in consequence so is the dual space ℓ p .
+
+• The space L p (Ω) is also uniformly convex , as is the dual L p (Ω).
+
+• Sobolev spaces W k,p (Ω). Since they can be isometrically embedded in L p (Ω; R N ) for some N , they are uniformly convex. The representation theorem for (W k,p (Ω)) * as a subspace of L p (Ω; R N ) implies that it is also uniformly convex. Similarly, W k,p 0 (Ω) and its dual W -k,p (Ω) are also uniformly convex.
+
+• The modulus of uniform convexity of the canonical norms of these spaces are of power type max(p, 2) or max(p , 2), respectively.
+
+• Quotients of uniformly convex spaces by closed subspaces are again uniformly convex.
+
+
+================================================================================
+Example 1.
+================================================================================
+
+While not apparent in the previous list, the uniform convexity of Y and of Y * are independent of each other. As a simple example, consider R 2 with the norm defined for (x, y) ∈ R 2 by (x, y) C = sup {λ > 0 | (λx, λy) ∈ C} induced (all norms in R d are of this form, see [32, Thm. 15.2] ) by the closed convex symmetric set C := {(x, y) | ψ(x) + ψ(y) 1} , where ψ is the Huber function of parameter 1/2 defined by
+
+2 .
+
+-2 Now, the corresponding dual norm is induced [32, Thm. 15.1] by the polar set C • of C defined by C • = {(x, ȳ) | xx + ȳy 1 for all y ∈ C} , so we can denote it by • C • . In view of the definition of C • , it is easy to convince oneself that • C • is uniformly convex; roughly, the influence of the rounded corners of C will prevent the facets of C • from being completely flat, see Figure 1 . However, • C is clearly not uniformly convex. In fact, for norms in a Banach space the dual property to uniform convexity is uniform smoothness (in the sense that the limit defining the Fréchet derivative exists uniformly in the point and direction taken) [13, Prop. 5.1.18 and Cor.
+
+
+================================================================================
+5.1.21] and since
+================================================================================
+
+Since we consider Fenchel duality for the minimization problem (P α,w ), we will need the duality mapping of Y , that is defined as
+
+where, as before, ∂ denotes the subgradient. Note that j is one-homogeneous. We make use of the following topological properties of Y and its dual (for the proofs, see [ 13, Ex 5.3.11, Thm. 5.4.6], [36, Cor. 2.43], [15, Thm. 3.31] [37, Prop. 32.22] and [26, Thm. 5.3
+
+
+================================================================================
+.7]).
+================================================================================
+
+Proposition 2. Let Y be a Banach space. Then
+
+• If Y is uniformly convex, the function • p Y is uniformly convex on bounded sets for any p > 1. If additionally the modulus of uniform convexity of the norm of Y is of power type τ , then • p Y is globally uniformly convex for all p τ .
+
+• Every uniformly convex Banach space is also reflexive, by the Milman-Pettis theorem.
+
+• If Y * is strictly convex, the duality mapping j is single valued and the map 1 2 • 2 Y is Gâteaux differentiable on Y \{0} with derivative j. If Y * is locally uniformly convex, then it is in fact Fréchet differentiable. Moreover, if Y is also locally uniformly convex, j is invertible with inverse the duality mapping of Y * .
+
+• If Y is locally uniformly convex, it has the Radon-Riesz property, that is if y n ↩ y is a weakly convergence sequence in Y and if y n Y → y Y , then the convergence is strong.
+
+Perimeters and curvatures in a nonsmooth framework. In the rest of the article, we deal with convergence in the Hausdorff distance of the level-sets of minimizers of (P α,w ). Let us define this mode of convergence:
+
+Definition 3. Let E and F two subsets of Ω. The Hausdorff distance between E and F is defined as
+
+If E n is a sequence of subsets of Ω, we say that E n Hausdorff converges to F whenever d H (E n , F ) → 0.
+
+The minimizers of (P α,w ) belong to the space of functions of bounded variation, which has a strong relation with properties of their level-sets:
+
+) is said to be of bounded variation (or belonging to BV(R d )) if its distributional derivative is a Radon measure with finite mass, which we denote by TV(u). Equivalently, when
+
+(1.8) We say that a set E is of finite perimeter if its characteristic function 1 E is of bounded variation. In that case the perimeter is defined as Per(E) := TV(1 E ). Conversely, we can recover the total variation of a function u ∈ BV(R d ) with compact support from the perimeter of its level-sets through the coarea formula (1.9)
+
+The main geometric tool used in the rest of the article is the isoperimetric inequality for sets of finite perimeter in R d (see [25, Thm. 14.1], for example): Proposition 3. Let E ⊂ R d be a set of finite perimeter with |E| < +∞. Then we have Per(E) |E| d-1 d Θ d , where Θ d := Per(B(0, 1))
+
+and equality holds if and only if |E∆B(x, r)| = 0 for some x ∈ R d and r > 0.
+
+We will also use extensively the notion of variational (mean) curvature, defined as follows:
+
+Definition 5. Let E be a subset of R d with finite perimeter. E is said to have variational mean curvature κ if E minimizes the functional
+
+There is no uniqueness of the variational curvatures of a set. In fact, one can show that if κ is a variational mean curvature for E, then for f 0 in E and f 0 in R d \ E, κ + f is also a variational mean curvature for E. Nevertheless, in [9] , specific variational curvatures with particular desirable properties are introduced. Let us briefly sketch their construction: Proposition 4 ([9, Thm. 2.1]). Let E be of finite perimeter in R d and for λ > 0, h ∈ L 1 (R d ) with h > 0 and E λ be a minimizer of
+
+.11) among F ⊂ E. Then, for λ < µ, E λ ⊂ E µ up to a set of Lebesgue measure zero. That allows to define, for x ∈ E, κ E (x) := inf{λh(x) > 0 | x ∈ E λ }. (1.12) One can similarly define κ E outside E by stating κ E (x) := -κ R d \E (x) for x ∈ R d \ E. As built, κ E is a variational mean curvature for E. It minimizes the L 1 (R d ) norm among variational curvatures, with κ E L 1 (R d ) = 2 Per(E) . Remark 1. The appearance of the density h ∈ L 1 (R d ) is required for κ E to be well defined, since otherwise the functionals (1.11) would not be bounded below. Unfortunately, the curvatures obtained are not independent of h, even if their L 1 (R d )-norm is optimal for each h. However, if E is bounded we are allowed to choose h(x) = 1 for all x in E or even in its convex envelope. The curvature obtained for such an h minimizes all the L p (E) norms for 1 < p < +∞, and its values on E are uniquely defined by this minimizing property [9, Thm. 3.2]. Consequently, there is a canonical choice for the variational curvature κ E inside E, and in the rest of the article we will use specific values of these variational curvatures only inside their corresponding sets. Example 2. Following Proposition 4 with h(x) = 1 B(0,R)
+
+We can show this by noting that for λ > 0, a minimizer of F → Per(F ) -λ|F | among F ⊂ B(0, R) is ∅ for λ For further information about functions of bounded variation and sets of finite perimeter, see [5, 25] . An overview on variational curvatures and their interplay with the regularity of ∂E can be found in [22] .
+
+
+================================================================================
+Organization of the paper
+================================================================================
+
+We first present an example of noisy data for total variation denoising in the threedimensional space in which the level-sets of the regularized solutions do not converge in Hausdorff distance to those of the noiseless data, regardless of the parameter choice used.
+
+Motivated by this example, we study the existence and convergence of minimizers of the regularized problem (P α,w ) while keeping the dimension and integrability as general as possible. We compute then the dual problem and find that in the noiseless case its solutions strongly converge under the assumption of the standard source condition, and then study the effect of the noise by proving a quantitative stability estimate for these dual solutions.
+
+Next, we see how the convergence of the dual solution and a parameter choice inequality arising from the stability estimate imply uniform weak regularity on the level-sets of the primal minimizers. Under the assumption of their compact support, this regularity makes equivalent the strong convergence of the primal minimizers in L 1 and the Hausdorff convergence of their level-sets.
+
+We then explore whether this compact support can be derived from the problem itself. This turns out to be only possible for the exponent appearing in the Sobolev embedding of the space of bounded variation functions in the whole d-dimensional space.
+
+Finally, we see how the previous analysis allows us to obtain analogous results in reasonable bounded domains, with Dirichlet or Neumann boundary conditions.
+
+
+================================================================================
+The dimension matters: ROF denoising in 3D
+================================================================================
+
+We begin by justifying the need of generality in our formulation by showing through a counterexample that convergence of level-sets of minimizers of (P α,w ) does not necessarily hold when A = Id, q = σ = 2 and d = 3. This corresponds to an straightforward extension to three dimensions of the Rudin-Osher-Fatemi (ROF) denoising model [34] , a choice that has been made in some works, for example [11] .
+
+We recall that the level-set {u > s} of value s of the ROF solution u for some data f minimizes the functional
+
+which can be easily proved using the coarea formula (1.9). The functions in our counterexample will be linear combinations of characteristic functions of two balls, so we begin by showing that in some situations the three-dimensional ROF problem can be solved explicitly for such data.
+
+
+================================================================================
+Lemma 2.
+================================================================================
+
+Assume that f is of the form
+
+Proof. Without loss of generality, we may assume that α = 1, the other cases being obtained by rescaling of f and s.
+
+First, using the symmetry of revolution of the problem along the axis defined by the origin and x 0 and its strict convexity, we have that the unique solution of the ROF problem also possesses this symmetry, implying that each E s has the same symmetry.
+
+Then we notice that because f -s ∈ L ∞ we may apply regularity theorems for Λminimizers of the perimeter [25, Thm. 26.3] to obtain that the boundaries ∂E s are in fact C 1,α surfaces for α < 1/2.
+
+On the other hand, since E s minimize (2.1) we have that E s must be contained (up to a set of measure zero) in E 0 . Indeed, by minimality of each set, we have
+
+Summing these inequalities, using the inequality (see [25, Lem. 12.22] )
+
+and linearity of the integrals, we end up with
+
+Combining with this fact with the regularity, we only need to prove the claim for E 0 .
+
+Moreover, since connected components of E 0 are also minimizers of (2.1), we may also assume that E 0 is connected. We can distinguish three cases: E 0 could intersect neither B(0, r 1 ) nor B(x 0 , r 2 ), one of them, or both.
+
+The first case cannot happen, since if E 0 is nonempty, it must intersect either B(0, r 1 ) or B(x 0 , r 2 ). To prove this claim, assume otherwise and notice that since E 0 minimizes (2.1), it admits f as a variational curvature. Since f 0 and f = 0 on E 0 by assumption, we would have that E 0 also admits the zero function as a variational curvature, making it an absolute minimizer of perimeter in R 3 , which can only be the empty set or the whole R 3 .
+
+For the second case we have that if E 0 intersects one of the balls (assumed to be B(0, r 1 ) without loss of generality) but not the other, then it must contain the whole B(0, r 1 ). To prove this, we note that by the computation in Example 2, B(0, r 1 ) admits an optimal variational curvature such that
+
+.
+
+As before, we can use optimality to write
+
+so as long as c 1 > 3/r 1 , we have that B(0, r 1 ) ⊆ E 0 . We are left with the case c 1 3/r 1 , for which we will need the isoperimetric inequality (1.10) that can be written as
+
+with equality only when E 0 is a ball of radius r 0 . Now, if |E 0 | |B(0, r 1 )| (or equivalently r 0 r 1 ) then we must have B(0, r 1 ) ⊆ E 0 , since otherwise we would have
+
+and this computation contradicts minimality of E 0 , since it implies that it has strictly higher energy in (2.1) than the empty set. Therefore, we end up with B(0, r 1 ) ⊆ E 0 but E 0 ∩ B(x 0 , r 2 ) = ∅. We must in fact have E 0 = B(0, r 1 ), since otherwise the isoperimetric inequality (2.3) would imply that B(0, r 1 ) has a smaller perimeter than E 0 and, since f E 0 \B(0,r 1 ) = 0, also strictly lower energy in (2.1).
+
+Finally we are left with the third case, in which E 0 is connected and intersects both balls. Using the symmetry and regularity, we have that ∂E 0 \ (∂B(0, r 1 ) ∪ ∂B(x 0 , r 2 )) contains a minimal surface (of class C 1,α , as before) which is bounded by circles contained on planes orthogonal to x 0 and of radius less than or equal to r 1 and r 2 respectively. In fact, Schauder regularity theorems for elliptic equations can be used to obtain that this surface is C ∞ [25, Thm. 27.3]. We can then conclude that this situation is impossible by applying classical results on necessary conditions for the existence of minimal surfaces bounded by planar curves (circles, in this case) [28, 29] .
+
+Remark 2. The articles [28, 29] are likely the first in the direction of understanding from which distance D any minimal surface spanning two orthogonal circles of radii r 1 and r 2 cannot be connected, providing D 3 max(r 1 , r 2 ), while the more recent [33] improves the bound to D 2 max(r 1 , r 2 ). Remark 3. A closer examination of the arguments above shows that we have actually proved that each connected component of E 0 equals either B(0, r 1 ) or B(x 0 , r 2 ). In fact, the arguments used for components that only intersect one ball also extend to components of E s with s > 0 by just replacing c 1 by c 1 -s, so that in fact each connected component of E s equals either B(0, r 1 ) or B(x 0 , r 2 ). Remark 4. In fact, Lemma 2 can be proved without making use of the strong C 1,α regularity. After developing the weak regularity tools that it requires, we will present in Section 5 a self-contained proof of this lemma, with the only price to pay being a worse control on D.
+
+Example 3. Assume that Ω ⊂ R 3 is bounded. In this situation, we consider denoising of the function f = 1 B(0,1) and a family of perturbations w n := c n 1 B(x 0 ,rn) , with x 0 = (3, 0, 0) and r n 1.
+
+Notice that w n L 2 = ( 4π 3 c 2 n r 3 n ) 1/2 . By Lemma 2 and Remark 3 we can compute the solution of (P α,w ) explicitly in this case, which will necessarily be of the form
+
+and optimality provides
+
+, and
+
+The goal is then to show that there is a choice of c n and r n such that w n L 2 goes to zero fast enough, but for which s n does not vanish, so the perturbation appears in the level sets of the denoised function.
+
+In [24] Hausdorff convergence of level-sets was proved under the condition w n L 2 /α n C. In the limit case α n = C w n L 2 , then it suffices to choose r n = 1/n and c n = n, in which case we have w n L 2 = C/ √ n, α n = C/ √ n, and s n = n -C √ n, as required. One could think that by applying more aggressive regularization (a case still covered in the condition w n L 2 /α n C) convergence of level-sets could be restored. In fact, this is not the case. To see this, assume that we are given a strictly increasing function f (t) t, with f (0) = 0. Then we can choose
+
+With this choice, we have c n n + 1 and s n = 1, preventing convergence of the levelsets corresponding to values less than one. Furthermore, if n is large enough so that 1/n + f (1/n) 3/(4π) we also have
+
+Since f was arbitrary among sublinear functions, the resulting sequences w n 'defeat' any sensible parameter choice rule based on the L 2 norm used in the data term.
+
+In the sequel we will see that convergence can be restored for domains of any dimension, if the error is measured in an adequate L q space with q = 2.
+
+
+================================================================================
+Convergence of primal and dual solutions
+================================================================================
+
+We start by studying existence of minimizers for (P α,w ) and their convergence, the dual problem, and convergence of the corresponding dual solutions. Proposition 5. Assume there is at least one solution u 0 of Au = f with TV(u 0 ) < +∞, and that either q = d/(d -1) or Ω is bounded. Then the problem (P α,w ) possesses at least one minimizer. If A is injective, the minimizer is unique. In addition, if α n → 0 and w n ∈ Y are such that w n σ Y /α n is bounded, and if u n are minimizers of
+
+then we have (up to possibly taking a subsequence) the weak convergence u n ↩ u † in L d/(d-1) (Ω), where u † is a solution of Au = f of minimal total variation among such solutions. Furthermore, if q < d/(d -1), we also have u n → u † in the (strong) L q loc (R d ) topology.
+
+Proof. For the existence statement, let (u k ) be a minimizing sequence. Since u k ∈ L q (R d ), we have that u k ∈ L 1 loc (R d ), so the Sobolev inequality for BV functions [5, Thm. 3.47] provides us with constants c k such that
+
+and we must have c k = 0 since u k ∈ L q (R d ). The u k being a minimizing sequence, TV(u k ) is bounded so using a standard compactness result in BV [5, Thm. 3.23] and the Banach-Alaoglu theorem we obtain that u k converges (up to possibly taking a subsequence) weakly in L d/(d-1) (R d ) and strongly in L 1 loc (R d ) to some limit u ∈ L d/(d-1) (R d ). If q = d/(d -1), since A : L q (Ω) → Y is bounded linear, Au k also converges weakly to Au in Y . Lower semicontinuity of the norm with respect to weak convergence, and of the total variation with respect to strong L 1 loc (R d ) convergence [5, Remark 3.5] imply that u realizes the infimal value in (P α,w ), and we obtain that u is a solution of (P α,w ).
+
+If on the contrary q < d/(d -1), we cannot conclude that u ∈ L q (Ω) unless |Ω| +∞, in which case u L q (Ω) |Ω| 1/q-(d-1)/d u L d/(d-1) (Ω) < +∞. This kind of inequality also provides boundedness of u n in L q (Ω) and therefore the convergence of Au k to Au.
+
+The proof of uniqueness, using injectivity of A and strict convexity of the data term, follows entirely along the lines of the L 2 case treated in [24, Prop. 1] .
+
+Existence of u † is covered in [35, Thm. 3.25] . Since u n ∈ L q (R d ) and w n σ Y /α n is bounded implies TV(u n ) is also bounded, we have that u n L d/(d-1) is again bounded [5, Thm. 3.47], giving weak convergence of a subsequence. The strong convergence statement relies on compact embeddings for BV along similar lines, and a proof can be found in [1, Thm. 5.1].
+
+Remark 5. For the counterexample of Section 2, we have that 2 = q > d/(d -1) = 3/2. Existence of solutions can still be proven by the above straightforward methods, but only because A is the identity, so that the data term provides a bound in L q .
+
+
+================================================================================
+Proposition 6.
+================================================================================
+
+The Fenchel dual problem of (P α,w ), writes, for α > 0, sup
+
+where 1/σ + 1/σ = 1. Moreover, strong duality holds, the maximizer p α,w of (D α,w ) is unique, and the following optimality condition holds:
+
+Here, the subgradient is understood to be with respect to the L q (Ω), L q (Ω) pairing, so that ∂TV(0) ⊂ L q (Ω).
+
+Proof. By the assumptions on Y , we have that the duality mapping j defined in (1.7) is single valued and invertible with inverse the duality mapping of Y * , and that the map
+
+Y is Gâteaux differentiable with derivative j. Defining the functional
+
+and by the Gâteaux differentiability we may take a directional derivative in direction h ∈ Y to find that at a purported maximum point g 0 ,
+
+or, since h was arbitrary,
+
+from which we get, computing norms on both sides and taking into account
+
+and inverting j we end up with
+
+Since Y is assumed uniformly convex, the function to be maximized was strictly concave and differentiable and g 0 provides the only solution. With it we can compute, taking into account that j -1 (p) Y = p Y * and p, j -1 (p
+
+The rest follows by Fenchel duality in a general pair of Banach spaces [14, Thm. 4.4.3, p. 136] applied to the choices (in their notation) X = L q (Ω) and Y , f (•) = TV(•), g = G and A as above. The functional TV * is computed in [24, Thm. 1], resulting in the indicator function of ∂TV(0). Uniqueness holds because by the assumptions on Y * , we have that • σ Y * is strictly convex.
+
+Following the scheme laid out in [20, 24] for the convergence of level-sets, we now prove strong convergence of the dual maximizers corresponding to noiseless data. It relies on the following source condition: and with minimal Y * norm. Furthermore, in the absence of noise (w = 0) the sequence p α,0 of maximizers of the dual problem (D α,w ) converges strongly in Y * to it.
+
+Proof. The existence of p 0,0 follows along the same steps as the Hilbert space case treated in [24, Lem. 2], while uniqueness is a consequence of the strict convexity of Y * (and therefore of powers of its norm). By optimality in their corresponding maximization problems, we have Summing these inequalities we obtain p α,0 Y * p 0,0 Y * . Since Y * is uniformly convex, it is also reflexive and the sequence p α,0 can be assumed [15, Cor. 3.30] (up to taking a subsequence) to converge weakly in Y * to some limit p * . Furthermore A * p * ∈ ∂TV(0) by weak closedness of subgradients in Banach spaces [21, Cor. I.5.1, p. 21]. Passing to the limit in both inequalities we obtain
+
+so that p * is a maximizer of p → p, f (Y * ,Y ) over p such that A * p ∈ ∂TV(0). Using (3.3) and weak lower semicontinuity of the norm we get that
+
+This implies that p * is of Y * minimal norm, and since • σ Y * is strictly convex, such a minimizer is unique and we must have p * = p 0,0 and the whole sequence p α,0 converging to it. Moreover, since Y * has the Radon-Riesz property, (3.4) implies that the convergence is in fact strong in Y * .
+
+In the sequel, we will need stability estimates for solutions of the dual problem (D α,w ), so that p α,w can be related to p α,0 , which was just proved to converge strongly. In the simple case where σ = 2 and Y is a Hilbert space H, the maximization to be performed corresponds to
+
+which after adding the constant term -(f + w)/α 2 H has the same maximizers as the problem
+
+, which is solved by computing the projection of (f + w)/α onto the convex set
+
+Convexity of the set implies that this projection is nonexpansive, providing a straightforward stability estimate for this case.
+
+In analogy with the Hilbert framework, we can define the functional
+
+which in the case σ = 2 is used in [3] to define a generalized projection for Banach spaces, mapping the dual space Y * onto Y . In the following we use the methods introduced in [3, 4] to derive the estimates we require.
+
+Proposition 8. For g ∈ Y and any weak-* closed and convex set K ⊂ Y * The problem
+
+has a unique solution, which we denote by π K (g). Furthermore, it satisfies
+
+(3.5)
+
+Proof. Existence follows by the Banach-Alaoglu theorem and closedness, while uniqueness is a consequence of the strict convexity of the function • σ Y * . For the second part, we have that
+
+and since we have Gâteaux differentiability of the squared dual norm • 2 Y * and that the duality mapping of Y * is j -1 by Proposition 2, we can differentiate V at (π K (g), g) in its first argument in direction q -π K (g) ∈ Y * , to obtain
+
+from which (3.5) follows directly.
+
+Since we have assumed that Y * is uniformly convex with modulus of uniform convexity of power type σ , we have by Proposition 2 that • σ Y * is also globally uniformly convex. This allows us to formulate stability estimates for the generalized projection: Proposition 9. We have the estimate:
+
+where ρ Y,σ is defined as the inverse of the function
+
+where δ • σ Y * /σ is the modulus of uniform convexity of the functional • σ Y * /σ . In consequence, the solutions of (D α,w ) satisfy
+
+(3.7)
+
+Proof. We denote φ(p) = p σ Y * /σ , so that φ is Gâteaux differentiable with derivative
+
+We compute
+
+where we have used Proposition 8 twice and the Cauchy-Schwarz inequality. On the other hand, Lemma 1 provides us with
+
+which combined with the above delivers (3.6). Note that the inverse function ρ Y,σ is well defined, since the property δ φ (ct) > c 2 δ φ (t) for all c > 1 [13, Fact 5.3.16] implies that t → δ φ (t)/t is strictly increasing. Now, we notice that we can divide by α 1/(σ-1) in the problem (D α,w ), to obtain the equivalent problem sup
+
+which in turn has the same solutions as
+
+Using (3.6) with g 1 -g 2 = α -1/(σ-1) w, we get the expected estimate (3.7).
+
+Remark 6. A straightforward computation shows that in the case σ = 2 and Y = H a Hilbert space, we have for any u, v ∈ H
+
+so that the best modulus of convexity of • 2 H /2 is the function defined by δ • 2 H /2 (t) = t 2 /2 and ρ H,2 (t/2) = t, recovering that the projection is nonexpansive, as used in [24] .
+
+4 Convergence of level-sets with assumed compact support Our next goal is to relate the convergence of the sequence p α,w with that of the level-sets. For the sake of clarity we assume throughout the section that the minimizers considered have a common compact support, and the possibility to lift this assumption will be discussed in Section 5. We start by recalling some known properties of the subgradient of the total variation, which allow us to interpret the optimality condition (3.1) in terms of the level-sets of u α,w .
+
+Proposition 10. Let u ∈ L q (R d ). Then, the following assertions are equivalent 1. v ∈ ∂TV(u), 2. v ∈ ∂TV(0) and uv = TV(u) 3. v ∈ ∂TV(0) and for a.e. s,
+
+Proof. The equivalence between statements 1 and 2 follows from the (L q , L q ) pairing used and the fact that TV(•) is one-homogeneous, and a proof can be found in [24, Lem. 10], for example. The equivalence between statements 3, 4 and 1 is a consequence of statement 2 and the coarea formula, for a proof see [20, Prop. 3] .
+
+The proof of Hausdorff convergence of level-sets goes along the lines of the proof of Theorem 2 in [24] , and is centered around uniform density estimates for the level-sets, that is, bounds on volume fractions of the type
+
+|B(x, r)| C, for x ∈ ∂{u α,w > s} and r small, the uniformity referring to the fact that the constant in the right hand side should be independent of α and w, as long as they are related by a suitable parameter choice.
+
+The first ingredient for such density estimates is the following comparison formula for intersections with balls, whose proof can be found, for example, in [24, Lemma 3] . Remembering that v α,w = A * p α,w , this formula applies to the level sets {u α,w > s} by the last item of Proposition 10. With the comparison formula above, to arrive at density estimates one needs precise control on the term E∩B(x,r) v α,w as r → 0. Since v α,w = A * p α,w , this control is attained by combining the estimates of Proposition 9, the equiintegrability of v α,0 and a parameter choice satisfying
+
+Θ d being the isoperimetric constant of Proposition 3. As in Remark 6, in the case of σ = 2, d = 2 and Y a Hilbert space H, the expression (4.2) simplifies to w H A * /α η < Θ 2 , the parameter choice used in [24] . Remark 8. Although the right hand side of the inequality (4.2) might look involved, it just provides the optimal constant for the ratio w σ-1 Y /α for which the convergence of level-sets can be proved by the methods presented. In particular, any choice such that w σ-1 Y /α → 0 satisfies (4.2). The choice α ∼ w σ-1 Y also appears as a sufficient condition for linear convergence rates in Bregman distance when the source condition (3.2) is assumed (see [35, Thm. 3 .42] or [36, Prop. 4.19] ). One might wonder whether using an a posteriori choice rule is possible. Such linear convergence rates can also be proved using the Morozov discrepancy principle and under source conditions ([12, Thm. 4.2], [7, Thm. 5.3]), but typically only w σ Y /α → 0 can be ensured for the ensuing parameters [7, Thm. 4.5], which is not enough to conclude (4.2).
+
+Assuming that the parameter choice satisfies (4.2), we are now ready to prove the anticipated uniform density estimates: Theorem 1. Assume that the parameter choice satisfies (4.2) and that the source condition (3.2) holds. Let E be a minimizer of
+
+Then, there exists C > 0 and r 0 > 0, independent of α and w such that for every ball B(x, r 0 ) with x ∈ ∂E, one has, for any r r 0 ,
+
+Proof. Using Hölder's inequality, that q = q/(q -1) d, the parameter choice (4.2) and the estimate (3.6), we obtain that for any
+
+With this, we obtain
+
+(4.5) Now, by Proposition 7, v α,0 converges strongly in L d as α → 0, and |v α,0 | d is therefore equiintegrable. This implies that for each ε > 0, there exists r ε such that for all r < r ε we have v α,0 L d (E∩B(x,r)) < ε. Moreover, by possibly reducing r ε we may assume that
+
+Assuming ε < Θ d -η we can use then (4.5) in (4.1) and the isoperimetric inequality (1.10) to obtain
+
+(4.6) Additionally, we have that for almost every r
+
+which in turn is the derivative with respect to r of the function g(r) := |E ∩ B(x, r)|, turning (4.6) into the variational inequality
+
+Integrating on both sides taking into account g(0) = 0, we end up with 2dg
+
+where the right hand side is uniform in α, w, r small enough and also in x.
+
+Remark 9. Note that if q < d/(d -1) (that is, q > d), the second term inside the parenthesis in the right hand side of (4.5) tends to zero as r → 0, which implies that in this case the density estimates still hold for any parameter choice (see (4.2)) that ensures that w Y /α 1/(σ-1) remains finite.
+
+Combining the compact support assumption with the density estimates of Theorem 1, we arrive at the desired convergence result.
+
+Theorem 2. Let f and A satisfy (3.2), α n , w n → 0 satisfying (4.2) and u n := u αn,wn the corresponding minimizer of (P α,w ). We assume that all the u n have a common compact support (we will see in Section 5 how to lift this artificial assumption). Then, for almost every s ∈ R, as n grows to infinity, the level-sets {u n > s} converge to {u † > s} in the sense of Hausdorff convergence.
+
+Proof. We saw in Proposition 5 that u n → u in L 1 loc . Combined with the compact support assumption for u n , it leads to the full L 1 convergence. This implies, using Fubini's theorem (see [24, Section 3.1] ) that for almost every s,
+
+Now, let us assume that the Hausdorff distance between these two level-sets does not go to zero. That means, using the definition of this distance, that there exists a constant L > 0 and either a sequence of points x n ∈ {u n > s} such that d(x n , {u † > s}) > L or a sequence y n ∈ {u † > s} such that d(y n , {u n > s}) > L. We will treat the first case. One can assume that x n ∈ ∂{u n > s}.
+
+Using then the density estimates (4.3), one concludes that for r min(r 0 , L),
+
+On the other hand, since r L, one has B(x n , r) ∩ {u † > s} = ∅ which implies that B(x n , r) ∩ {u n > s} ⊂ {u n > s}∆{u † > s} and contradicts the L 1 convergence.
+
+The second case is treated similarly, but the contradiction is obtained using the density estimates on {u † > s}.
+
+
+================================================================================
+Behavior at infinity
+================================================================================
+
+We now discuss whether it is possible to remove the assumptions on compact support of the solutions that were used in the previous section. In view of the proof of Theorem 2, this amounts to being able to infer that u α,w → u † strongly in L 1 (Ω).
+
+
+================================================================================
+The critical case
+================================================================================
+
+The following lemma, analogous to [24, Lemma 5] , tells us that this is indeed possible for the critical exponent q = d/(d -1), with the same parameter choice as in Section 4.
+
+Lemma 4. Let q = d/(d -1), and assume (4.2) and (3.2). Then, the elements of
+
+have the following properties:
+
+1. There exists a constant C > 0 such that for all E ∈ E, Per(E) ≤ C, 2. There exists a constant R > 0 such that for all E ∈ E, E ⊆ B(0, R).
+
+Proof. The proof is very similar to what is done in [20, 24] .
+
+Here, by Proposition 7, we have that v α,0 → v 0 strongly in L q = L d , and therefore the family (v α,0 ) is L d (R d )-equiintegrable, which in particular means that for every ε > 0, one can find a ball B(0, R) such that
+
+Then, for every E with finite mass belonging to E and provided α and w satisfy (4.2) we get as in (4.4) that
+
+Now, the isoperimetric inequality (1.10) and sub-additivity of the perimeter (2.2) lead to
+
+which when used in the previous equation, since ε is arbitrary and η < Θ d , implies that Per(E) is bounded uniformly in α. Once again using the isoperimetric inequality yields the boundedness of |E| independently of α, as long as (4.2) is satisfied. We now prove that the mass and perimeter of level-sets of u α,w are bounded away from zero. The equiintegrability of (v α,0 ) ensures that there is no concentration of mass for v α,0 , that is, for any ε > 0 we can ensure E |v α,0 | d ε if |E| small enough. Then, if E belongs to E, Hölder inequality provides an inequality of the type
+
+, which together with the isoperimetric inequality, implies Per(E) ε 1/d Θ -1 d Per(E), which is not possible for ε too small. Therefore, |E| must be bounded away from zero (and Per(E) as well thanks to the isoperimetric inequality).
+
+Similarly to what is done in [20, 24] , one can (see [6, Thm. B.29]) decompose any E ∈ E into E = i∈I E i , Per(E) = i Per(E i ) with I being finite or countable and all the E i being indecomposable ("connected"). By splitting the equation defining E into the E i (similarly to [20, Remark 4]), one infers that each E i satisfies Per(E i ) = E i v α,w (5.1) which implies, using the same reasoning as before, that both |E i | and Per(E i ) are bounded away from zero, by constant that does not depend on i, w nor α.
+
+We show now that each E i must have a bounded diameter. This step will actually make use of the density estimates we showed in Theorem 1 (the proof of which does not make use of the compact support of u α,w ). If it were not the case, there would exist a sequence of points x n ∈ ∂E i → ∞ such that |x j -x k | 2r 0 for j = k, where r 0 is defined in Theorem 1. Using the same theorem, one obtains that |B(
+
+Summing over the (disjoint) balls B(x j , r 0 ), we get a contradiction with the boundedness of |E i |. Since both r 0 and C are uniform, the bound on the diameter is actually independent from i, w, α.
+
+Finally, since (v α,w ) is equiintegrable in L d , one can find R > 0 such that
+
+Then, if one component E i had an empty intersection with B(0, R), we would have, using (5.1) and Hölder inequality
+
+We can then make use of the isoperimetric inequality to obtain
+
+Per(E i ) Θ d , a contradiction. Then, any component of E intersects B(0, R) and the bound on their diameter implies the existence of R such that that E ⊂ B(0, R).
+
+This lemma actually provides (for the particular value of q assumed) the common compact support that was assumed in Theorem 2. This assumption can therefore be removed from that result, and we obtain: Theorem 3. Assume q = d/(d -1), and let A, f , and α n , w n → 0 as in Theorem 2, with u n minimizing (P αn,wn ). Then, for almost every s ∈ R, as n grows to infinity, the level-sets {u n > s} converge to {u † > s} in the sense of Hausdorff convergence.
+
+An elementary proof of Lemma 2. Arguing as in the proof of Lemma 4, it is possible to obtain a fairly elementary proof of Lemma 2 that doesn't require strong regularity results. To see this, consider
+
+and assume c 1 > 3/r 1 , c 2 > 3/r 2 , and E 0 connected.
+
+For simplicity, we denote B(0, r 1 ) by B 1 and B(x 0 , r 2 ) by B 2 in the rest of this argument. First, we notice that the L 1 -optimal variational curvature κ of B 1 ∪B 2 of Proposition 4 satisfies
+
+Therefore, even without knowledge of κ outside B 1 ∪ B 2 we can write
+
+where summing and using the union-intersection inequality (as in (2.2)) we get 0
+
+these inclusions mean that we can reformulate the problem for E 0 as minimizing perimeter with an inclusion constraint (as in the obstacle problem of [10, Lemma, p.132] and [24, Lemma 9] ), so that E 0 ∈ arg min
+
+Now, this variational problem and the isoperimetric inequality provide us with the bound
+
+(5.3)
+
+On the other hand, for a point x ∈ ∂E 0 and a radius r such that B(x, r) ∩ B 1 = ∅ and B(x, r) ∩ B 2 = ∅ we have that f B(x,r) = 0, implying the density estimate
+
+
+================================================================================
+The subcritical case
+================================================================================
+
+If q < d/(d -1), unless we work in a bounded set (see Section 6) there is no hope to obtain a consistent regularization scheme with Hausdorff convergence of level-sets, since the data term fails to control the behavior at infinity of the solutions and subgradients. This is already hinted at in Proposition 5, where we cannot guarantee obtaining a minimizer in L q (R d ).
+
+To demonstrate further, we have a closer look at the two-dimensional Radon transform in R 2 with measurements in L 2 . We construct a sequence of perturbations and regularization parameters which satisfy the parameter choice inequality (4.2), but nevertheless force the level-sets of potential solutions to escape to infinity. The implication is that in this setting it is advisable to work in a bounded domain. For example, in [17] a model is presented, which uses total variation regularization and a L 2 data term as an approximation of the Poisson noise model for photon emission tomography (PET) reconstruction. For this model, the analysis performed is indeed done on bounded domains.
+
+We will need the following lemma:
+
+and A r 1 ,r 2 := B 2 \ B 1 be an annulus in R 2 . We denote by κ A an optimal curvature in the sense of Proposition 4. Then, κ A is constant on A r 1 ,r 2 , with value 2(r 1 + r 2 )/(r 2 2 -r 2 1 ).
+
+Proof. Thanks to the rotational invariance of the problem, there exists a minimizer of F → Per(F ) -λ|F | among F ⊆ A r 1 ,r 2 which is rotationally invariant. We can furthermore decompose it into "connected components" as in Lemma 2: there is a minimizer which is an annulus A ra,r b .
+
+Computing the energy of this annulus makes clear that such a minimizer is actually either empty (if
+
+Example 4. We consider A = R the Radon transform in the plane, Y = L 2 ([0, 2π)×R + ), σ = 2 and q = 4/3. We note that in the plane R is a bounded operator from L 4/3 to L 2 [30, 31] . The starting point is the noiseless measurement f := R1 B(0,1) , which since R is injective, gives rise to the corresponding minimal variation solution u † = 1 B(0,1) . For a fixed δ ∈ (0, 1/2), we define the perturbation
+
+The corresponding sequence of regularization parameters is defined as α n = ℓn -δ → 0 for a constant ℓ, for which we can compute
+
+meaning that the parameter choice inequality required for Hausdorff convergence of levelsets (4.2) holds if ℓ is chosen large enough. Notice also that the condition listed in Proposition 5 for convergence of minimizers is also automatically satisfied, since in addition to the above we have w n Y → 0. Now, assume for the sake of contradiction that we had a sequence u n of minimizers of (P α,w ), all of them supported in a compact set B. Using Ru † = f , the optimality condition for (P α,w ) reads
+
+However [27, Thm. 1.5], the operator R * R is proportional the Riesz potential operator of order one, R * Ru = 2 I 1 u, with I 1 u(x) := R 2 u(y) |x -y| dy, which allows us to consider x ∈ A n (for which we have u † (x) = 0) and estimate v n (x) for large n. On the one hand we have the common compact support B for all u n , implying that 1
+
+where we have used x ∈ A n , the common compact support and Proposition 5 to conclude that u
+
+). Notice that (5.4) also holds when replacing u n by u † . On the other hand, we have
+
+from which, in combination with (5.4) and since δ < 1/2, we can conclude that in fact also v n (x) C v ℓ -1 n -1/2 for all x ∈ A n , some constant C v and n large enough. Additionally, by Lemma 5 the optimal curvature κ An of A n satisfies κ An (x) C k /n for all x in A n and some constant C k . Combining these two estimates we have therefore for n large enough the pointwise curvature comparison
+
+which in turn (comparing as in (5.2)) implies that any minimizer of F → Per(F ) -F v n must contain A n , a contradiction with the common compact support for all u n .
+
+
+================================================================================
+Remarks on bounded domains and boundary conditions
+================================================================================
+
+So far, the convergence results that we have proved hold for functions defined in the whole R d . Nevertheless, our results also apply to bounded domains with either Dirichlet or Neumann boundary conditions on a bounded set Ω that satisfies mild regularity assumptions. This adaptation has been explained in detail for solutions in L 2 (R 2 ) in [24] , and as we have seen, restricting to bounded domains is also necessary for the case q < d/(d -1). We now briefly present the required constructions.
+
+
+================================================================================
+Bounded domain with Dirichlet conditions.
+================================================================================
+
+Here, u ∈ L q (Ω) and TV(u) is the total variation, computed in R d , of the extension ũ of u by zero outside Ω. Differently said, it means that the jump of u to zero at the boundary of Ω is taken into account. This is well defined if Ω is an extension domain, for example Lipschitz. In the following, we will need that Ω has also a variational curvature κ Ω that satisfies κ Ω R d \Ω ∈ L d (R d \ Ω). (6.1)
+
+In particular, any convex or C 1,1 domain will satisfy this assumption. The existence of a minimizer for the approximate problem and its convergence in L 1 to a minimal total variation solution (Proposition 5) as well as the duality analysis (Propositions 6 and 7) still hold with no modification. The results related to the parameter choice (Propositions 8 and 9) depend only on the space Y and the dimension and therefore are not affected by changing the boundary conditions.
+
+However, the proof of density estimates has to be slightly modified, since it is not possible anymore to consider, for a level-set E of u α,w , the competitor E ∪ B r . Indeed, such a set E would minimize F → Per(F ) -sign(s) F v α,w only among the subsets F of Ω. The strategy is then to relax the constraint F ⊂ Ω and introduce κ α,w := sign(t)v α,w
+
+where κ Ω is a variational curvature for Ω. One can then show (see [24, Lemma 9] ) that E minimizes F → Per(F ) -F κ α,w among F ⊂ R d (without inclusion constraint). Then, provided (6.1), density estimates are obtained as before, since the functions (κ α,w ) are also equiintegrable in R d .
+
+
+================================================================================
+Bounded domain with Neumann boundary conditions.
+================================================================================
+
+In this case, u ∈ L q (Ω) and one uses TV(u ; Ω), the total variation computed in Ω (the jumps at the boundary of Ω are not taken into account). In this case, the proof of the existence result (Proposition 5) needs to take into account the behaviour of the operator A on constant functions, in exactly the same way as done in [24, Prop. 2] . Other than that, everything until Proposition 9 works similarly. Proposition 10 then implies that any level-set E of a minimizer u α,w minimizes among F ⊂ Ω F → Per(F ; Ω) -F v α,w , where Per(F ; Ω) := TV(1 F ; Ω) is the perimeter in Ω, defined as in (1.8), but with test functions in C ∞ 0 (Ω; R d ). For this relative perimeter, the standard isoperimetric inequality does not hold. To see this, consider for example that if x ∈ ∂Ω and r → 0 + , then Per(Ω \ B(x, r); Ω) → 0 while |Ω \ B(x, r)| → |Ω|. Nevertheless, provided Ω is Lipschitz, the Sobolev inequality [5, Remark 3.50] writes for u ∈ BV(Ω),
+
+C Ω TV(u ; Ω). (6.2)
+
+Taking u = 1 F for any F ⊂ Ω, we obtain [24, Section 4.3]
+
+which can play the role of the isoperimetric inequality in the proof of density estimates. Note that now the parameter choice (4.2) has to be made relatively to the constant C Ω , that is η < C Ω in (4.2).
+
+
+================================================================================
+Periodic boundary conditions.
+================================================================================
+
+It is also possible to treat the case of periodic boundary conditions, commonly used in image processing (see for example [8, Sec. 3.3] ). A reasonable definition of periodic total variation is given in [19] , which we now describe using their same notation. Let Q = (0, 1) d be the d-dimensional cube. For u ∈ BV(Q) we denote by u ∂Q ∈ L 1 (∂Q) its trace on ∂Q (which exists by [5, Thm. 3.87] ). Moreover, we define the part of the boundary
+
+where jumps should be accounted for in the variation. To accomplish this, one can use the boundary map ζ : ∂ 0 Q → ∂Q defined by
+
+With it, one can define the periodic total variation of u ∈ BV(Q) to be TV per (u ; Q) := TV(u ; Q)
+
+) and the corresponding perimeter of a set E ⊂ Q as TV per (1 E ; Q). With these definitions, we can just notice TV per (u ; Q) TV(u ; Q), so that the Sobolev inequality (6.2) remains valid with the same constant, allowing us to proceed as in the Neumann case for the proof of the density estimates. Existence is likewise treated as in the Neumann case, and all the other results hold with no modification. Notice in particular that even if the expression (6.3) of TV per contains boundary terms, periodicity implies that the difficulties that make the Dirichlet case require extensions do not arise.
+
+
+================================================================================
+Acknowledgements
+================================================================================
+
+We would like to thank Otmar Scherzer for encouragement to work on the interplay between the space dimension and convergence of level-sets.
+

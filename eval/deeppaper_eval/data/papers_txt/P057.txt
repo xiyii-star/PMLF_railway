@@ -1,0 +1,81 @@
+
+================================================================================
+Title
+================================================================================
+
+Empirical analysis on a keyword-based semantic system
+
+
+================================================================================
+Abstract
+================================================================================
+
+Keywords in scientific articles have found their significance in information filtering and classification. In this article, we empirically investigated statistical characteristics and evolutionary properties of keywords in a very famous journal, namely Proceedings of the National Academy of Science of the United States of America (PNAS), including frequency distribution, temporal scaling behavior, and decay factor. The empirical results indicate that the keyword frequency in PNAS approximately follows a Zipf's law with exponent 0.86. In addition, there is a power-low correlation between the cumulative number of distinct keywords and the cumulative number of keyword occurrences. Extensive empirical analysis on some other journals' data is also presented, with decaying trends of most popular keywords being monitored. Interestingly, top journals from various subjects share very similar decaying tendency, while the journals of low impact factors exhibit completely different behavior. Those empirical characters may shed some light on the in-depth understanding of semantic evolutionary behaviors. In addition, the analysis of keyword-based system is helpful for the design of corresponding recommender systems.
+
+
+================================================================================
+Introduction
+================================================================================
+
+The study on semantics has a long history from its birth by Breal in 1893. It has been acquainted as a branch of glossology. The modern semantic theory begins with the book, Course in General Linguistics, authorized by Saus-Correspondence to: zhutou@ustc.edu sure [1] . As pointed out by Graemes [2] , semantics does not aim at making description of every word in the natural language, but establishing the fundamental of descriptive meta-language, according to which we can record and unify the procedure of content description.
+
+The traditional semasiology analyzes the evolutionary properties of the acceptation mainly from the historical viewpoint, whereas the modern theory extends the horizon to the selection of new expressions, the existing and vanishing of phrases, systematicness of acceptation and the meaning of sentences. Recently, as a new interdisciplinary issue, semiotic dynamics has attracted more and more attention from different scientific communities. Compared with the traditional glossology and semasiology, the semiotic dynamics treats word and morpheme as the basic unit of content, and focuses on the understanding of how our communication pattern affects the human semantic system, as well as the underlying mechanism of evolution, emergence, self-organization and self-adaptation of the semantic system [3, 4, 5] . Therefore, semiotic dynamics not only extends the research scope of traditional semasiology, but also contributes to the understanding of the characteristics of human language system, including the evolving properties, competition between different terms, the birth and fashion of new words, and so on [6, 7] .
+
+The first step of the study on semiotic dynamics is to extract the representative morphemes, such as tags and keywords of text, and find out their relations. The mainstream methods include the Vector Space Model (VSM) [8, 9, 10, 11] and the Ontology-Based Model (OBM) [12, 13] . VSM is an algebraic model, which describes text documents as vectors of identifiers. In VSM, a document is represented as a vector, and each dimension corresponds to a separate term. Several methods have been developed to calculate the values, and one of the well-known ways is the TI-IDF weighting [14] . The weight vector for document d can be defined as:
+
+where
+
+tf t is the frequency of term t in document d. |D| is the total number of documents, and |t ∈ d| is the number of documents which contains the term t. An online recommendation system Fab [15] is a typical application of VSM.
+
+However, VSM neglects the semantic content and thus its accuracy is sensitive to the word-cutting algorithm.
+
+Comparatively, OBM uses ontologies to describe the relationship between terms. An ontology is a set consisted of abstracts, concepts and relations by which we wish to conceptualisze for the target world. The most typical kind of ontology in the web has a taxonomy and an interface rules set. The taxonomy defines the classes of terms and relations among them, while interface rules make the terms more useful and meaningful to users [17] . An ontologybased lexical database, namely WordNet [18] , is generic ontology and free for research purposes. There are also many limitations in the OBM, for the relations between morphemes cannot be changed after the definition of a domain ontology [12, 13] . In addition, the keywords in the text with special functions are usually confined within a previously defined set of words, which update generally slower than the frontier of the corresponding subjects. For instance, the articles in Physical Reviews (A-E, L) are labeled by PACS Numbers, which can only be selected from a standard set. The analysis on these kinds of semantic systems can partly exhibit the correlations and statistical evolutionary properties of keywords [19, 20] , however, the establishment of this set of words involves strong external disturbances, which hinder the understanding of essential evolving properties driven by the semantic system itself.
+
+There are many ways to identify the semantic charac-  tific journals among the world. PNAS was found in 1915 with one volume per year. It publishes the original research articles and reports the important academic activities. We have applied a Java script program to automatically download the keywords of each article in PNAS from the Web of Science. Since the articles published from 1915 to 1990 do not have keywords, our analysis is limited in the collected data from 1991 to 2006 (the documents without keywords, such as Correction and Addition, are not considered in our analysis), which is consisted of 46149 articles and 466470 keywords. Those keywords are the combination of two parts: the ones added by authors, and the ones proposed by editors (namely Keywords Plus). Note that, some keywords are very popular and have been used in many articles, thus the number of distinct keywords, 102992, is much smaller than the number of keyword occurrences (i.e., 466470). Hereinafter, when referring to the number of keywords, we mean the total number of keyword occurrences. For example, if there are two articles, one has keywords A, B and C, while the other has keywords C and D. Then, we say there are 5 keywords, and 4 distinct keywords. Data of some other journals are also analyzed for comparison (see below). To be comparable, we also extract the data from 1991 to 2006.
+
+
+================================================================================
+Zipf's law of keywords' occurrences
+================================================================================
+
+In 1930s, Zipf put forth a famous law of frequency distribution of phrases, namely Zipf 's Law [21] , which has been widely used to characterize the distributions of firm size [22, 23] , city scale [24] , wealth [25, 26] , earthquake strength [27] , and so on. Rank the phrases in a descending order according to their occurring frequency in a text, Zipf found a power-law relation between the rank, n, and its corre-sponding frequency, P n , as:
+
+As shown in Fig. 1 , the frequency distribution of keywords in PNAS approximately follows a Zipf's law with exponent 0.86 crossing 4 magnitudes. Most keywords are of low frequencies, while a few popular keywords appear very frequently. Up to 2006, the most popular keyword, Expression, has been used for 6927 times. Meanwhile, there are 66782 (64.84%) distinct keywords used only once. As shown in Table 1, this Zipf's law is universally existed for various scientific journals in different subjects.
+
+where λ ≈ 0.75, and c is a constant. From Eq. ( 4 ), one can derive that the growing rate of distinct keywords is cλτ λ-1 , where τ is the number of keywords. When λ = 1, there exists a linear relation between the number of newly The full titles of the journals can be found in Table 1 .
+
+added distinct keywords and that of the newly added keywords, and the growing rate is a constant c. When λ < 1, the growing rate of distinct keywords will decrease with the increasing of the total number of keywords. Actually, if the number of distinct keywords is N , the probability that the next keyword has not been used before (i.e., distinct) is equal to c 2λ-1 λN 1-1 λ , which will decreases with the increase of N when λ < 1. The data from some other scientific journals indicate the universality of this scaling law (see Table 1 ).
+
+Surprisingly, some recently empirical studies demonstrate the extensive existence of this kind of scaling law, with the same form as Eq. ( 4 ), in the web tag systems [28, 29, 30] . Note that, the collaborative tagging system is an open and optional system where each user can optionally modify the tags in the system. In contrast, the keywords in articles are considered seriously by the authors and editors, so the keyword-based systems are more canonical and serious. However, both tags and keywords follow the same scaling law. This result indicates a possibly universal law for the generic semantic systems.
+
+
+================================================================================
+Decaying behavior of the most popular keywords
+================================================================================
+
+The decay factor r t of a keyword describes the collective decay of attention, which can be defined as [31] : where N t denotes the cumulative occurring frequency of the monitored keyword at time t with year resolution. N 0 is the occurring frequency in the first year (i.e., the year 1991). In order to reduce the fluctuation, when analyzing the decay factor, we use the aggregated data of several keywords, thus the Eq. ( 5 ) should be rewritten as:
+
+where E(•) denotes the average over the monitored set of keywords. We analyze the decay factor of ten most popular keywords (top-10 keywords for short) in the year 1991.
+
+As shown in Fig. 3 , r t of PNAS (red circles) decays very fast in the first three years, and then slows down. The decay factor almost decreases to a half in 1993. Actually, its decaying trend can be well fitted by an exponential function as
+
+where y 0 = 0.10 ± 0.01, A 1 = 1.47 ± 0.09, t 1 = 1.88 ± 0.13, and the time x varies from 1 (the year 1992) to 15 (the year 2006). The fitting curve versus empirical result is shown in Fig. 4 . This decaying trend can be used to quantify the broadness of interests of a journal. For a journal with high impact factor, it is possible and reasonable that r t decays very fast in the early stage since it mainly publishes the newest progress in natural science with some new concepts.
+
+We also empirically study the decaying behavior of top-10 keywords for several top journals in different subjects, from biology to mathematics. As shown in Fig. 3 , all those decaying curves display similar tendency. In contrast, as shown in the inset of Fig. 3 , r t of three local journals with relatively lower scientific impacts have far different shapes compared with those top journals. Actually, the decay factor r t exhibits large fluctuation and no obvious decaying tendency can be observed even in a long period of time (15 years). A possible reason is that those journals with low impacts do not publish as many newest progresses as top journals.
+
+
+================================================================================
+Conclusion and Discussion
+================================================================================
+
+In this paper, we empirically investigated the statistical characteristics and the evolutionary properties of keywords The studies of systems with collaborative keywords are also relevant to the recent progress on the design of recommender systems. Actually, with the advance of Web2.0 technique, a great number of recommendation algorithms were applied to some on-line resource-sharing systems [33] , which can recommend music, films, books and news to users according to their historical activities. Up to now, the most accurate algorithm is content-based [34] . However, those content-based methods are practical only if the items have well-defined attributes, which can be extracted automatically. The traditional content analyzing approach, based on cutting the content word by word, is often impractical since its computational complexity is too high for the huge-size database. In contrast, the structurebased algorithm has less complexity but also lower accuracy [35, 36, 37] . Because the keywords of an article can express, to some extent, the main content of this article, an algorithm with low complexity and high accuracy is expected by properly integrating the recommendations drawn from the keyword-article bipartite graph and the author-article bipartite graph (see Ref. [35] how to get recommendations from a bipartite graph).
+
+In addition, a Keyword-Based Collaboration Network (KBCN) can be constructed based on the definition that two keywords are connected if they appeared together in at least one article. More characters about the structural organization of a keyword-based semantic system can be analyzed with the help of KBCN (see Refs. [38, 39, 40] how to construct and analyze collaboration networks). Especially, the in-depth understanding of the hierarchical organization [41] , the community structure [42] and the motif density [43] are crucial for the classification of research areas and the evaluation on the strength of interdisciplinary studies.
+
+
+================================================================================
+Acknowledgement
+================================================================================
+
+This work is supported by SBF (Switzerland) for financial support through project C05.0148 (Physics of Risk), and the Swiss National Science Foundation (Project 205120-113842). T.Z. acknowledges the National Natural Science Foundation of China (Grant Nos. 10635040 and 60744003).
+

@@ -1,0 +1,578 @@
+
+================================================================================
+Title
+================================================================================
+
+Chapter 7 Data Mining-based Techniques
+
+
+================================================================================
+Abstract
+================================================================================
+
+Software engineering processes generate a large amount of data, and several authors have advocated for the use of data mining methods to conduct fault localization. Many data mining methods with different merits exist, but the very first step is often to simply consider as data what was previously considered a mere by-product of a process. One of the first historical examples of uncovering new knowledge from pre-existing data was Florence Nightingale's (1820-1910) demonstration that soldiers died more often from bad sanitary conditions in military hospitals than from battle wounds. For her demonstration, she gathered previously ignored data and presented it in revealing graphics. This example demonstrates that data mining is itself a process with important questions, from the selection and gathering of data to the presentation of the results. In the fault localization context, the following questions emerge: which existing data can be leveraged to improve the localization? Which presentation of the results is best suited for the debugging process? In this chapter, we will illustrate the basic concepts of fault localization using a data mining technique and present three approaches to locate the faulty statements of a program. We will also address how data mining can be further applied to fault localization for GUI components.
+
+
+================================================================================
+Introduction 2
+================================================================================
+
+As software engineering data are symbolic by nature, in this chapter, we will present fault localization using symbolic methods. Symbolic methods tend to lend themselves naturally to give explanations, and this is exactly what we are looking for in fault localization. Indeed, we prefer a system with the capacity of saying "the failure has to do with the initialization of variable x" to a system limited to saying "the fault is in these million lines with probability 0.527". Therefore, we will illustrate how to use two data mining techniques: association rules and formal concept analysis in fault localization.
+
+Formal concept analysis and association rules deal with collections of objects and their features. The former extracts contextual truth, such as "in this assembly, all white-haired female wear glasses", while the latter extracts relativized truth, such as "in this assembly, carrying a briefcase increases the chance of wearing a tie". In a fault localization context, the former could say that "all failed tests call method m", and the latter could discover that "most failed tests call method m, which is very seldom called in passed tests".
+
+Throughout this chapter, we use the Trityp program (partly given in Table 7 .1) to illustrate the general method. It is a classical benchmark for test generation methods. Its specification is to classify sets of three segment lengths into four categories: scalene, isosceles, equilateral, and not a triangle, according to whether a given kind of triangle can be formed with these dimensions, or no triangle at all. We use this benchmark to explain the ability of data mining process for localizing faults. We do so by introducing faults in the program in order to form slight variants, called mutants, and by testing them through a test suite [9] . The data mining process starts with the output of the tests, i.e., execution traces and pass/fail verdicts. The mutants can be found on the web 3 , and we use them to illustrate the general localization method. Table 7 .2 presents the eight mutants of the Trityp program. The first mutant is used to explain in detail the method. For mutant 1, one fault has been introduced in Line 84. The condition (trityp == 2) is replaced by (trityp == 3). That fault causes a failure in two cases: Table 7.2. Mutants of the Trityp program [6].
+
+(2) The second case is when trityp is equal to 3; the execution should go to Line 87, but due to the fault, it goes to Line 84. Indeed, if the condition (i+k>j) holds, trityp is assigned to 2. However, (i+k>j) does not always imply (j+k>i), which is the real condition to test when trityp is equal to 3. Therefore, trityp is assigned to 2, whereas 4 is expected.
+
+The faults of mutants 2, 3, 6, and 8 are on assignments. The faults of mutants 4, 5, and 7 are on conditions. We will present more details about multiple fault situations in Chapter 8.5. In this case, we simply combine several mutations to form new mutants.
+
+
+================================================================================
+Formal Concept Analysis and Association Rules 4
+================================================================================
+
+Formal concept analysis (FCA, [12] Erreur ! Source du renvoi introuvable. Erreur ! Source du renvoi introuvable.) and association rules (AR, [ [3] ]) are two well-known methods for symbolic data mining.
+
+In their original inception, they both consider data in the form of an object-attribute table. In the FCA world, the table is called a formal context. In the AR world, objects are called transactions and attributes are called items, so that a line represents the items present in a given transaction. This comes from one of the first applications of AR, namely the basket analysis of retail sales. We will use both vocabularies interchangeably according to context.
+
+Definition 1 (Formal context and transactions). A formal context, K, is a triple (O, A, d), where O is a set of objects, A is a set of attributes, and d is a relation in O × A. We write (o,a)∈ d or oda equivalently.
+
+In the AR world, A is called a set of items, or itemset, and each {i∈A | odi} is the oth transaction.
+
+For visualization, we will consider objects as labeling lines and attributes as labeling columns of a table.
+
+A cross sign at the intersection of line o and column a indicates that object o has attribute a.
+
+Table 7.3 is an example of context. The objects are the planets of the solar system, and the attributes are discretized properties of these planets: size, distance to the sun, and presence of moons. One can observe that all planets without moons are small, but all planets with moons except two are far from the sun. The difficulty is making similar observations in large data sets.
+
+Both methods try to answer questions such has "which attributes entail these attributes?" or "which attributes are entailed by these attributes?". The main difference between FCA and AR is that FCA answers these questions to the letter, i.e., the mere exception to a candidate rule kills the rule, though association rules are accompanied by statistical indicators. In short, association rules can be almost true. As a consequence, rare events as well as frequent events are represented in FCA, whereas in AR, frequent events are distinguished.
+
+
+================================================================================
+Formal Concept Analysis
+================================================================================
+
+FCA searches for sets of objects and sets of attributes with equal significance, like Mercury, Venus, and without moons, and then orders the significances by their specificity.
+
+Definition 2 (extent /intent/formal concept) Let be a formal context.
+
+is the extent of a set of attributes . It is written as extent . is the intent of a set of objects . It is written intent .
+
+A formal concept is a pair such that , , and . is called the intent of the formal concept, and is called its extent.
+
+Formal concepts are partially ordered by set inclusion of their intent or extent. iff . We say that contains .In other words, forms a formal concept iff and A are mutually optimal for describing each others; ie., they have same significance. 7 .1) [6] .
+
+(extent)intent(O)), intent(O)) is always a formal concept, and it is written as concept(O). In the same
+
+
+================================================================================
+( )
+================================================================================
+
+, , All formal concepts can be constructed this way.
+
+Theorem 1 (Fundamental theorem of FCA, [16] ). Given a formal context, the set of all its partially ordered formal concepts forms a lattice called a concept lattice.
+
+Given a concept lattice, the original formal context can be reconstructed. Figure 7 .1 shows the concept lattice deduced from the solar system context. It is an example of the standard representation of a concept lattice. In this representation, concepts are drawn as colored circles with an optional inner label that serves as a concept identifier, and 0, 1, or 2 outer labels in square boxes. Lines represent nontransitive containment; therefore, the standard representation displays a Hasse diagram of the lattice [26] . The figure is oriented such that higher concepts (higher in the diagram) contain lower concepts.
+
+The upper outer label of a concept (such as large for concept G), when present, represents the attributes that are new to this concept intent compared with higher concepts; we call it an attribute label. It can be proven that if A is the attribute label of concept c, then A is the smallest set of attributes such that c = concept(A). Symmetrically, the lower outer label of a concept (such as Jupiter, Saturn for concept G), when present, represents the objects that are new to this concept extent compared with lower concepts; we call it an object label. It can be proven that if O is the object label of concept c, then O is the smallest set of objects such that c = concept(O). As a consequence, the intent of a concept is the set of all attribute labels of this concept and higher concepts, and the extent of a concept is the set of all object labels of this concept and lower concepts.
+
+For example, the extent of concept A is {Jupiter, Saturn, Uranus, Neptune}, and its intent is {far fromsun, withmoons}. In other words, an attribute labels the highest concept to which intent it belongs, and an object labels the lowest concept to which extent it belongs.
+
+It has been proven [12] that such a labeling where all attributes and objects are used exactly once is always possible. As a consequence, some formal concepts can be named by an attribute and/or an object; for example, concept G can be called either concept large, Jupiter, or Saturn, but others like concept D have no such names. They are merely unions or intersections of other concepts.
+
+In the standard representation of concept lattice, "a1 entails a2" reads as an upward path from concept(a1) to concept(a2). Attributes that do not entail each other label incomparable concepts, such as attributes small and with moons. Note that there is no purely graphical way to detect that "a1 nearly entails a2".
+
+The bottom concept, ⊥, has all attributes and usually zero objects, unless some objects have all attributes. The top concept, , has all objects and usually zero attributes, unless some attributes are shared by all objects.
+
+The worst-case time complexity of the construction of a concept lattice is exponential, but we have shown that if the size of the problem can only grow with the number of objects, i.e., the number of attributes per object is bounded, then the complexity is linear [11] . Moreover, though the mainstream interpretation of FCA is to compute the concept lattice at once and use it as a means for presenting graphically the structure of a data set, we have shown [11][21] that the concept lattice can be built and explored gradually and efficiently.
+
+
+================================================================================
+Association Rules
+================================================================================
+
+FCA is a crisp methodology that is sensitive to every detail of the data set. Sometimes, one may wish for a method that is more tolerant to exceptions.
+
+
+================================================================================
+⊥
+================================================================================
+
+Definition 3 (Association rules), Let K be a set of transactions, i.e., a formal context seen as a set of lines seen as itemsets. An association rule is a pair (P, C) of itemsets. It is usually written as P→ C.
+
+
+================================================================================
+The P part is called the premise, and the C part is the conclusion.
+================================================================================
+
+Note that any P→C forms an association rule. It does not mean it is a relevant one. Statistical indicators give hints at the relevance of a rule.
+
+Definition 4 (Support/confidence/lift). The support of a rule P→C, written as sup , is defined as 5   The normalized support a rule is defined as
+
+The confidence of rule ,written con ,is defined as
+
+The lift of a rule , written lift , is defined as Support measures the prevalence of an association rule in a data set. For example, the support of near sun with moon is 2. Normalized support measures its prevalence as a value in [0, 1], i.e., as a probability of occurrence. For example, the normalized support of near sun with moon is 2/8 = 0.25. It can be read as the probability of observing the rule in a random transaction of the context. It would seem that the greater the support, the better it is, but very often one must be satisfied with a very small support. This is because in large contexts, with many transactions and items, any given co-occurrence of several items is a rare event. Efficient algorithms exist for calculating all ARs with minimal support [2] [4][24] [28] .
+
+Confidence measures the "truthness" of an association rule as the ratio of the prevalence of its premise and conclusion together on the prevalence of its premise alone. Its value is in [0, 1], and for a given premise, bigger is better; in other words, it is better to have fewer exceptions to the rule considered as a 5 Where . is the cardinal of a set; how many elements it contains.
+
+( )
+
+) extent P C È P C ® ( ) ( ) extent P C extent È AE P C ® ( ) f P C ® ( ) ( ) ( ) ( ) sup sup P C extent P C P e x t e n t P ® È = ® AE P C ® ( ) P C ® ( ) ( ) ( ) ( ) sup sup conf P C P C conf C P ® ® = AE ® ® AE ( ) ( ) ( ) sup( ) ( ) extent P C extemt C extent P extent C È ´AE AE ® =
+
+´ logical implication. For example, the confidence of near sun with moon is 2/4 = 0.5. This can be read as the conditional probability of observing the conclusion knowing that the premise holds. However, there is no way to tell whether a confidence value is good in itself. In other words, there is no absolute threshold above which a confidence value is good.
+
+Lift also measures "truthness" of an association rule, but instead as the increase of the probability of observing the conclusion when the premise holds w.r.t. when it does not hold. In other words, it measures how the premise of a rule increases the chance of observing the conclusion. A lift value of 1 indicates that the premise and conclusion are independent. A lower value indicates that the premise repels the conclusion, and a higher value indicates that the premise attracts the conclusion. For example, the lift of near sun with moon is 0.5/0.75, which shows that the attribute near sun repels the attribute with moon; to be near the sun diminishes the probability of having a moon. The rule near sun without moon has a support value of 0.25, confidence value of 0.5, and lift value of 0.5/0.25, which indicates an attraction; to be near the sun augments the probability of not having a moon. The two rules have identical supports and confidences but opposite lifts. In the sequel, we will use support as an indicator of the prevalence of a rule and lift as an indicator of its "truthness".
+
+
+================================================================================
+Data Mining for Fault Localization 6
+================================================================================
+
+We consider a debugging process in which a program is tested against different test cases. Each test case yields a transaction in the AR sense, in which attributes correspond to properties observed during the execution of the test case. Two attributes, PASS and FAIL, represent the issue of the test case (again, see future works for variants on this). Thus, the set of all test cases yields a set of transactions that form a formal context, which we call a trace context. The main idea of the data mining approach is to look for a formal explanation of the failures.
+
+
+================================================================================
+Failure Rules
+================================================================================
+
+Formally, we are looking for association rules following pattern P → FAIL. We call these rules failure rules. A failure rule proposes an explanation to a failure, and this explanation can be evaluated according to its support and lift. Note that failure rules have a variable premise P and a constant conclusion FAIL. This slightly simplifies the management of rules. For instance, relevance indicators can be specialized as follows:
+
+Definition 5 (Relevance indicators for failure rules) , , .
+
+Observe that extent(Ø) and extent({FAIL}) are constant for a given test suite. Only extent(P) and extent (P∪ {FAIL} depend on the failure rule.
+
+6 Part of Chapter 7.4 is from Reference [6] ( ) { } ( ) sup P FAIL extent P FAIL ® = È ( ) { } ( ) ( extent P FAIL conf P FAIL extent P È ® = ( ) { } ( ) ( ) ( ) { } ( ) extent P FAIL extent lift P FAIL extent P extent FAIL
+
+It is interesting to understand the dynamics of these indicators when new test cases are added to the trace context.
+
+Lemma 2 (Dynamics of relevance indicators with respect to test suite). Consider a failure rule P FAIL:
+
+A new passed test case that executes P will leave its support unchanged (normalized support will decrease slightly 7 ), will decrease its confidence, and will decrease its lift slightly if P is not executed by all test cases.
+
+A new passed test case that does not execute P will leave its support and confidence unchanged (normalized support will decrease slightly) and will increase its lift.
+
+A new failed test case that executes P will increase its support and confidence (normalized support will increase slightly) and will increase its lift slightly if P is not executed by all test cases.
+
+A new failed test case that does not execute P will leave its support and confidence unchanged (normalized support will decrease slightly), and will decrease its lift.
+
+In summary, support and confidence grow with new failed test cases that execute P, and lift grows with failed test cases that execute P or passed test cases that do not execute P. Failed test cases that execute P increase all the indicators, but passed test cases that do not execute P only increase lift 8 .
+
+
+================================================================================
+Another interesting dynamic is what happens when P increases.
+================================================================================
+
+Lemma 3 (Dynamics of relevance indicators with respect to premise). Consider a failure rule P→FAIL and replacing P with P such that P>P: Support will decrease (except if all test cases fail, which should not persist). One says P→FAIL is more specific than P→FAIL.
+
+Confidence and lift can go either way, but both in the same way because is a constant.
+
+For the sequel of the description, we assume that the attributes recorded in the trace context are line numbers of executed statements. Since the order of the attributes in a formal context does not matter, this forms an abstraction of a standard trace (see a fragment of such a trace context in Table 7 .4). Thus, explanations for failures will consist of line numbers, lines that increase the risk of failure when executed. Had other trace observations been used, the explanations would have been different. For faults that materialize in faulty instructions, it is expected that they will show up as explanations to failed test cases. For other faults that materialize in missing instructions, they will still be visible in actual lines that would have been correct if the missing lines where present. For instance, a missing initialization will be seen as the faulty consultation of a non-initialized variable. It is up to a competent debugger to conclude from faulty consultations that an initialization is missing. Note finally that the relationships 7 Slightly: if most test cases pass, which they should eventually. 8 Observing more white swans increases the belief that swans are white, but observing non-white non-swans increases the interest of the white swan observations. Observing a non-white swan does not change the support of the white swan observations, but it decreases its confidence and interest. Still, the interest can be great if there are more white swans and non-white non-swans than non-white swans.
+
+( ) { } ( ) extent extent FAIL AE between faults and failures are complex: • Executing a faulty line does not necessarily cause a failure. For example, a fault in a line may not be stressed by a case test (e.g. faulty condition i > 1 instead of the expected i > 0, tested with i equals to 10) or a faulty line that is "corrected" by another one.
+
+• Absolutely correct lines can apparently cause failure, such as lines of the same basic block [29] as a faulty line (they will have exactly the same distribution as the faulty line) or lines whose preconditions cannot be established by a distant faulty part.
+
+Failure rules are selected according to a minimal support criterion. However, there are too many such rules, and it would be inconvenient to list them all. We have observed in Lemma 3 that more specific rules have less support. However, this does not mean that less specific rules must be preferred. For instance, if the program has a mandatory initialization part, which always executes a set of lines I, rule I→FAIL is a failure rule with maximal support, but it is also less informative. On the contrary, if all failures are caused by executing a set of lines FÉ I, rule 9 F\I→FAIL will have the same support as F →FAIL, but will be the most informative. In summary, maximizing support is good, but it is not the definitive criteria for selecting informative rules.
+
+Another idea is to use the lift indicator instead of support. However, lift does not grow monotonically with premise inclusion. Therefore, finding rules with a minimal lift cannot be done more efficiently than by enumerating all rules and then filtering them.
+
+Table 7.5. Failure context for mutant 1 of the Trityp program with min and min (for mutant 1 the fault is at line 84, see Table 7.1 ) [6]. Rule ID Executed lines 17 58 66 81 84 87 90 105 93 … 113 ×
+
+
+================================================================================
+Failure Lattice
+================================================================================
+
+Here, we describe how to use FCA to help navigate in the set of explanations.
+
+Definition 6 (The failure lattice). Form a formal context with the premises of failure rules. The rules 9 Where .\. is set subtraction; the elements of a first set that do not belong to a second set.
+
+identifiers are the objects, and their premises are the attributes (in our example, line numbers) (see an example in Table 7 .5). It is called the failure context.
+
+Observe that the failure context is special in that all premises of failure rules are different from each other 10 . Thus, they are uniquely determined by their premises (or itemsets). Thus, it is not necessary to identify them by objects identifiers.
+
+Apply FCA on this formal context to form the corresponding concept lattice. It is called the failure lattice. Its concepts and labeling display the most specific explanations to groups of failed tests.
+
+Since object identifiers are useless, replace object labels by the support and lift of the unique rule that labels each concept. This forms the failure lattice (see Figure 8 .3). The overall trace mining process is summarized in Figure 8 .4.
+
+
+================================================================================
+Lemma 4 (Properties of the failure lattice).
+================================================================================
+
+The most specific explanations (i.e., the largest premises) are at the bottom of the lattice. On the contrary, the least specific failure rules are near the top. For instance, the line numbers of a prelude sequence executed by every test case will label the topmost concepts.
+
+The explanations with the smallest support are at the bottom of the lattice. For example, line numbers executed only by specific failed test cases will label concepts near the bottom. 7 .5 (for mutant 1, the fault is at line 84) [6] Figure 7 .3. The trace mining process [6] .
+
+Support increases when going upstream, from bottom to top. We call this the global monotony of support ordering. This is a theorem [ [5] ].
+
+
+================================================================================
+Lift does not follow any global monotony behavior.
+================================================================================
+
+Concepts form clusters of comparable concepts with the same support. For example, concepts 2, 4, and 7 in Figure 7 .2 form a cluster of rules with support 60. We call them support clusters. This means that explanations of increasing size represent the same group of failures.
+
+In a support cluster, a unique concept has the largest extent. We call it the head concept of the support cluster. It corresponds to the explanation with the highest lift value in the support cluster. More generally, lift decreases when going bottom-up in a support cluster. We call this behavior the local monotony of lift ordering, and it is also a theorem [[5] ].
+
+It is useless to investigate explanations other than the head concepts. This can be done by a bottom-up exploration of the failure lattice.
+
+In the lattice of Figure 7 .2, only concepts 2 (head of support cluster with value 60), 3 (head of support cluster with value 52), and 5 (head of support cluster with value 112) need be presented to the debugging oracle. Concept 5 has Line 84 in its attribute label, which is the location of the fault in this mutant. The local monotony of lift ordering shows that the lift indicator can be used as a metric, but only inside support clusters.
+
+The process that we have presented is dominated by the choice of a minimal value for the support indicator. Recall that the support of an explanation is simply the number of simultaneous realizations of its items in the failure context, and the normalized support is the ratio of this number to the total number of realizations. In this application of ARs, it is more meaningful to use the non-normalized variant because it directly represents the number of failed test cases covered by an explanation. What is a good value for the minimal support? First, it cannot be larger than the number of failed test cases (= extent(FAIL)); otherwise, no P → FAIL rule will show up. Second, it cannot be less than 1. The choice of between 1 and extent(FAIL) depends on the nature of the fault, but in any case, experiments show that acceptable minimum support is quite low (a few percent of the total number of test cases). A high minimal support will filter out all faults that are the causes of less failures than this threshold. Very singular faults will require a very small support, eventually 1, to be visible in the failure lattice. This suggests starting with a high support to localize the most visible faults, and then decreasing the support to localize less frequently executed faults. The minimal support acts as a resolution cursor. A coarse resolution will show the largest features at a low cost, and a finer resolution will be required to zoom in on smaller features at a higher cost.
+
+We have insisted on using lift instead of confidence as a "truthness" indicator, because it lends itself more easily to an interpretation (recall Definition 4 and subsequent comments). However, in the case of failure rules, the conclusion is fixed (= FAIL), and both indicators increase and decrease in the same way when the premise changes (recall Lemma 3). The only difference is that the lift indicator yields a normalized value (1 is independence, bellow 1 is repulsion, and over 1 is attraction). What is the effect of a minimum lift value? Firstly, if it is chosen to be larger than or equal to 1, it will eliminate all failure rules that show a repulsion between the premise and conclusion. Secondly, if it is chosen to be strictly greater than 1, it will eliminate failure rules that have a lower lift, thus compressing the representation of support clusters and eventually eliminating some support clusters. Thus, the minimal lift also acts as a zoom.  Figure 7.5. The four Venn diagrams of two-fault dependency [6].
+
+This suggests a global debugging process in which the results of an increasingly large test suite are examined with increasing acuity (see Figure 7 .4). Given a test suite, an inner loop computes failure rules, i.e., explanations with decreasing support, from a fraction of extent(FAIL) to 1, and builds the corresponding failure lattice. In the outer loop, test cases are added progressively to cope with added functionality (such as test-driven development) or new failure reports. Thus, the global debugging process zooms in on the failed test cases to find explanations for more and more specific failures.
+
+
+================================================================================
+The Failure Lattice for Multiple Faults 11
+================================================================================
+
+This section extends the analysis of data mining for fault localization for the multiple fault situation. From the debugging process point of view, there is nothing special about multiple faults. Some software engineering life cycles like test-driven development tend to limit the number of faults observed simultaneously, but one can never assume a priori that there is a single fault. Thus, we assume there are one or several faults.
+
+
+================================================================================
+Dependencies between Faults
+================================================================================
+
+In the multiple fault case, each failure trace accounts for one or several faults. Conversely, faulty lines are suspected in one or several failure traces. Thus, the inner loop of the global debugging process cannot stop because a fault is found. The process must go on until all failures are explained. How can this be done without exploring the entire failure lattice?
+
+Consider any pair of two faults F1 and F2, and F ail F1 and F ail F2 are the sets of failed test cases that detect F1 and F2, respectively. We identify four types of possible dependencies between the two faults.
+
+Definition 7 (Dependencies between faults) If , we say that they are mutually strongly dependent (MSD).
+
+If we say F1 is strongly dependent (SD) from F2 (and vice versa). 11 Part of Chapter 7.5 is from Reference [6] Otherwise, , we say that they are independent (ID).
+
+Note that this classification, is not intrinsic to a pair of faults; it depends on the test suite. However, it does not depend arbitrarily from the test suite.
+
+Lemma 5 (How failure dependencies depend on growing test suites) Assume that the test suite can only grow, then an ID or SD pair can only become LD, and an MSD pair can only become SD or LD.
+
+This can be summarized as follows:
+
+Note also that this knowledge, with several faults and the dependencies between them, is what the debugging person is looking for, whereas the trace context only gives hints at this knowledge. The question is: how does it give hints at this knowledge?
+
+The main idea is to distinguish special concepts in the failure lattice that we call failure concepts.
+
+
+================================================================================
+Definition 8 (Failure concept).
+================================================================================
+
+A failure concept is a maximally specific concept of the failure lattice whose intent (a set of lines) is contained in a failed execution.
+
+Recall that the failure rules are an abstraction of the failed execution. For instance, choosing minimal support and lift values eliminates lines that are seldom executed or that do not attract failure. Thus, the failure lattice describes exactly the selected failure rules but only approximately the failed executions.
+
+That is why it is interesting; it compresses information, though with loss. The failure concepts in the failure lattice are the concepts that best approximate failed executions. All other concepts contain less precise information. For the same reasons, there are much fewer failure concepts than failed executions; each failure concept accounts for a group of failures that detects some fault.
+
+The main use for failure concepts is to give a criterion for stopping the exploration of the failure lattice. In a few words,
+
+• The bottom-up exploration of the failure lattice goes from support clusters to support clusters as above;
+
+• The line labels of the traversed concepts are accumulated in a fault context sent to the competent debugger;
+
+• Any time a competent debugger finds a hint at an actual fault, all the failure concepts under the concept that gave the hint are deemed explained;
+
+• The process continues until all failure concepts are explained.
+
+The fault context is the part of the program that the debugging person is supposed to check. We consider its size as a measure of the effort imposed on the debugging person (see Section 1.6 for comparative experiments).
+
+Dependencies between faults have an impact on the way failure concepts are presented in the failure
+
+Lemma 6 (ID faults with respect to failure concepts). If two faults are ID, their lines can never occur in the same failed trace, and then no rule contains the two faults and no concept in the failure lattice contains the two faults. Thus, the two faults will label failure concepts in two different support clusters that have no subconcepts in common (for an example, see Figure 7 .6).
+
+Concretely, when exploring the failure lattice bottom-up, finding a fault in the label of a concept explains both the concept and the concepts underneath, but the faults in the other upper branches remain to be explained. Moreover, the order with which the different branches are explored does not matter.
+
+Lemma 7 (LD faults with respect to failure concepts). If two faults are LD, some failed traces contain both faults, while other failed traces contain either fault. They may label concepts in two different support clusters that share common subconcepts. Concretely, when exploring the failure lattice bottom-up, finding a fault for a failure concept does not explain the other LD failure concept. Once a fault is found, shared concepts must be re-explored in the direction of other superconcepts.
+
+Lemma 8 (SD faults with respect to failure concepts). If two faults are SD, say F1 depends on F2, a failure concept whose intent contains LineF1 will appear as a subconcept of a failure concept whose concept contains LineF2 in a different support cluster (for an example, see Figure 7 .7).
+
+Therefore, fault F1 will be found before F2, but the debugging process must continue because there is a failure concept above.
+
+Lemma 9 (MSD faults with respect to failure concepts). Finally, if two faults are MSD, they cannot be distinguished by failed executions, and their failure concepts belong to the same support cluster. However, they can sometimes be distinguished by passed executions (such as one having more passed executions than the other), and this can be seen in the failure lattice through the lift value.
+
+All this can be formalized in an algorithm that searches for multiple faults in an efficient traversal of the failure lattice (see Algorithm 7.1). The failure lattice is traversed bottom-up, starting with the failure concepts (step 1). At the end of the failure lattice traversal, CfailuretoExplain, the set of failure concepts not explained by a fault (step 2) must be empty, or all concepts must be already explored (step 3). When a concept, c (step 4), is chosen among the concepts to explore, CtoExplore, the events that label the concept are explored. Note that the selection of that concept is not determinist. If no fault is located, then the upper neighbours of c are added to the set of concepts to explore (step 7). If, thanks to the new clues, the debugging oracle understands mistakes and locates one or several faults, then all subconcepts of c and all concepts that are in the same support cluster are "explained". Those concepts do not have to be explored again (step 10). This means that the failure concepts that are subconcepts of c are explained (step 11). The exploration goes on until all failed executions in the failure lattice are explained by at least one fault, or all concepts have been explored. Algorithm 7.1. Failure lattice traversal [6]. Table 7.6. Exploration of the failure lattice of Figure 7.6 At the next iteration, concept 9 is selected. As in the previous iteration, no fault is found. The upper neighbour, concept 8, is added to CtoExplore.
+
+Finally, concept 7 is selected. That concept is labeled by lines 81 and 84. By exploring those lines (new clues) in addition with the fault context, i.e., lines that have already been explored: 87, 90, 101, and 85, the competent debugging oracle locates fault 1 at line 84. The fault is the substitution of the test of trityp = 2 by trityp = 3. Concepts 12 and 9 exhibit two concrete realizations (failures) of the fault at line 84 (Concept 7). Concepts 7, 12, and 9 are tagged as explained. The set of failure concepts to explain is empty; thus, the exploration stops. All four faults (for failures above support and lift threshold) are found after the debugging oracle has inspected nine lines. 12 The contexts and lattices introduced in the previous sections allow programmers to see all the differences between execution traces as well as all the differences between association rules. There exist other methods that compute differences between execution traces. We first show that the information about trace differences provided by the failure context (and the corresponding lattice) is already more relevant than the information provided by four other methods proposed by Renieris and Reiss [25] and Cleve and Zeller [7] . Then, we show that explicitly using association rules with several lines in the premise alleviates some limitations of Jones et al.'s method [15] . Finally, we show that reasoning on the partial ordering given by the proposed failure lattice is more relevant than reasoning on total order rankings [8] [18][20][24] [32] .
+
+
+================================================================================
+The Structure of the Execution Traces
+================================================================================
+
+The trace context contains the whole information about execution traces. In particular, the associated lattice, the trace lattice, allows programmers to see all differences between traces in one pass.
+
+There exist several fault localization methods based on the differences between execution traces. They all assume a single failed execution and several passed executions. We rephrase them in terms of search in a lattice to highlight their advantages, their hidden hypothesis, and limitations.
+
+
+================================================================================
+Union Model
+================================================================================
+
+The union model, proposed by Renieris and Reiss [25] , aims at finding features that are specific to the failed execution. The method is based on trace differences between the failed execution f and a set of passed executions S : f -∪ s∈S s. The underlying intuition is that the failure is caused by lines that are executed only in the failed execution. Formalized in FCA terms, the concepts of interest are the subconcepts whose label contains FAIL, and the computed information is the lines contained in the labels of the subconcepts. The trace lattice presented in the figure is slightly different from the lattice that would be computed for the union model, because it represents more than one failed execution. Nevertheless, the union model often computes empty information, namely each time the faulty line belongs to failed and passed execution traces. For example, a fault in a condition has a very slight chance to be localized. The approach we presented is based on the same intuition. However, the lattices that we propose do not lose information and help navigate in order to localize the faults, even when the faulty line belongs to both failed and passed execution traces.
+
+The union model helps localize a bug when executing the faulty statement always implies an error, such as the bad assignment of a variable that is the result of the program. In that case, the lattice also helps, and the faulty statement labels the same concept as FAIL.
+
+
+================================================================================
+Intersection Model
+================================================================================
+
+The intersection model [25] is the complementary of the previous model. It computes the features whose absence is discriminant of the failed execution: ∩s∈S s -f. Replacing FAIL with PASS in the above discussion is relevant to discussing the intersection model and leads to the same conclusions.
+
+
+================================================================================
+Nearest Neighbor
+================================================================================
+
+The nearest neighbor approach [25] computes a distance metric between the failed execution trace and a set of passed execution traces. The computed trace difference involves the failed execution trace, f , and only one passed execution trace, the nearest one, p : f -p. The difference is meant to be the part of the code to explore. The approach can be formalized in FCA. Given a concept Cf whose intent contains FAIL, the nearest neighbor method searches for a concept Cp whose intent contains PASS, such that the intent of Cp shares as many lines as possible with the intent of Cf.
+
+The rightmost concept fails, whereas the leftmost one passes. As for the previous methods, it is a good approach when the execution of the faulty statement always involves an error. However, when the faulty statement can lead to both a passed and a failed execution, the nearest neighbor method is not sufficient. In addition, we remark that there are possibly many concepts of interest, namely all the nearest neighbors of the concept that is labeled by FAIL. With a lattice, that kind of behavior can be observed directly.
+
+Note that in the trace lattice, the executions that execute the same lines are clustered in the label of a single concept. Executions that are nearby share a large part of their executed lines and label concepts that are neighbors in the lattice. There is therefore no reason to restrict the comparison to a single pass execution. Furthermore, all the nearest neighbors are naturally in the lattice.
+
+
+================================================================================
+Delta Debugging
+================================================================================
+
+Delta debugging, proposed by Zeller et al. [8] , reasons on the values of variables during executions rather than on executed lines. The trace spectrum, and therefore the trace context, contains different types of attributes. Note that the presented approach does not depend on the type of attributes and would apply more to spectra containing other attributes than executed lines.
+
+Delta debugging computes the differences between the failed execution trace and a single passed execution trace in a memory graph. By injecting the values of variables of the failed execution into variables of the passed execution, the method tries to determine a small set of suspicious variables. One of the purposes of the method is to find a passed execution relatively similar to the failed execution. It has the same drawbacks as the nearest neighbor method.
+
+
+================================================================================
+From the Trace Context to the Failure Context
+================================================================================
+
+Tarantula Jones et al. [15] computed association rules with only one line in the premise. Denmat et al. [10] showed the limitations of this method through three implicit hypotheses. The first hypothesis is that a failure has a single faulty statement origin. The second hypothesis is that lines are independent. The third hypothesis is that executing the faulty statement often causes a failure. That last hypothesis is a common assumption of fault localization methods, including the presented method. Indeed, when the fault is executed in both passed and failed executions (such as in a prelude), it cannot be found so easily using these hypotheses.
+
+In addition, Denmat et al. demonstrated that the ad hoc indicator, which was used by Jones et al., is equivalent to the lift indicator.
+
+By using association rules with more expressive premises than in Jones et al.'s method (namely with several lines), the limitations mentioned above are alleviated. Firstly, the fault need not be a single line but can contain several lines together. Secondly, the dependency between lines is taken into account. Indeed, dependent lines are clustered or ordered together.
+
+The part of the trace context that is important to search in order to localize a fault is the set of concepts that are related to the concept labeled by FAIL; i.e., those that have a non-empty intersection with the concept labeled by FAIL. Computing association rules with FAIL as a conclusion compute exactly those concepts, modulo the minsup and minlift filtering. In other words, the focus is done on the part of the lattice related to the concept labeled by FAIL.
+
+
+================================================================================
+The Structure of Association Rules
+================================================================================
+
+Jones et al.'s method presents the result of the analysis to the user as a coloring of the source code. A red-green gradient indicates the correlation with failure. Lines that are highly correlated with failure are colored in red, whereas lines that are not highly correlated are colored in green. Red lines typically represent more than 10% of the lines of the program, without identified links between them. Other statistical methods [8][18][19][32] also try to rank lines in a total ordering. It can be seen as ordering the concepts of the failure lattice by the lift value of the rule in their label. However, we have shown in Section 1.3 that the monotonicity of lift is only relevant locally to a support cluster.
+
+For example, on the failure lattice of Figure 7 .2, the obtained ranking would be: line 85, line 66, line 68, line 84. No link would be established between the execution of line 85 and line 68, for example.
+
+The user who must localize a fault in a program has background knowledge about the program and can use it to explore the failure lattice. Reading the lattice gives context about the fault and not just a sequence of independent lines to be examined, and it reduces the number of lines to be examined at each step (concept) by structuring them.
+
+
+================================================================================
+Multiple Faults
+================================================================================
+
+We have compared the failure lattice with existing single fault localization methods. In this section, we compare the presented navigation in the failure lattice with the strategies of the other methods to detect several faults. The presented approach involves algorithmic debugging [27] . The difference lies in the traversed data structure. While Shapiro's algorithm helps traverse a proof tree, the presented algorithm helps traverse the failure lattice, starting from the most suspicious places.
+
+For multiple faults, Jiang et al. [14] criticized the ranking of statistical methods. They proposed a method based on traces whose events are predicates. The predicates are clustered, and the path in the control flow graph associated to each cluster is computed. In the failure lattice, events are also clustered in concepts. The relations between concepts give information about the path in the control flow graph and highlight some parts of that path as relevant to debug without computing the control flow graph.
+
+Zheng et al. [32] proposed a method based on bi-clustering in order to group failed executions and identify one feature (bug predictor) that characterizes each cluster. They proposed to look at one bug predictor at a time. Several bug predictors can be in relation with the same fault, but no link is drawn between them. The presented approach gives context to the fault, in order to help understand the mistakes of the programmer that have produced the fault.
+
+Jones et al. [16] proposed a method that first clusters executions and then finds a fault in each cluster in parallel. The method has the same aim as the presented method. Indeed, in both cases, we want to separate the effects of the different faults in order to treat the maximum of faults in one execution of the test suite, but in the presented approach, the clusters are partially ordered to take into account dependencies between faults.
+
+Finally, SBI [18] introduces a stop criterion as we did in the presented algorithm. SBI tries to take advantage of one execution of the test suite. The events are predicates, and SBI ranks them. When a fault is found due to the ranking, all execution traces that contain the predicates used to find the fault are deleted, and a new ranking of predicates with the reduced set of execution traces is computed. Deleting execution traces can be seen as equivalent to tagging concepts, as well as the events of their labeling, as explained in DeLLIS. The difference between SBI and DeLLIS is that DeLLIS does not need to compute the failure lattice several times.
+
+
+================================================================================
+Fault Localization using N-gram Analysis 13
+================================================================================
+
+In the previous sections, we described the background of data mining and how it can be applied to fault localization in general. In this section, we will describe how to use data mining along with N-gram analysis for software fault localization.
+
+In software fault localization, test cases are usually utilized as sets of inputs with known expected outputs. If the actual output does not match the expected output, the test case has failed. Various information can be collected during the execution of the test cases for later analysis. This information may include statement coverage (the set of statements that were executed at least once during the execution) and exact execution sequence (the actual order in which the statements were executed during the test case executions). Since we will be working only with the exact execution sequence in this paper, we refer to it as trace. Usually, the usefulness of trace data is limited by the sheer volume. Data mining traditionally deals with large volumes of data, and in this research, we apply data mining techniques to process this trace data for fault localization. From trace data, we generate N-grams, i.e., subsequences of length N. From these, we choose N-grams that appear more than a certain number of times in the failing traces. For these N-grams, we calculate the confidence -the conditional probability that a test case fails given that the N-gram appears in that test case's trace. We sort the N-grams in descending order of confidence and report the statements in the program in the order of their first occurrence in the sorted list.
+
+
+================================================================================
+Execution Sequence
+================================================================================
+
+Let be a program with n lines of source code, labeled .For example, in the sample program mid from [15] in Figure 7 .8, L= {4,5,6,10,11,12,13,14,15,17,18,19,20,21,24} after excluding comments, blank lines and structural constructs like '}'. A test case is a set of input with known outputs. Let be the n test cases for program P. Each test case has the input and expected output When program is executed with input , it produces actual output . If , then we say is a passing test case, and if ; then we say is a failing test case. For example, the 6 test cases for the program mid in [15] , , are shown in Table 7 .7. Let 13 Part of Chapter 7.7 is from Reference [22
+
+, , , T t t t =  be the trace of program when running test case T. Then, for mid the trace for the test case is Y = {4,4,5,10,11,12,14,15,24,6}. We define two sets based on the outcome of the test casespassing traces which is and failing traces which is .
+
+We define the problem as: given program P with executable statements ,test cases and actual outputs , the problem is to rank the statements in according to their probability of containing the fault. To compare this method with other methods like [15] , we report the results in terms of statements, but it can also work at function level.
+
+Given an ordered list, an N-gram is any sub-list of N consecutive elements in the list. The elements of the N-gram must be in the same order as they were in the original list, and they must be consecutive. Given an execution trace , an N-gram is a contiguous subsequence of length N starting at position . For a trace , the set of all line N-gram is
+
+
+================================================================================
+Linear Execution Blocks
+================================================================================
+
+From the set of all traces, we identify the execution blocks, i.e., the code segments with a single point of entry and a single point of exit. For this, we construct the Execution Sequence Graph XSG(P) = (V, E) where the set of vertices is such that for each , for some and that and are consecutive in . This is similar to a Control Flow Graph, but the vertices in an XSG represent statements rather than blocks. In this graph, there is an edge between two vertices only if they were executed in succession in at least one of the execution traces. The XSG for mid is given in Figure 8 .10, where we can see that the blocks of mid are . Thus, trace of test case t1 can be converted to block level trace by .
+
+It should be noted that the definition of blocks here is different than the traditional blocks [ [1] ]. Since we identify blocks from traces, the blocks here may include function or procedure entry points. For example, will not be a single block by the traditional definition since it has a function started at line 10. Due to this difference, we name the blocks Linear Execution Blocks, defined as follows: A Linear Execution Block is a directed path in XSG such that the indegree of each vertex
+
+
+================================================================================
+Association Rule Mining
+================================================================================
+
+Association rule mining searches for interesting relationships among items in a given data set [13] . It has the following two parts: Frequent Itemset Generation. Search for sets of items occurring together frequently, called a frequent itemset, whose frequency in the data set, called support, exceeds a predefined threshold, called minimum support.
+
+
+================================================================================
+Association Rule Generation. Look for association rules like
+================================================================================
+
+among the elements of the frequent itemsets, meaning that the appearance of A in a set implies the appearance of B in the same set. The conditional probability P(B|A) is called confidence, which must be greater than a predefined minimum confidence for a rule to be considered. More details can be found in [13] .
+
+We model the blocks as items and the block traces as transactions. For example, Y1 = <b1, b2, b3, b8, b10, b7> is a transaction for mid corresponding to the first test case, T1. We generate frequent itemsets from the transactions with the additional constraint that the items in an itemset must be consecutive in the original transaction. To do this, we generate N-grams from the block traces, and from them, we choose the ones with at least the minimum support. For a block N-gram GY i ,N,p, support is the number of failing traces containing GY i ,N,p:
+
+.9. Execution sequence graph for program mid [22] .
+
+For example, for mid, the support for is 1 since it occurs in one failing trace. We add the test case type to the itemset. For example, after adding the test case type to the itemset , the itemset becomes . Then, we try to discover association rules of the form failing from these itemsets where the antecedent is a block N-gram and the consequent is failing. Therefore, the block N-grams that appear as antecedents in the association rules are most likely to have caused the failure of the test case. We sort these block N -grams in descending order of confidence. For a block N-gram ; confidence is the conditional probability that the test case outcome is failure given that appears in the trace of that test case. That is, For example, the confidence the rule failing has confidence 0.33. After sorting the block N-grams, we convert the blocks back to line numbers and report this sequence of lines to investigate to find the fault location.
+
+
+================================================================================
+Methodology
+================================================================================
+
+As input, we use the source code, the test case types, and the traces for all the test cases, and we produce as output an ordered list of statements, sorted in order of probability of containing the fault. We first
+
+2 3 8 , , b b b
+
+2 3 8 , , b b b
+
+2 3 8 , , , b b b passing
+
+, , b b b Þ convert the traces to block traces and then apply N-gram analysis on these block traces to generate all possible unique N-grams for a given range of N. For each N-gram, we count its frequency in passing and failing traces.
+
+The execution of the faulty statement may not always cause failure of the test case. There may be quite a number of test cases in which the faulty statement was executed but did not cause a failure. In most cases, the failure is dependent on the sequence of execution. A specific sequence or path of execution will cause the program to fail, and this sequence will be very common in the failing traces but not so common in the passing traces. Therefore, we can find the subsequences that are most likely to contain the fault by analyzing the traces during passing and failing test cases.
+
+There are two major parameters in the algorithm. The first one is MinSup, the minimum support for selecting the N-grams, and the second is NMAX, the maximum value of N for generating the N-grams. Taking a low value of mini-mum support will result in the inclusion of irrelevant N-grams in consideration. Therefore, we should take minimum support at a high value. Our experience suggests that 90% is a good choice. However, the choice of an appropriate NMAX is more difficult. Two execution paths can differ because of conditional branches. Such differences can be detected by 2-grams. Again, the same function can be called from different functions, which can also be detected with 2-grams. Since we are using execution blocks, an N-gram can capture (N 1) branches, and a choice of 2 or 3 for NMAX should give good results in most cases. If we use higher N-grams, the algorithm will still be able to find the fault, but due to larger N-grams, we will have to examine more lines to find the fault.
+
+L2B: Convert exact execution sequences to block traces. From the line level traces, we create the execution sequence graph (XSG). From the XSG, we find the linear execution blocks (LEB). Then, we convert the traces into block traces in lines 2 to 4 of Algorithm 7.2. GNG: Generate N-grams. In this step, we first generate all possible N-grams of lengths 1 to NMAX from the block traces. The generation of all N-grams from a set of block traces for a given N is done in lines 1 to 7, and the generation and combination of all the N-grams are done in lines 5 to 8. Then, we find out how many passing and failing traces each N-gram occurs in. FRB: Find relevant blocks. From 1-gram, we construct a set of relevant blocks, Brel, that contains only the blocks that have appeared in each of the failing traces in lines 10 to 14. EIN: Eliminate irrelevant N-grams. In lines 15 to 16, we discard the N-grams that do not contain any block from the relevant block set, Brel.
+
+FFN: Find frequent N-grams. In lines 17 to 21, we eliminate N-grams with support less than the minimum support.
+
+RNC: Rank N-grams by confidence. For each surviving N-gram, we compute its confidence using Equation (2) . This is done in lines 22 to 26. Then, we order the N-grams in order of confidence in line 27.
+
+B2L: Convert blocks in N-grams to line numbers. We convert each block in the N-grams back to line numbers using the XSG in line 28.
+
+RLS: Rank lines according to suspicion. We traverse the ordered list of N-grams and report the line numbers in the order of their first appearance in the list. This is done in line 29.
+
+If there are multiple N-grams with the same confidence as the N-gram containing the faulty statement, the best case will be the ordering in which the faulty statement appears in the earliest possible position in the group, and the worst case will be the ordering in which the faulty statement appears in the latest possible position. Algorithm 7.2. Fault localization using N-gram analysis [22] .
+
+Algorithm 7.3. N-gram generation [22] .
+
+
+================================================================================
+Conclusion
+================================================================================
+
+In this section, we presented an approach to locate the suspiciousness statement using N-gram analysis. The augmenting the execution traces with data flows in order to pinpoint data-driven faults is worth investigating. Different than other fault localization techniques, such as spectrum, the amount of data that N-gram requires is relatively small; this gives it an advantage in the fault localization world, where the complexity and size of software are growing dramatically. Research using exact execution sequences, as well as applying data mining to fault localization, is still in an early phase, and there are many avenues to explore and improve the effectiveness.
+
+
+================================================================================
+Fault Localization for GUI Software using N-gram Analysis 14
+================================================================================
+
+After describing how to use N-gram analysis to conduct fault localization for program, let us see how N-gram analysis is used to localize the faults of GUI modules.
+
+Unlike traditional software, test cases for testing GUI programs are event sequences instead of individual input data or files [20] . For each event, there must be a piece of source code that addresses the event; we call it the event's corresponding event handler [31] . By ranking these event handlers by their level of suspicion accounting for faults encountered during the testing, we can help programmers pinpoint the failures that cause event handlers in the source code. Due to the large volume of GUI event sequences, usually infinity, we apply data mining techniques to the test data to extract the most relevant sequences. From each test case, we generate N-grams, i.e., subsequences of length N. From these, we choose N-grams that appear more than a certain number of times in the event sequence of failing test cases. For these N-grams, we calculate the confidence: the conditional probability that a test case fails given that the N-gram appears in that test case's event sequence. We sort the N-grams in descending order of confidence and report the events of the program in the order of their first occurrence in the sorted list.
+
+
+================================================================================
+GUI components:
+================================================================================
+
+Objects of a GUI include some windows and all kinds of GUI widgets (such as button, menu) in the windows [20] . In a broad definition, the window itself can also be viewed as a kind of GUI widget. Each window or GUI widget has a fixed set of properties, such as the size and position of the GUI widget. At any specific point in time, the GUI can be described in terms of the specific GUI widgets that it contains and the values of their properties.
+
+
+================================================================================
+Event:
+================================================================================
+
+The basic inputs for GUI software are events. When a GUI application is running, users' operations trigger events, and the application responds to these events. Since events may be performed on different types of GUI widgets in different contexts, yielding different behaviors, they are parameterized with objects and property values. Commonly, we can use a 3-tuple <a, o, v> to represent event where a is the action of the event (such as clicking the mouse), o stands for the GUI widget the event deals with (such as a button), and v is the set of parameters of this action [31] . GUI test cases: Unlike traditional software, GUI test cases are usually defined as event sequences [20] . A formal representation of a GUI test case is a legal event sequence <e1, e2, en> consisting of n events. "Legal" refers to the fact that for can be immediately accepted by GUI software and executed after the execution of ei. Cai et al. extended this definition by defining GUI test cases using a hierarchical language [17] . People can first generate simple test cases as low order test cases. Then, more test cases can be generated by combining these low order test cases.
+
+EFG and EIG: Due to the hierarchical relationship between GUI widgets, some events can only be accepted by the GUI software after the execution of some other events. If event ej can be immediately accepted and executed after the execution of event ei, we say ej follows ei and (ei, ej) is called an event interaction. In model-based GUI testing, event-flow graph (EFG) is used to model all possible event interactions of GUI software [20] . EFG is a directed graph that contains nodes (that represent events) and edges (that represent a relationship between events). 14 Part of Chapter 7.8 is from Reference [30] 1 1, 2, , 1, i i n e + = - Event-interaction graph (EIG) is an improvement for EFG [22] . EIG nodes, on the other hand, do not represent events to open or close menus or open windows. These events are only structural events and usually do not interact with the underlying software. The result is a more compact, and hence more efficient, GUI model. Figure 7 .10 presents a GUI that consists of four events: Undo, Redo, Select, and Edit. Figure 7 .10 (b) shows the GUI's EFG; the four nodes represent the four events, while the edges represent the follows relationships. For example, in this EFG, the event Undo follows Edit, represented by a directed edge from the node labeled Edit to Undo. Figure 7 .10 (c) shows the GUI's EIG. The Edit event is a menu open event, and we only use it to get the availability of the three other events, so the EIG model does not contain it. Following the deletion of event Edit, each edge (ex, Edit) in the original EFG is replaced with edge (ex, ey) for each occurrence of edge (Edit, ey).  Figure 7.11. Example of event handler [30]
+
+
+================================================================================
+Event Handler
+================================================================================
+
+When one event executes on the software, all the pieces of source code that are possible to be executed are called the event's corresponding event handler [31] . The event handler usually includes the message response function and source code called by this function. Each event at most has one event handler. In addition, an event handler may response to several events. For example, pressing the shortcut key "Ctrl+S" has the same effect as clicking the "Save" button on the toolbar in Microsoft Word; therefore, these two events have the same event handler. Figure 8 .12 gives an example of an event handler. The figure lists two events' event handlers out of five, h1 and h2, which respectively represent the event handler for the event of clicking the "About" button and the event of typing in the textbox.
+
+
+================================================================================
+N-gram
+================================================================================
+
+For a GUI application, let be the test set with n test cases in it. Each test case is composed of the input , i.e., a set of events and , the expected output of . When input is executed, it produces the actual output . If , then we regard ti as a passing test case, and if ; then ti is regarded as a failing test case. Let be the event sequence corresponding to test case ti, then the total event sequences of the entire test set is .
+
+We define two sets based on the outcome of the test cases passing event sequences which is and failing event sequences which is .
+
+Given an ordered list, an N -gram is any sub-list of N consecutive elements in the list. The elements of the N-gram must be in the same order as they were in the original list, and they must be consecutive.
+
+Given an event sequence , an N-gram is a contiguous subsequence of length N starting at position . Taking the difference of into account, the set of all N-grams for is After deleting the duplicated N-grams, is the N-grams corresponding to the total event sequences E.
+
+
+================================================================================
+Association Rule Mining
+================================================================================
+
+Association rule mining searches for interesting relationships among items in a given data set [11] , which involves the following two procedures:
+
+(1) Frequent itemset generation: Search for sets of items occurring together frequently, called a frequent itemset, whose frequency in the data set, called support, exceeds a predefined threshold (known as the minimum Support). For an N-gram , Support is the number of failing test case containing :
+
+(2) Association Rule Generation: Look for association rules like among the elements of the frequent itemsets, meaning that the appearance of A in a set implies the appearance of B in the same set. The conditional probability is called Confidence, which must be greater than a predefined Minimum Confidence for a rule to be considered. For an N-gram , Confidence is the conditional probability that the test case outcome is failure given that appears in the event sequence of that test case; That is:
+
+1 2 , , , n T t t t =  , i i i t I X = i I i X i I i I i A i i A X = i i A X ¹ 1 2 , , i k E e e e =  1 2 , , n E E E E =  { } is a passing test case p i i E E t = { } is a failing test case f i i E E t = i E , , i E N G a 1 1 , , , i N E e e e a a a + +-=  a a i E { } , ,
+
+
+================================================================================
+Methodology
+================================================================================
+
+In this section, we present the methodology for GUI software fault localization [30] . As input, we use the source code, the test case types, and the event sequences of all the test cases, and we produce as output an ordered list of events, sorted in order of probability of their corresponding event handler containing the fault. We apply N-gram analysis to these event sequences to generate all possible unique N-grams for a given range of N. For each N-gram, we calculate its frequency in passing and failing event sequences. The set of N-grams and their frequencies are analyzed using the association rule mining technique described above.
+
+The execution of the faulty event handler may not always cause failure of the test case. There may be quite a number of test cases in which the faulty event handler was executed but did not cause a failure. In most cases, the failure is dependent on the execution of other events. A specific event sequence of execution will cause the program to fail, and this event sequence will be very common in the failing event sequences but not so common in the passing event sequences. Therefore, we can find the subsequences that are most likely to contain the fault by analyzing the event sequences of passing and failing test cases.
+
+
+================================================================================
+General Approach
+================================================================================
+
+We model the events as items and the event sequence corresponding to a test case as the transaction. For example, is a transaction corresponding to the test case ti. We generate frequent itemsets from the transactions with the additional constraint that the items in an itemset must be consecutive in the original transaction. To do this, we generate GE,N , and from them, we choose the ones with at least the minimum support. Then, we try to discover association rules of the form from these itemsets where the antecedent is an N-gram and the consequent is failing. Therefore, the N-grams that appear as antecedents in the association rules are most likely to have caused the failure of the test case. We sort these N-grams in descending order of confidence. After sorting the N-grams, we convert the N-grams back to event orders.
+
+
+================================================================================
+B. N-Gram Fault Localization Algorithm
+================================================================================
+
+(1) Parameters: There are two major parameters in the algorithm: the first is MinSup, the minimum support for selecting the N-grams, and the second is NMAX, the maximum value of N for generating the N-grams. Taking a low value of minimum support will result in the inclusion of irrelevant Ngrams in consideration. Giving a high value of minimum support may cause us to discard some very important N-grams. Thus, we should give MinSup a median value. For GUI software, the execution of event e1 may differ because of the execution of the previous event e2. If event sequence <e1, e2> can be executed without inserting another intermediate event (such as an event to open menu), such differences can be detected by 2-grams; otherwise, such differences can be commonly detected by 3-grams. Consequently, we believe a choice of 3 for NMAX should give good results in most cases. If we give CDEF@higher value, the algorithm will still be able to find the fault, but due to larger N-grams, we will have to examine more event handlers to find the fault.
+
+(2) Algorithm pseudo-code: In this section, the complete algorithm is presented in Algorithm 8.4.
+
+i i j E N p j j f E N p j E N p j E G E and E E Confidence G E G E Î Î = Î 1 2 , , , i k E e e e = á ñ A failing ® (f) Find relevant events: From 1-gram, where the length of the sub-list is 1, we construct a set of relevant events, denoted by ERel. It contains only the events that have appeared at least in one of the failing event sequences in lines 6 to 11 of
+
+
+================================================================================
+Example
+================================================================================
+
+For the example of Figure 7 .6, the min sup value is equal to four failed executions (out of 400 executions, of which there are 168 failed executions), and the min lift value is equal to one. There are four failure concepts: 5, 13, 12, and 9. Table 7 .6 presents the values of CtoExplore and CfailuretoExplain at each iteration of the exploration. We choose to explore the lattice with a queue strategy; it means first in CtoExplore, first out of CtoExplore. However, the algorithm does not specify one strategy.
+
+At the begining, CtoExplore and CfailuretoExplain are initialized as the set of all failure concepts (iteration 0 in Table 7 .6). At the first iteration of the while loop, concept 5 is selected (c = c5). That concept is labeled by line 74. Line 74 actually corresponds to fault 6. Thanks to the competent debugging hypothesis, fault 6 is located. Concepts 5, 4, and 14 are thus tagged as explained. The new values of CtoExplore and CfailuretoExplain are presented at iteration 1 in Table 7 .6.
+
+At the second iteration, concept 13 is selected (c = c13). That concept is labeled by lines 64 and 79. Line 79 actually corresponds to fault 2; the competent debugging oracle locates fault 2. Concept 13 is tagged as explained. At the third iteration, concept 12 is selected. That concept is labeled by lines 87 and 90. No fault is found. The upper neighbours, concepts 7 and 11, are added to CtoExplore, and CfailuretoExplain is { }    (t) Convert N-grams to event numbers and rank events: We traverse the ordered list of N-grams and report the event numbers in the order of their first appearance in the list. This is done in lines 25 to 26 of (u) (v) Algorithm 7.4. If there are multiple N-grams with the same confidence, then concerning the order for "new events" (do not exist in N-grams with a higher confidence) that these N-grams contain, the best case will be the ordering in which the more "new faults" (do not exist in the event handler of higher ranking event) that one event handler contains, the earlier the position the corresponding event appears in the event group; we call this the best situation. The worst case will be the ordering in which the more "new faults" that one event handler contains, the later the position the corresponding event appears in the event group; we call this the worst situation. If two event handlers contain the same number of "new faults", we break the tie by random selection. For example, if we finally have two 2-grams <e1, e2>and <e3, e4> of the same confidence 0.8, suppose e1, e2, e3, and e4 are "new events" and the event handler individually contains 1,0,0,2 "new faults". Then, we obtain event orders "e4, e1, e2, e3" or "e4, e1, e3, e2" under the best situation and "e2, e3, e1, e4" or "e3, e2, e1, e4" under the worst situation.
+
+
+================================================================================
+Conclusion
+================================================================================
+
+Unlike traditional software, GUI test cases are usually event sequences, and each individual event has a unique corresponding event handler. This approach applies data mining techniques to the event sequences and their output data in terms of failure detections collected in the testing phase to rank the fault proneness of the event handlers for fault localization. This approach only focuses on how to prioritize the event handlers of the program under test. To further improve the efficiency, other fault localization techniques can be integrated with this approach so that code-level suggestions can be generated by analyzing the runtime execution data.
+

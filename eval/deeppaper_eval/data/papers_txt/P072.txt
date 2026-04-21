@@ -1,0 +1,213 @@
+
+================================================================================
+Title
+================================================================================
+
+Unsupervised Category Discovery via Looped Deep Pseudo-Task Optimization Using a Large Scale Radiology Image Database
+
+
+================================================================================
+Abstract
+================================================================================
+
+Obtaining semantic labels on a large scale radiology image database (215,786 key images from 61,845 unique patients) is a prerequisite yet bottleneck to train highly effective deep convolutional neural network (CNN) models for image recognition. Nevertheless, conventional methods for collecting image labels (e.g., Google search followed by crowd-sourcing) are not applicable due to the formidable difficulties of medical annotation tasks for those who are not clinically trained. This type of image labeling task remains non-trivial even for radiologists due to uncertainty and possible drastic inter-observer variation or inconsistency. In this paper, we present a looped deep pseudo-task optimization procedure for automatic category discovery of visually coherent and clinically semantic (concept) clusters. Our system can be initialized by domain-specific (CNN trained on radiology images and text report derived labels) or generic (ImageNet based) CNN models. Afterwards, a sequence of pseudo-tasks are exploited by the looped deep image feature clustering (to refine image labels) and deep CNN training/classification using new labels (to obtain more task representative deep features). Our method is conceptually simple and based on the hypothesized "convergence" of better labels leading to better trained CNN models which in turn feed more effective deep image features to facilitate more meaningful clustering/labels. We have empirically validated the convergence and demonstrated promising quantitative and qualitative results. Category labels of significantly higher quality than those in previous work are discovered. This allows for further investigation of the hierarchical semantic nature of the given large-scale radiology image database.
+
+
+================================================================================
+Introduction
+================================================================================
+
+The rapid and tremendous success of applying deep convolutional neural networks (CNNs) [27, 47, 52] to many challenging computer vision tasks derives from the accessibility of the well-annotated ImageNet [13, 42] and PASCAL VOC [16] datasets. Deep CNNs perform significantly better than previous shallow learning methods and hand-crafted image features, however, at the cost of requiring greater amounts of training data. ImageNet pre-trained deep CNN models [22, 27, 32] serve an indispensable role to be bootstrapped upon for all externally-sourced data exploitation tasks [5, 31] . In the medical domain, however, no comparable labeled large-scale image dataset is available except the recent [44] . Vast amounts of radiology images/reports are stored in many hospitals' Picture Archiving and Communication Systems (PACS), but the main challenge lies in how to obtain ImageNet-level semantic labels on a large collection of medical images [44] .
+
+Nevertheless, conventional means of collecting image labels (e.g. Google image search using the terms from WordNet ontology hierarchy [34] , SUN/PLACE databases [60, 63] or NEIL knowledge base [7] ; followed by crowdsourcing [13] ) are not applicable due to 1) the formidable difficulties of medical annotation tasks for clinically untrained annotators, 2) unavailability of a high quality or large capacity medical image search engine. On the other hand, even for well-trained radiologists, this type of "assigning labels to images" task is not aligned with their regular diagnostic routine work so that drastic inter-observer variations or inconsistency may be demonstrated. The protocols of defining image labels based on visible anatomic structures (often multiple), or pathological findings (possibly multiple) or using both cues have a lot of ambiguity.
+
+Shin et al. [44] first extract the sentences depicting disease reference key images (similar concept to "key frames in videos") using natural language processing (NLP) out of ∼ 780K patients' radiology reports, and find 215,786 key images of 61,845 unique patients from PACS. Then, image categorization labels are mined via unsupervised hierarchical Bayesian document clustering, i.e. generative latent Dirichlet allocation (LDA) topic modeling [3] , to form 80 classes at the first level of hierarchy. The purely textcomputed category information offers some coarse level of radiology semantics but is limited in two aspects: 1) The classes are highly unbalanced, in which one dominating category contains 113,037 images while other classes contain a few dozens. 2) The classes are not visually coherent. As a result, transfer learning from the CNN models trained in [44] to other medical computer-aided detection (CAD) problems performs less compellingly than those transferred directly from ImageNet CNNs [27, 46, 52] .
+
+In this paper, we present a Looped Deep Pseudo-task Optimization (LDPO) approach for automatic category discovery of visually coherent and clinically semantic (concept) clusters. The true semantic category information is assumed to be latent and not directly observable. The main idea is to learn and train CNN models using pseudotask labels (when human annotated labels are unavailable) and iterate this process with the expectation that pseudotask labels will eventually resemble latent true image categories. Our work is partly related to the recent progress of semi-supervised learning or self-taught image classification, which has advanced both image classification and clustering processes [11, 12, 24, 30, 38, 48] . The iterative optimization in [24, 48] seeks to identify discriminative local visual patterns and reject others, whereas our goal is to set better labels for all images during iterations towards autoannotation.
+
+Our contributions are in several fold. 1), We propose a new "iteratively updated" deep CNN representation based on the LDPO technique. Thus it requires no handcrafted image feature engineering [24, 30, 38, 48] which may be challenging for a large scale medical image database. Our method is conceptually simple and based on the hypothesized "convergence" of better labels lead to better trained CNN models which in turn, offer more effective deep image features to facilitate more meaningful clustering/labels. This looped property is unique to deep CNN classification-clustering models since other types of classifiers do not learn better image features simultaneously. We use the database from [44] to conduct experiments with the proposed method in different LDPO settings. Specifically, different pseudo-task initialization strategies, two CNN architectures of varying depths (i.e., AlexNet [27] and GoogLeNet [52] ), different deep feature encoding schemes [8, 9] and clustering via K-means only or over-fragmented K-means followed by Regularized Information Maximization (RIM [20] as an effective model selection method), are extensively explored and empirically evaluated. 2), We consider the deep feature clustering followed by supervised CNN training as the outer loop and the deep feature clustering as the inner loop. Model selection on the number of clusters is critical and we carefully employ over-fragmented K-means followed by RIM model pruning/tuning to implement this criterion. This helps prevent cluster labeling amongst similar images, which can consequently compromise the CNN model training in the outer loop iteration. 3), The convergence of our LDPO framework can be observed and measured in both the cluster-similarity score plots and the CNN training classification accuracies. 4), Given the deep CNN LDPO models, hierarchical category relationships in a tree-like structure can be naturally formulated and computed from the final pairwise CNN classification confusion measures, as described in 3.5. We will make our discovered image annotations (after reviewed and verified by board-certified radiologists in a with-humans-in-theloop fashion [62] ) together with trained CNN models publicly available upon publication.
+
+To the best of our knowledge, this is the first work exploiting to integrate unsupervised deep feature clustering and supervised deep label classification for self-annotating a large scale radiology image database where the conventional means of image annotation are not feasible. The measurable LDPO "convergence" makes this ill-posed problem well constrained, at no human labeling costs. Our proposed LDPO method is also quantitatively validated using Texture-25 dataset [12, 29] where the "unsupervised" classification accuracy improves over LDPO iterations. The ground truth labels of texture images [12, 29] are known and used to measure the accuracy scores against LDPO clustering labels. Our results may grant the possibility of 1), investigating the hierarchical semantic nature (object/organ, pathology, scene, modality, etc.) of categories [23, 40] ; 2), finer level image mining for tag-constrained object instance discovery and detection [1, 59] , given the large-scale radiology image database.
+
+
+================================================================================
+Related Work
+================================================================================
+
+Unsupervised and Semi-supervised Learning: Dai et al. [11, 12] study the semi-supervised image classification/clustering problem on texture [29] , small to middlescale object classes (e.g., Caltech-101 [17] ) and scene recognition datasets [37] . By exploiting the data distribution patterns that are encoded by so called ensemble projection (EP) on a rich set of visual prototypes, the new image representation derived from clustering is learned for recognition. Graph based approaches [26, 33] are used to link the unlabeled image instances to labeled ones as anchors and propagate labels by exploiting the graph topology and connectiveness weights. In an unsupervised manner, Coates et al. [10] employ k-means to mine image patch filters and then utilize the resulted filters for feature computation. Surrogate classes are obtained by augmenting each image patch with its geometrically transformed versions and a CNN is trained on top of these surrogate classes to generate features [15] . Wang et al. [56] design a Siamese-triplet CNN network, leveraging object tracking information in 100K unlabeled videos to provide the supervision for visual representation learning. Our work initializes an unlabeled image collection with labels from a pseudo-task (e.g., text topic modeling generated labels [44] ) and update the labels through an iterative looped optimization of deep CNN feature clustering and CNN model training (towards better deep image features).
+
+Text and Image: [28] is a seminal work that models the semantic connections between image contents and the text sentences. Those texts describe cues of detecting objects of interest, attributes and prepositions and can be applied as contextual regularizations. [25] proposes a structured objective to align the CNN based image region descriptors and bidirectional Recurrent Neural Networks (RNN) over sentences through the multimodal embedding. [55] presents a deep recurrent architecture from "Sequence to Sequence" machine translation [51] to generate image description in natural sentences, via maximizing the likelihood of the target description sentence given the training image. [49] applies extensive NLP parsing techniques (e.g., unigram terms and grammatical relations) to extract concepts that are consequently filtered by the discriminative power of visual cues and grouped by joint visual and semantic similarities. [6] further investigates an image/text co-clustering framework to disambiguate the multiple semantic senses of some Polysemy words. The NLP parsing in radiology reports is arguably much harder than processing those public datasets of image captions [25, 28, 55] where most plain text descriptions are provided. Radiologists often rule out or indicate pathology/disease terms, not existing in the corresponding key images, but based on patient priors and other long-range contexts or abstractions. In [45] , only ∼ 8% key images (18K out of 216K) can be tagged from NLP with the moderate confidence levels. We exploit the interactions from the text-derived image labels, to the proposed LDPO (mainly operating in the image modality) and the final term extraction from image groups.
+
+
+================================================================================
+Domain Transfer and Auto-annotation:
+================================================================================
+
+Deep CNN representation has made transfer learning or domain adaption among different image datasets practical, via straightforward fine-tuning [19, 39] . Using pre-trained deep CNNs allows for the cross-domain transfer between weakly supervised video labels and noisy image labels. It can further output localized action frames by mutually filtering out low CNN-confidence instances [50] . A novel CNN architecture is exploited for deep domain transfer to handle unlabeled and sparsely labeled target domain data [54] . An image la-bel auto-annotation approach is addressed via multiple instance learning [58] but the target domain is restricted to a small subset (25 out of 1000 classes) of ImageNet [13] and SUN [60] . [57] introduces a method to identify a hierarchical set of unlabeled data clusters (spanning a spectrum of visual concept granularities) that are efficiently labeled to produce high performing classifiers (thus less label noise at instance level). By learning visually coherent and class balanced labels through LDPO, we expect that the studied large-scale radiology image database can markedly improve its feasibility in domain transfer to specific CAD problems where very limited training data are available per task.
+
+
+================================================================================
+Looped Deep Pseudo-Task Optimization
+================================================================================
+
+Traditional detection and classification problems in medical imaging, e.g. Computer Aided Detection (CAD) [41] , require precise labels of lesions or diseases as the training/testing ground-truth. This usually requires a large amount of annotation from well-trained medical professionals (especially at the era of "deep learning"). Employing and converting the medical records stored in the PACS into labels or tags is very challenging [45] . Our approach performs the category discovery in an empirical manner and returns accurate key-word category labels for all images, through an iterative framework of deep feature extraction, clustering, and deep CNN model fine-tuning.
+
+As illustrated in Fig. 1 , the iterative process begins by extracting the deep CNN feature based on either a finetuned (with high-uncertainty radiological topic labels [44] ) or generic (from ImageNet labels [27] ) CNN model. Next, the deep feature clustering with k-means or k-means followed by RIM is exploited. By evaluating the purity and mutual information between discovered clusters, the system either terminates the current iteration (which leads to an optimized clustering output) or takes the refined cluster labels as the input to fine-tune the CNN model for the following iteration. Once the visually coherent image clusters are obtained, the system further extracts semantically meaningful text words for each cluster. All corresponding patient reports per category cluster are finally adopted for the NLP. Furthermore, the hierarchical category relationship is built using the class confusion measures of the latest converged CNN classification models.
+
+
+================================================================================
+Convolution Neural Networks
+================================================================================
+
+The proposed LDPO framework is applicable to a variety of CNN models. We analyze the CNN activations from layers of different depths in AlexNet [27] and GoogLeNet [52] . Pre-trained models on the ImageNet ILSVRC data are obtained from Caffe Model Zoo [22] . We also employ the Caffe CNN implementation [22] to perform fine-tuning on pre-trained CNNs using the key image database (from [44] ). Both CNN models with/without fine-tuning are used to  initialize the looped optimization. AlexNet is a common CNN architecture with 7 layers and the extracted features from its convolutional or fully-connected layers have been broadly investigated [19, 25, 39] . The encoded convolutional features for image retrieval tasks are introduced in [35] , which verifies the image representation power of convolutional features. In our experiments we adopt feature activations of both the 5th convolutional layer Conv5 and 7th fully-connected (FC) layer F C7 as suggested in [4, 9] . GoogLeNet is a much deeper CNN architecture compared to AlexNet, which comprises 9 inception modules and an average pooling layer. Each inception modules is truly a set of convolutional layers with multiple window sizes, i.e. 1 × 1, 3 × 3, 5 × 5. Similarly, we explore the deep image features from the last inception layer Inception5b and final pooling layer P ool5. Table 1 illustrates the detailed model layers and their activation dimensions.
+
+
+================================================================================
+Encoding Images using Deep CNN Features
+================================================================================
+
+While the features extracted from fully-connected layer are able to capture the overall layout of objects inside the image, features computed at the last convolution layer preserve the local ac-tivations of images. Different from the standard max-pooling before feeding the fully-connected layer, we adopt the same setting ( [8] ) to encode the convolutional layer outputs in a form of dense pooling via Fisher Vector (FV) [36] and Vector Locally Aggregated Descriptor (VLAD) [21] . Nevertheless, the dimensions of encoded features are much higher than those of the FC feature. Since there is redundant information from the encoded features and we intend to make the results comparable between different encoding schemes, Principal Component Analysis (PCA) is performed to reduce the dimensionality to 4096, equivalent to the FC features' dimension.
+
+Given a pre-trained (generic or domain-specific) CNN model (i.e., Alexnet or GoogLeNet), an input image I is resized to fit the model definition and feed into the CNN model to extract features {f L i,j } (1 i, j s L ) from the L-th convolutional layer with dimensions s L × s L × d L , e.g., 13 × 13 × 256 of Conv5 in AlexNet and 7 × 7 × 1024 of P ool5 in GoogLeNet. For Fisher Vector implementation, we use the settings as suggested in [9] : 64 Gaussian components are adopted to train the Gaussian mixture Model(GMM). The dimension of resulted FV features is significantly higher than F C7's, i.e. 32768(2 × 64 × 256) vs 4096. After PCA, the FV representation per image is reduced to a 4096component vector. A list of deep image features, the encoding methods and output dimensions are provided in Table 1 . To be consistent with the settings of FV representation, we initialize the VLAD encoding of convolutional image features by k-means clustering with k = 64. Thus the dimensions of VLAD descriptors are 16384(64 × 256) of Conv5 in AlexNet and 65536(64 × 1024) of Inception5b in GoogLeNet. PCA further reduces the dimensions of both to 4096.
+
+
+================================================================================
+Image Clustering
+================================================================================
+
+Image clustering plays an indispensable role in our LDPO framework. We hypothesize that the newly generated clusters driven by looped pseudo-task optimization are better than the previous ones in the following terms: 1) Images in each cluster are visually more coherent and discriminative from instances in other clusters; 2) The numbers of images per cluster are approximately equivalent to achieve class balance; 3) The number of clusters is self-adaptive according to the statistical properties of a large collection of image data. Two clustering methods are employed here, i.e. k-means alone and an over-segmented k-means (where K is much larger than the first setting, e.g., 1000) followed by Regularized Information Maximization (RIM) [20] for model selection and optimization.
+
+k-means is an efficient clustering algorithm provided that the number of clusters is known. We explore k-means clustering here for two reasons: 1) To set up the baseline performance of clustering on deep CNN image features by fixing the number of clusters k at each iteration; 2) To initialize the RIM clustering since k-means is only capable of fulfilling our first two hypotheses, and RIM will help satisfy the third. Unlike k-means, RIM works with fewer assumptions on the data and categories, e.g. the number of clusters. It is designed for discriminative clustering by maximizing the mutual information between data and the resulted categories via a complexity regularization term. The objective function is defined as
+
+where c ∈ {1, ..., K} is a category label, F is the set of image features f i = (fi1, ..., fiD) T ∈ R D . I W {c; f } is an estimation of the mutual information between the feature vector f and the label c under the conditional model p(c|f , W). R(W; λ) is the complexity penalty and specified according to p(c|f , W). As demonstrated in [20] , we adopt the unsupervised multilogit regression cost. The conditional model and the regularization term are consequently defined as
+
+where W = {w1, ..., wK , b1, ..., bK } is the set of parameters and w k ∈ R D , b k ∈ R. Maximizing the objective function is now equivalent to solving a logistic regression problem. R is the L2 regulator of weight {w k } and its power is controlled by λ. Large λ values will enforce to reduce the total number of categories considering that no penalty is given for unpopulated categories [20] . This characteristic enables RIM to attain the optimal number of categories coherent to the data. λ is fixed to 1 in all our experiment.
+
+
+================================================================================
+Convergence in Clustering and Classification
+================================================================================
+
+Before exporting the newly generated cluster labels to finetune the CNN model of the next iteration, the LDPO framework will evaluate the quality of clustering to decide if convergence has been achieved. Two convergence measurements have been adopted [53] , i.e., Purity and Normalized Mutual Information (NMI). We take these two criteria as forms of empirical similar-ity examination between two clustering results from adjacent iterations. If the similarity is above a certain threshold, we believe the optimal clustering-based categorization of the data is reached. We indeed find that the final number of categories from the RIM process in later LDPO iterations stabilize around a constant number. The convergence on classification is directly observable through the increasing top-1, top-5 classification accuracy levels in the initial few LDPO rounds which eventually fluctuate slightly at higher values.
+
+Convergence in clustering is achieved by adopting the underlying classification capability stored in those deep CNN features through the looped optimization, which accents the visual coherence amongst images inside each cluster. Nevertheless, the category discovery of medical images will further entail clinically semantic labeling of the images. From the optimized clusters, we collect the associated text reports for each image and assemble each cluster's text reports together as a unit. Then NLP is performed on each report unit to find highly recurring words to serve as key word labels for each cluster by simply counting and ranking the frequency of each word. Common words to all clusters are removed from the list. The resultant key words and randomly sampled exemplary images are ultimately compiled for review by board-certified radiologists. This process shares some analogy to the human-machine collaborated image database construction [57, 62] . In future work, NLP parsing (especially term negation/assertion) and clustering can be integrated into LDPO framework.
+
+
+================================================================================
+Hierarchical Category Relationship
+================================================================================
+
+ImageNet [13] are constructed according to WordNet ontology hierarchy [34] . Recently, a new formalism so-called Hierarchy and Exclusion (HEX) graphs has been introduced [14] to perform object classification by exploiting the rich structure of real world labels [13, 27] . In this work, our converged CNN classification model can be further extended to explore the hierarchical class relationship in a tree representation. First, the pairwise class similarity or affinity score Ai,j between class (i,j) is modeled via an adapted measurement from CNN classification confusion [5] .
+
+where Ci, Cj are the image sets for class i,j respectively, | • | is the cardinality function, CN N (Im|j) is the CNN classification score of image Im from class Ci at class j obtained directly by the N-way CNN flat-softmax. Here Ai,j = Aj,i is symmetric by averaging P rob(i|j) and P rob(j|i). Affinity Propagation algorithm [18] (AP) is invoked to perform "tuning parameter-free" clustering on this pairwise affinity matrix {Ai,j} ∈ R K×K . This process can be executed recursively to generate a hierarchically merged category tree. Without loss of generality, we assume that at level L, classes i L ,j L are formed by merging classes at level L-1 through AP clustering. The new affinity score A i L ,j L is computed as follows.
+
+where L-th level class label j L include all merged original classes (i.e., 0-th level before AP is called) k ∈ j L so far. From the above, the N-way CNN classification scores (Sec. 3.4) only need to be evaluated once. A i L ,j L at any level can be computed by summing over these original scores. The discovered category hierarchy can help alleviate the highly uneven visual separability between different object categories in image classification [61] from which the category-embedded hierarchical deep CNN could be beneficial.
+
+
+================================================================================
+Dataset:
+================================================================================
+
+We experiment on the same dataset used in [44] . The image database contains totally 216K 2D key-images which are associated with ∼ 62K unique patients' radiology reports. Key-images are directly extracted from the Dicom file and resized as 256×256 bitmap images. Their intensity ranges are rescaled using the default window settings stored in the Dicom header files (this intensity rescaling factor improves the CNN classification accuracies by ∼ 2% to [44] ). Linked radiology reports are also collected as separate text files with patient-sensitive information removed for privacy reasons. At each LDPO iteration, the image clustering is first applied on the entire image dataset so that each image will receive a cluster label. Then the whole dataset is randomly reshuffled into three subgroups for CNN fine-tuning via Stochastic Gradient Descent (SGD): i.e. training (70%), validation (10%) and testing (20%). In this way, the convergence is not only achieved on a particular data-split configuration but generalized to the entire database.
+
+In order to quantitatively validate our proposed LDPO framework, we also apply category discovery on the texture-25 dataset [12, 29] : 25 texture classes, with 40 samples per class. The images from Texture-25 appear drastically different from those natural images in ImageNet, similar to our domain adaptation task from natural to radiology images. The ground truth labels are first hidden from the unsupervised LDPO learning procedure and then revealed to produce the quantitative measures (where purity becomes accuracy) against the resulted clusters. The cluster number is assumed to be known to LDPO and thus the model selection module of RIM in clustering is dropped.
+
+
+================================================================================
+CNN Fine-tuning:
+================================================================================
+
+The Caffe [22] implementation of CNN models are used in the experiment. During the looped optimization process, the CNN is fine-tuned for each iteration once a new set of image labels is generated from the clustering stage. Only the last softmax classification layer of the models (i.e. 'FC8' in AlexNet and 'loss3/classifier' in GoogLeNet) is significantly modulated by 1) setting a higher learning rate than all other layers and 2) updating the (varying but converging) number of category classes from the newly computed results of clustering.
+
+
+================================================================================
+LDPO Convergence Analysis
+================================================================================
+
+We first study how the different settings of proposed LDPO framework will affect convergence as follows:
+
+
+================================================================================
+Clustering Method:
+================================================================================
+
+We perform k-means based image clustering with k ∈ {80, 100, 200, 300, 500, 800}. Fig. 2 shows the changes of top-1 accuracy, cluster purity and NMI with different k across iterations. The classification accuracies quickly plateau after 2 or 3 iterations. Smaller k values naturally trigger higher accuracies (> 86.0% for k = 80) as less categories make the classification task easier. Levels of Purity and NMI between clusters from two consecutive iterations increase quickly and fluctuate close to 0.7, thus indicating the convergence of clustering labels (and CNN models). The minor fluctuation are rather due to the randomly re-sorting of the dataset in each iteration. RIM clustering takes an over-segmented k-means results as initialization, e.g., k = 1000 in our experiments. As shown in Fig. 3 Top-left, RIM can estimate the category capacities or numbers consistently under different image representations (deep CNN feature + encoding approaches). k-means clustering enables LDPO to approach the convergence quickly with high classification accuracies; whereas, the added RIM based model selection delivers more balanced and semantically meaningful clustering results (see more in Sec. 4.2). This is due to RIM's two unique characteristics: 1), less restricted geometric assumptions in the clustering feature space; 2), the capacity to attain the optimal number of clusters by maximizing the mutual information of input data and the induced clusters via a regularized term.
+
+
+================================================================================
+Pseudo-Task Initialization:
+================================================================================
+
+Both ImageNet and domain-specific [44] CNN models have been employed to initialize the LDPO framework. In Fig. 3 , two CNNs of AlexNet-FC7-ImageNet and AlexNet-FC7-Topic demonstrate their LDPO performances. LDPO initialized by ImageNet CNN reach the steady state noticeably slower than its counterpart, as AlexNet-FC7-Topic already contains the domain information from this radiology image database. However, similar clustering outputs are produced after convergence. Letting LDPO reach ∼ 10 iterations, two different initializations end up with very close clustering results (i.e., Cluster number, purity and NMI) and similar classification accuracies (shown in Table 2 ).
+
+
+================================================================================
+CNN Deep Feature and Image Encoding:
+================================================================================
+
+Different image representations can vary the performance of proposed LDPO framework as shown in Fig. 3 . As mentioned in Sec. 3, deep CNN images features extracted from different layers of CNN models (AlexNet and GoogLeNet) contain the levelspecific visual information. Convolutional layer features retain the spatial activation layouts of images while FC layer features do not. Different encoding approaches further lead to various outcomes of our LDPO framework. The numbers of clusters range from 270 (AlexNet-FC7-Topic with no deep feature encoding) to 931 (the more sophisticated GoogLeNet-Inc.5b-VLAD with VLAD encoding). The numbers of clusters discovered by RIM re-  flect the amount of information complexity stored in the radiology database.
+
+
+================================================================================
+Computational Cost:
+================================================================================
+
+LDPO runs on a node of Linux computer cluster with 16 CPU cores (x2650), 128G memory and Nvidia K20 GPUs. The Com-putational costs of different LDPO configurations are shown in Table 2 per looped iteration. The more sophisticated and feature rich settings, e.g., AlexNet-Conv5-FV, GoogLeNet-Pool5 and GoogLeNet-Inc.5b-VLAD, require more time to converge.
+
+
+================================================================================
+14:35
+================================================================================
+
+AlexNet-FC7-Imagenet
+
+
+================================================================================
+14:40
+================================================================================
+
+AlexNet-Conv5-FV
+
+
+================================================================================
+17:40
+================================================================================
+
+AlexNet-Conv5-VLAD
+
+
+================================================================================
+15:44
+================================================================================
+
+GoogLeNet-Pool5
+
+
+================================================================================
+21:12
+================================================================================
+
+GoogLeNet-Inc.5b-VLAD
+
+
+================================================================================
+LDPO Categorization and Auto-annotation Results
+================================================================================
+
+The category discovery clusters employing our LDPO method are found to be more visually coherent and cluster-wise balanced in comparison to the results in [44] where clusters are formed only from text information (∼ 780K radiology reports). Fig. 4 Left shows the image numbers for each cluster from the AlexNet-FC7-Topic setting. The numbers are uniformly distributed with a mean of 778 and standard deviation of 52. Fig. 4 Right illustrates the relation of clustering results derived from image cues or text reports [44] . Note that there is no instance-balance-per-cluster constraints in the LDPO clustering. The clusters in [44] are highly uneven: 3 clusters inhabit the majority of images. Fig. 5 shows sample images and top-10 associated key words from 4 randomly selected clusters (more results in the supplementary material). The LDPO clusters are found to be semantically or clinically related to the corresponding key words, containing the information of (likely appeared) anatomies, pathologies (e.g., adenopathy, mass), their attributes (e.g., bulky, frontal) and imaging protocols or properties.
+
+Next, from the best performed LDPO models in Table 2 , AlexNet-FC7-Topic has Top-1 classification accuracy of 0.8109 and Top-5 accuracy 0.9412 with 270 formed image categories; AlexNet-FC7-ImageNet achieves accuracies of 0.8099 and 0.9547, respectively, from 275 discovered classes. In contrast, [44] reports Top-1 accuracies of 0.6072, 0.6582 and Top-5 as 0.9294, 0.9460 on 80 text only computed classes using AlexNet [27] or VGGNet-19 [47] , respectively. Markedly better accuracies (especially on Top-1) on classifying higher numbers of classes (being generally more difficult) highlight advantageous quality of the LDPO discovered image clusters or labels. This means that the LDPO results have rendered significantly better performance on automatic image labeling than the most related previous work [44] , under the same radiology database. After the subjective evaluation by two board-certified radiologists, AlexNet-FC7-Topic of 270 categories and AlexNet-FC7-ImageNet of 275 classes are preferred, out of total six model-encoding setups. Interestingly, both CNN models have no deep feature encoding built-in and preserve the gloss image layouts (capturing somewhat global visual scenes without unordered FV or VLAD encoding schemes [8, 9, 21] .).
+
+For the quantitative validation, LDPO is also evaluated on the Texture-25 dataset as an unsupervised texture classification problem. The purity and NMI are computed between the resulted LDPO clusters per iteration and the ground truth clusters (of 25 texture image classes [12, 29] ) where purity becomes classification accuracy. AlexNet-FC7-ImageNet is employed and the quantitative results are plotted in Fig. 7 . Using the same clustering method of k-means, the purity or accuracy measurements improve from 53.9% (0-th) to 66.1% at the 6-th iteration, indicating that LDPO indeed learns better deep image features and labels in the looped process. Similar trend is found for another texture dataset [8] . Exploiting LDPO for other domain transfer based auto-annotation Figure 5 . Sample images of four LDPO clusters with associated clinically semantic key words, containing the information of (likely appeared) anatomies, pathologies, their attributes and imaging protocols or properties.
+
+tasks will be left as future work.
+
+The final trained CNN classification models allow to compute the pairwise category similarities or affinity scores using the CNN classification confusion values between any pair of classes (Sec. 3.5). Affinity Propagation algorithm is called recursively to form a hierarchical category tree. The resulted category tree has (270, 64, 15, 4, 1) different class labels from bottom (leaf) to top (root). The random color coded category tree is shown in Fig. 6 . The high majority of images in the clusters of this branch are verified as CT Chest scans by radiologists. Enabling to construct a semantic and meaningful hierarchy of classes offers another indicator to validate the proposed LDPO category discovery method and results. Refer to the supplementary material for more results. We will make our trained CNN models, computed deep image features and labels publicly available upon publication.
+
+
+================================================================================
+Conclusion & Future Work
+================================================================================
+
+In this paper, we present a new Looped Deep Pseudo-task Optimization framework to extract visually more coherent and semantically more meaningful categories from a large scale medical image database. We systematically and extensively conduct experiments under different settings of the LDPO framework to validate and evaluate its quantitative and qualitative performance. The measurable LDPO "convergence" makes the ill-posed autoannotation problem well constrained without the burden of human labeling costs. For future work, we intend to explore the feasibility/performance on implementing our current LDPO clustering component by deep generative density models [2, 26, 43] . It may therefore be possible that both classification and clustering objectives can be built into a multi-task CNN learning architecture which is "end-to-end" trainable by alternating two task/cost layers during SGD optimization [54] .
+

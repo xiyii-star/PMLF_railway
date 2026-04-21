@@ -1,0 +1,522 @@
+
+================================================================================
+Title
+================================================================================
+
+Statistical learning theory of structured data
+
+
+================================================================================
+Abstract
+================================================================================
+
+The traditional approach of statistical physics to supervised learning routinely assumes unrealistic generative models for the data: usually inputs are independent random variables, uncorrelated with their labels. Only recently, statistical physicists started to explore more complex forms of data, such as equally-labelled points lying on (possibly low dimensional) object manifolds. Here we provide a bridge between this recently-established research area and the framework of statistical learning theory, a branch of mathematics devoted to inference in machine learning. The overarching motivation is the inadequacy of the classic rigorous results in explaining the remarkable generalization properties of deep learning. We propose a way to integrate physical models of data into statistical learning theory, and address, with both combinatorial and statistical mechanics methods, the computation of the Vapnik-Chervonenkis entropy, which counts the number of different binary classifications compatible with the loss class. As a proof of concept, we focus on kernel machines and on two simple realizations of data structure introduced in recent physics literature: k-dimensional simplexes with prescribed geometric relations and spherical manifolds (equivalent to margin classification). Entropy, contrary to what happens for unstructured data, is nonmonotonic in the sample size, in contrast with the rigorous bounds. Moreover, data structure induces a novel transition beyond the storage capacity, which we advocate as a proxy of the nonmonotonicity, and ultimately a cue of low generalization error. The identification of a synaptic volume vanishing at the transition allows a quantification of the impact of data structure within replica theory, applicable in cases where combinatorial methods are not available, as we demonstrate for margin learning.
+
+
+================================================================================
+I. INTRODUCTION
+================================================================================
+
+The idea of investigating machine learning within the tools provided by the statistical physics of disordered system is more than thirty years old, starting with the seminal papers by Amit, Gutfreund and Somplinsky [1, 2] on the Hopfield model, and with Gardner's replica analysis of the Perceptron architecture [3, 4] . Many of the results produced in this field have been obtained under the restrictive and unrealistic hypothesis that the inputs of the training set were independent identically distributed random variables with no correlation with their labels. Only quite recently, physicists working in this field are starting to probe the impact of more realistic generative models of synthetic data on the available theoretical frameworks. Sompolinsky and collaborators investigated the problem of the linear classification of perceptual manifolds [5, 6] and provided a first quantitative measurement of the ability to support the classification of object manifolds in deep neural networks [7] . Mézard suggested that hierarchical architectures with hidden layers naturally emerge in the context of Hopfield models, assuming that the training patterns are structured as superpositions of a given set of random features [8] , a common property of empirical data [9, 10] . Zdeborová and collaborators provided exact results for the generalization error within the replica approach for two different scenarios of synthetic * mauro.pastore@unimi.it † pietro.rotondo@mi.infn.it ‡ vittorio.erba@unimi.it § marco.gherardi@mi.infn.it data: random features and the hidden manifold model [11, 12] . One of the motivations behind these choices is the observation that many machine learning datasets, or their representations within deep networks, lie on the surface of low dimensional manifolds, as also verified often in practice by measuring their so-called intrinsic dimension [7, [13] [14] [15] [16] . More in general, a generative model with a factorized joint probability distribution of the inputs and their corresponding labels is expected to be unrealistic, with respect to the benchmark datasets commonly used in machine learning (e.g., MNIST, CIFAR-10, or Imagenet). Intuitively, one expects there to be a notion of similarity among inputs that constrains similar inputs to have the same label. This regularity is expected to be related to the problem of generalization, i.e., the ability of a classifier to correctly classify inputs beyond the data set used for training.
+
+The results obtained in the statistical physics framework address the typical case performance. In contrast, statistical learning theory (SLT) [17] , a successful mathematical framework in the theory of machine learning, follows the tradition of computer science of establishing worst-case bounds. This difference in scope made it difficult, for physicists and computer scientists alike, to work towards inter-disciplinary results, and few examples of cross-fertilization are found in the literature. Statistical learning theory is the branch of mathematics and computer science that studies inference, or the problem of generating models starting from data [18] . It provides formal definitions for words like "generalisation" or "overfitting", and it is ultimately designed to evaluate the performance of learning algorithms. As such, it represents the ideal framework to study the problem of arXiv:2005.10002v1 [cond-mat.stat-mech] 20 May 2020 generalisation in deep learning. Unfortunately, in spite of its elegance, the insight it provides into the impressive generalization abilities of present deep learning models is poor. The main product of the theory in this setting is a set of upper bounds on the generalization error (which roughly counts the average number of errors made on the test set). These upper bounds in many cases turn out to be too loose to be useful [19] [20] [21] [22] .
+
+The main drawback of this class of bounds is generally recognized to be their being distribution independent, meaning that they hold for any probability distribution over inputs and labels of the data set, and for all models of the chosen hypothesis class. Substantial effort is being put, within statistical learning theory, to overcome these shortcomings and formulate rigorous data-dependent results [21, [23] [24] [25] . The Vapnik-Chervonenkis (VC) entropy is a way to establish distribution dependent, and hopefully tighter, bounds to the generalisation error [18] . Informally, the VC entropy measures the number of different ways a given class of functions can classify the inputs of the training set. Unfortunately it is usually very difficult to compute explicitly. Kernel architectures represent a notable exception. Their VC entropy has been evaluated analytically in a remarkable paper by Cover long ago [26] , under very mild hypotheses on the probability distribution of the inputs. The explicit calculation shows, however, that knowing the VC entropy does not improve significantly the standard bound obtained using the growth function [27] . In fact, both quantities scale logarithmically with the size of the training set, and depend linearly on the VC dimension, a well known measure of model complexity.
+
+Our goal here is to show how the concept of data structure, as it is emerging in the physics literature, can be addressed within statistical learning theory, thereby providing a bridge between the two viewpoints. This bridge immediately allows a quantification of the generalization capabilities of simple hypothesis classes, which shows how severely loose the classic rigorous bounds in SLT are. Concretely, we investigate the finite-size and asymptotic behavior of the VC entropy of kernel machines by using both combinatorial and replica techniques. While replica theory is well established in the statistical mechanics of neural networks, combinatorial tools, though certainly not foreign to statistical mechanics [28] [29] [30] , have been developed only very recently for what concerns the role of data structure in machine learning [5, 31] . We concentrate on two simple models of data structure, or "object manifolds": (i) k-dimensional simplexes with prescribed geometric relations and (ii) spherical manifolds, which are equivalent to classify unstructured data points with margin (and are related to support vector machines [32] ). These models are not new, and have already received attention for their being general enough to provide insight, but simple enough to allow full analytical treatment.
+
+The manuscript is organised as follows: in Sec. II A we review the main definitions and basic results of statistical learning theory. In Sec. II B we recall Cover's combina-torial result on the VC entropy of kernel architectures. In Sec. II C we discuss how data structure can be taken into account in SLT, and define the two synthetic data ensembles we use in the following. In Sec. III we first recall the extension of Cover's combinatorial technique to structured data that was introduced in [31] , and then we establish the asymptotic behavior of the VC entropy for the first ensemble (simplexes). After introducing an asymptotic method based on analytic combinatorics in Secs. III A and III B, we use it to show that the VC entropy is non-monotonic in the load in Sec. III C. In Sec. III D we describe a satisfiability transition that is brought about by data structure [33] , and we further analyse it in Secs. III E and III F. In section IV, we introduce a synaptic volume that monitors the behavior of the VC entropy in the thermodynamic limit. This is particularly useful for those object manifolds for which the combinatorial method is not yet available, which includes our second data ensemble (spherical manifolds). We present calculations for the annealed (in Sec. IV A) and quenched (in Sec. IV B) averages (in the replica symmetric and one-step replica symmetry breaking ansätze) for the case of 2-dimensional simplexes, and for spherical manifolds in Sec. IV C.
+
+
+================================================================================
+II. TAKING DATA STRUCTURE INTO ACCOUNT IN STATISTICAL LEARNING THEORY
+================================================================================
+
+A. Basic results in statistical learning theory
+
+In this section we recall the basic facts of SLT, mostly following the exposition of [18] . We restrict to binary classification problems, in which the goal is to find a function g mapping the input space X to the output space Y = {+1, -1}. Each pair Z µ = (X µ , Y µ ) (with µ = 1, . . . , p) in the training set Z p = (Z 1 , . . . , Z p ) is drawn by the unknown joint probability distribution P X ,Y (X, Y ). A map g between the set of inputs X p = and {+1, -1} is called a dichotomy of X p . The criterion to choose g is the minimization of the risk
+
+which is the probability of error. Ideally, we should look for inf g R(g) over all the possible g's. Since P is unknown, the best we can do is to consider the empirical risk
+
+and limit the search within a specific hypothesis class G to prevent overfitting. A dichotomy g ∈ G is called realizable. The output of a learning algorithm is a function g p that depends on the data Z p . The goodness of the choice of g p can be measured by its generalization error gen (g p ), where
+
+Notice that gen (g) ≤ 1. In practice, R p is evaluated on the training set and R is estimated on a test set [34] .
+
+One of the primary goals of SLT is to establish rigorous bounds on the generalization error.
+
+A complementary description of risk minimization within a class G is given through the definition of the loss class L:
+
+To each g ∈ G, we associate a function ℓ g such that ℓ g ((x, y)) = 1 if g(x) = y, and is zero otherwise. While elements of G take values in {+1, -1}, those of L have range {0, 1}. ℓ gp can be used to count the number of errors made on the training set by the function g p . Given a loss class L, we can consider its projection on the sample Z p , by defining
+
+This is the set of all possible ways that a function in G can correctly or incorrectly classify each sample in Z p . Importantly, L Zp can be interpreted as the set of all classifications of the points in X p that can be realized by the model, i.e., the set of all (Y 1 , . . . , Y p ) such that there exists a g ∈ G such that Y µ = g(X µ ) for all µ. This representation reveals a useful bijection between L Zp and the set of realizable dichotomies.
+
+A key quantity in SLT is the Vapnik-Chervonenkis (VC) entropy H L (Z p ), which measures the size of L Zp :
+
+By virtue of the bijection discussed above, valid when Y = {+1, -1}, H L (Z p ) can be defined equivalently as
+
+where N G (X p ) is the number of dichotomies of the set X p realizable by G. The VC entropy controls a rigorous upper bound to the generalization error:
+
+Theorem 1 For any δ > 0, with probability at least 1-δ,
+
+where the annealed VC entropy H L (p) is defined as:
+
+and • is the average over the joint probability distribution P X ,Y of the training set.
+
+Unfortunately, direct computation of the VC entropy is unfeasible in most cases. For this reason, a main goal of SLT is to construct more tractable upper bounds to the VC entropy. The classic example is based on the Vapnik-Chervonenkis dimension, which is a scalar metric of the expressivity of a given hypothesis class G. More formally, the VC dimension d VC of a class G is the largest integer such that there exists at least one set of d VC inputs X dVC such that
+
+(i.e., the class G realizes all possible dichotomies of the inputs). With this definition, it can be proved that
+
+Hence, a corollary of Theorem 1 is the well-known upper bound first obtained by Vapnik: if the class G has finite VC dimension d VC , then, with probability at least 1 -δ,
+
+A crucial property of this elegant result is its being distribution independent, meaning that the bound is uniform in the function g, and does not depend on the particular problem at hand. Owing to its universality, the bound is often too loose for most practical applications [21] . Let us consider for instance a deep neural network with a number of weights w = 10 6 -10 9 . In this case the VC dimension is of order d VC ∼ w log w [35] . When the typical size of the dataset is p = 10 4 -10 6 , as is often the case in practice, is is evident that bounds such as the one in Eq. ( 12 ) do not offer any insight on the generalization performance of deep neural networks. Indeed, one of the main pursuits of contemporary SLT is to provide better results on the generalization error, going beyond distribution independent bounds. Several strategies have been proposed, advocating the importance of considering datadependent hypothesis classes [25] and data-dependent measures of complexity (such as the Rademacher complexity [36] , which was recently connected to the statistical mechanics of disordered systems [37] ), also in relation to the original concept of VC entropy itself [38] .
+
+
+================================================================================
+B. Vapnik-Chervonenkis entropy of kernel machines
+================================================================================
+
+As mentioned above, in most cases it is not possible to compute the VC entropy directly. However, kernel machines are a notable exception: their VC entropy was computed half century ago by Cover [26] . Kernel architectures provide a special realization of one-hidden layer neural networks and are at the core of the idea of support vector machines. In these machines, one defines a priori a kernel function φ : R n → R d , that maps n-dimensional inputs to a d-dimensional feature space. One of the simplest realizations of such maps is a quadratic polynomial kernel, such that each input X is mapped on a d(d+1)/2dimensional feature space via a kernel φ (2) with components φ (2) ij = X i X j , ∀i ≤ j. The map from feature space to the space of labels is realized by a linear separator:
+
+where the weight vector, W ∈ R n , is the set of learnable parameters.
+
+Cover's theorem is a function counting theorem: it computes the number of dichotomies N φ (X p ) of this function class, the logarithm of which is the VC entropy. It is simpler to state Cover's theorem for linear separators, i.e., for d = n and φ = 1; the realizable dichotomies in this case are called linearly realizable. We comment below on the extension to general φ. The key idea behind the theorem is twofold: (i) under a weak condition on the inputs X p , the number of dichotomies N 1 (X p ) is a function solely of the dimension n and the number of points p; (ii) it is possible to write a solvable recurrence relation, in n and p, for this function. Following Cover's original paper, we denote the (data-independent) number of dichotomies N 1 (X p ) by C n,p , and the corresponding VC entropy by H n,p = log C n,p .
+
+Theorem 2 (Cover, 1965) Let X p be a set of p points in R n . If the points are in general position, i.e., if the points in X are linearly independent for all subsets X ⊆ X p such that |X | ≤ n, then N 1 (X p ) = C n,p , where
+
+The proof of Theorem 2 is based on a simple recurrence relation for C n,p :
+
+with boundary conditions
+
+Equation (15) states that adding the (p+1)th point X to X p increases the number of dichotomies by C n-1,p , which is the number of dichotomies of X p that are realizable by a vector W such that W • X = 0. Cover actually proved a more general statement. Informally, if one maps all elements of X p by the non-linear kernel function φ from R n to R d with d larger than n, then, under mild assumptions on φ, Eq. ( 14 ) holds with d in place of n.
+
+It is straightforward to see how the storage capacity defined in statistical mechanics, α c (recall that α = p/n), can be obtained from C n,p . The number of dichotomies is a combinatorial quantity, and is expected to scale exponentially in n, at least for small α. Thus, an intensive quantity can be defined by normalizing C n,p with the total number of dichotomies of p points. The fraction of dichotomies c n,p ≡ C n,p /2 p is bounded, 0 ≤ c n,p ≤ 1, and has a non-trivial thermodynamic limit c ∞ (α). The thermodynamic limit is defined by taking both n, p → ∞, with fixed α = p/n. It is not hard to see directly from Eq. ( 14 ) that
+
+with α c = 2. The expression in Eq. ( 17 ) takes the value 1 for α < α c , the value 0 for α > α c , and the value 1/2 for α = α c (θ is the Heaviside step function). Qualitatively, c n,αn as a function of α is a decreasing sigmoid, which is steeper for larger values of n (see Fig. 1a ). This allows the definition of a notion of capacity at finite dimension n, as the value αc (n) such that c n, αc(n)n = 1/2, or
+
+Another notable value of p can be read off of c n,p : it is the Vapnik-Chervonenkis dimension d VC , equal to the maximum p such that c n,p = 1. For a linear separator, d VC = n. Notice that one cannot use the asymptotic form Eq. ( 17 ) to this aim, since the thermodynamic limit pushes c n,αn to 1 for all values of α up to α c . Notice that Eq. ( 14 ) implies that the VC entropy grows asymptotically as H n,p ∼ (n-1) log p for large number of inputs p (see Sec. III B for a derivation). This is the same behavior as that obtained by bounding the VC entropy as in Eq. (11) .
+
+Two remarks can be made, concerning the generality of Cover's theorem. First, the general position is a rather weak condition. For instance, we mention three examples of distributions of the points ξ µ ∈ X p under which the general position holds with probability 1: (i) ξ µ ∈ X p are i.i.d. variables with the uniform measure on the sphere S n-1 ; (ii) ξ µ ∈ X p are i.i.d. variables with marginal probability distribution P (ξ), and the support of P is R n ; (iii) the coordinates of each ξ µ ∈ X p are i.i.d. variables, with discrete probability distribution p(x) = (1+m)/2δ x,1 +(1-m)/2δ x,-1 , for any m ∈ [-1, 1]. Clearly, there are trivial ways to violate general position: for instance, if the probability distribution of (i) or (ii) above is conditioned to assigning the same value to a fixed subset of size k < n of the coordinates of all inputs. Then Cover's theorem still applies in the subspace, with n -k in place of n.
+
+Second, the condition that φ must satisfy for the theorem to apply to the kernel machine specified by φ is essentially that the vectors φ(ξ µ ) must be in general position in the feature space R d . This again is a very mild condition. Starting with a set of inputs X p in general position in the original n-dimensional space, most interesting mappings satisfy the condition. This includes polynomial kernels, but also more complex functions, such as those of the form φ i (ξ) = g j W ij ξ j , where g is an activation function (e.g., ReLU or tanh) and W is any rectangular random matrix. The latter case is relevant for the theory of extreme learning machines [39] .
+
+
+================================================================================
+C. Constrained models of structured data
+================================================================================
+
+The discussion above suggests that, in order to go beyond the prediction of Cover's theorem, one needs a way of introducing statistical dependence between the inputs X p and their labels Y p = (Y 1 , . . . , Y p ). This reflects a simple observation that can be made on empirical datasets of images: similar inputs tend to be classified similarly. For instance, one expects that there exists an (unknown) set of transformations on an input image X, possibly including some translations, dilations, and rotations, that leave the classification of X invariant. Such intuition agrees with the concepts, put forward in neuroscience and gaining momentum in physics, of invariant recognition (the similar neural representation of the same object in different conditions) and object manifolds (sets of input stimuli giving rise to the same neural representation) [5-7, 40, 41] .
+
+Integrating data structure within the framework of statistical mechanics is relatively straightforward and usually follows two steps: (i) define a generative model for the data, given in terms of a nonfactorized joint probability distribution P (X p , Y p ); (ii) compute averages over the measure P (the "disorder"); this is what was done for instance in [5, 12, 42] . How to best address data dependence in the SLT formalism, instead, is a debated issue. Here we follow a simple strategy inspired by recent literature in statistical physics: we change the input space X . Each input X µ is now an object manifold, i.e., a (possibly countably or uncountably infinite) set of points that, by definition, are be classified coherently.
+
+We focus on two simple realizations of data structure, the first motivated by the availability of analytical results and the second motivated by its connection to the wellknown framework of margin learning.
+
+a. Simplex learning -Inputs are "multiplets" of k points with fixed geometric interrelations. The input set is X p = {X µ } µ=1,...,p , where each X µ = {ξ µ a } a=1,...,k is a set of k points on the unit (n -1)-sphere, ξ µ a ∈ S n-1 . The k(k -1)/2 overlaps within each multiplet are fixed: ξ µ a • ξ µ b = ρ ab for all µ = 1, . . . , p. We assume the uniform probability measure on each point ξ µ a , conditioned on the constraint on the overlaps [31] . The usual unconstrained ensemble is recovered for k = 1, or at any k if ρ ab = 1 for all a, b. The name "simplex" is justified by the fact that, since linear classification is a projective problem, if Y = g(X) for each X in a set of points X µ , then Y = g(X) for all X in the convex hull of X µ . The input space X S ({ρ ab }) depends on k and ρ ab , and is the set of all multiplets with the given constraints.
+
+b. Margin learning -Given a kernel machine with kernel φ : R n → R d and inputs X ∈ X = R n , learning with margin κ is defined by the class G(κ) of all functions
+
+Cases falling within the margin (-κ, κ) can be defined with a third value, for instance 0, or left undefined. Hence, the corresponding loss class projected on a sample (X p , Y p ), Eqs. (4) and ( 5 ), contains all the dichotomies of X p that can be realized by an element of G M (κ). An alternative representation of margin learning can be given via the definition of appropriate object manifolds. In fact, linear separation of points with margin κ is equivalent to zero-margin linear separation of spherical object manifolds with radius κ [5] . Thus, Y µ = g κ (X µ ) for all µ if and only if Y µ = g 0 (Q µ ) for all µ and all Q µ such that
+
+The input space X M (κ) is the set of the preimages, via φ, of all spheres of radius κ in R d . Note that, while margin learning has a natural description in terms of the original space X = R n , through the hypothesis class G M (κ), simplex learning does not have such a straightforward representation, and is defined directly by means of the object space X S ({ρ ab }).
+
+The VC entropy for margin learning, H κ , can be bounded from above by means of the VC dimension d VC (κ):
+
+In turn, an upper bound of the VC dimension exists for points lying on the d-dimensional sphere of radius R [27] :
+
+The standard bound is therefore again logarithmic in the sample size p. In the following, we set out to investigate the behavior of the VC entropy of kernel machines for the two data structures defined above, in order to quantify how loose these logarithmic upper bounds are. We do so by means of two complementary approaches: the combinatorial framework and the theory of disordered systems.
+
+
+================================================================================
+III. COMBINATORIAL APPROACH
+================================================================================
+
+Very recently the combinatorial approach introduced by Cover was extended to formulate a mean field theory of simplex learning [31] . In this section we focus on this model of data structure. The definition we have given above of simplex learning specifies the ensemble of the sets X p . It remains to define the hypothesis class G M ({ρ ab }). This is straightforward: one starts from the class G of linear separators in R n and restricts it to the class Ĝ({ρ ab }) of those functions h ∈ G that assign the same label to all points in each multiplet X µ (i.e., those that are constant on each multiplet). Then the restricted hypothesis class is defined as
+
+The functions in Ĝ({ρ ab }) are called admissible. The mean-field combinatorial theory allows the computation of the average N 1 (X p ) Xp , i.e., the average number of admissible dichotomies of simplexes that can be realized linearly. We will still denote this number with C n,p , although it depends on the parameters k and {ρ ab } of the ensemble.
+
+The quantities C n,p satisfy a recurrence relation
+
+where the constant coefficients θ k l are fixed in turn by the recurrence relation
+
+with boundary conditions
+
+The boundary conditions for Eq. ( 22 ) are difficult to express precisely for generic k. Here we will assume the boundary conditions in Eq. ( 16 ) for all k. This approximation is expected to have a negligible effect for the asymptotic analysis presented in the following; we checked the validity of this approximation numerically for the first non-trivial cases k = 2 and k = 3. Each coefficient θ k l in Eq. ( 22 ) depends on k -1 numbers {ψ m } m=2,...,k , with 0 ≤ ψ m ≤ 1, having the following geometric-probabilistic interpretation. Let w ∈ S n-1 be a random vector with the flat measure on the unit sphere. Consider any multiplet X µ , and a subset X ⊆ X µ of m ≤ k points. Then ψ m is the symmetrized probability that the scalar product w • ξ has the same sign for all ξ ∈ X , conditioned on it having the same sign for all ξ ∈ X \ {ξ }:
+
+where the symmetrization • sym is performed by averaging over all subsets X and over all choices of ξ ∈ X . These quantities can be expressed in terms of the overlaps ρ ab , e.g.,
+
+(More information on ψ m can be found in [31] ). The notion of storage capacity α c can be defined for structured data, similarly to Cover's unstructured case, and coherently with the thermodynamic limit addressed in statistical mechanical computations. The combinatorial theory yields
+
+A. Asymptotic analysis via analytic combinatorics
+
+In the case of unstructured data, we know that the growth of C n,p as a function of p is exponential up to the capacity p c = 2n and sub-exponential afterwards. Due to this change of behavior, the fraction of linearly realizable dichotomies, c n,p = C n,p /2 p , has a discontinuous transition from 1 to 0 in the thermodynamic limit (see Fig. 1a ). What is the asymptotic growth rate of C n,p ? This question can be answered by inspecting the explicit solution Eq. ( 14 ). However, we construct a different method here, based on the techniques of analytic combinatorics. Our method has the crucial advantage of being applicable to cases where (i) the solution C n,p is not known explicitly, and (ii) the recurrence equation is given implicitly, as a relation between its coefficients.
+
+Let g n (z) be the ordinary generating function of C n,p with respect to the variable p:
+
+Formally, the coefficient C n,p can be obtained by derivation as
+
+When it is unfeasible to compute the p-th derivative explicitly, one can extract information on the asymptotic behavior of C n,p for large p by means of analytic techniques (see for instance [43] ). Whenever the generating function Eq. ( 27 ) is a rational function analytic in z = 0, it admits a partial fraction expansion
+
+where Q n is a polynomial, s ranges over the poles of g n , and r s is the multiplicity of the pole s. Then, the asymptotic form of the coefficients of g n (z) can be read off the series expansion of (z -z s ) -r :
+
+By substituting (30) in Eq. ( 29 ) one obtains r s different contributions for each pole s. The overall leading term corresponds to the dominant singularity z 0 of g n (z), i.e., the one with smallest modulus |z 0 |. This is due to the term z -p s in (30) that suppresses the sub-dominant poles exponentially. Among the contributions due to z 0 , the leading one is that with r = r s , because the binomial coefficient in (30) is a polynomial of degree r -1 in p. Putting it all together, if the dominant singularity is a pole of order r, then
+
+where the constant R can be obtained by factoring out the singularity:
+
+Equation (31) shows that if |z 0 | < 1 (respectively, > 1), C n,p increases (respectively, decreases) exponentially with p at fixed n; if |z 0 | = 1 then the asymptotic behavior is polynomial (of order r -1).
+
+In simple cases, when it is possible to obtain g n (z) in closed form, this method can be applied straightforwardly. However, this set up allows to probe the asymptotics of C n,p even in more complicated scenarios, where g n (z) cannot be solved for explicitly, or when even the recurrence relation for g n (z) is not specified completely. Section III E shows how to tackle this more general problem. Before that, we consider the simpler cases k = 1 and k = 2.
+
+
+================================================================================
+B. Asymptotics for unstructured data
+================================================================================
+
+As a "warm-up exercise", we use the combinatorial method described above to explore the asymptotics of C n,p in the well-understood unstructured case.
+
+By multiplying both sides of Eq. ( 15 ) by z p and summing over p one obtains
+
+where the constant term 2 comes from the initial condition (16) . It is useful to rewrite the equation as
+
+The boundary condition is g 0 (z) = 0, due to every C 0,p being zero. The relation ( 34 ) is a linear (non homogeneous) first-order recurrence with constant coefficients, whose solution is
+
+Equation (35) shows that g n (z) has a single pole at z 0 = 1, of order n, with finite part R = 2. Therefore, the corresponding asymptotic form has no exponential factor, and is purely polynomial:
+
+Note that the right-hand side of Eq. ( 35 ) has a removable discontinuity in z 1 = 1/2, where the apparent pole in the first term gets canceled by a zero in the numerator (the term in square brackets). The corresponding exponential asymptotic growth, 2 p , is present in C n,p only transiently, for p < n.
+
+
+================================================================================
+C. Non-monotonicity of the VC entropy
+================================================================================
+
+The behavior of C n,p , and therefore of the VC entropy, changes dramatically when data structure is present, already in the simplest case where the training data are structured as pairs of points, i.e., k = 2. Figure 1 shows the fraction of dichotomies, C n,p /2 p , and the number of dichotomies, C n,p , as functions of α for increasing values of the dimension n, for k = 1 and k = 2 with ρ = 0.3. The fraction of dichotomies is qualitatively similar in the two scenarios, the only apparent difference being the expected decrease in the storage capacity. A remarkable divergence appears instead in the asymptotic behavior of C n,p . The absolute number of dichotomies is nonmonotonic for simplex learning already in the simplest nondegenerate case k = 2 with ρ < 1. What is also evident in Fig. 1b is the fact that the storage capacity α c (k) does not pinpoint any qualitatively special point for the unnormalized C n,p , and therefore for the VC entropy.
+
+Since the two-point case k = 2 is the simplest case where the nonmonotonicity of the VC entropy arises, we work it out in detail, before showing the general k-point case below. The geometry of the problem is fixed by the single quantity ψ 2 . The recurrence equation reads C n,p+1 = ψ 2 C n,p + C n-1,p + (1 -ψ 2 ) C n-2,p ,
+
+with boundary conditions C 0,p = 0, C n,1 = 2{1 -[1ψ 2 (d)]δ n,1 }. In order to simplify the computations, we will use the same boundary conditions as for k = 1, i.e., C 0,p = 0 and C n≥1,1 = 2. This approximation has negligible effects in the large-n limit [31] . Equation (37) fixes the recurrence relation satisfied by the generating function g n (z):
+
+with boundary condition g n≤0 (z) = 0. The solution, which can be found by means of the characteristic polynomial method, reads
+
+The explicit solution has a pole of order n in z 0 = 1/ψ 2 , with finite part
+
+Similarly to the unstructured case, the singularity in z = 1/2 is removable, which signals that the initial exponential increase of the number of dichotomies must be superseded eventually by the asymptotic behavior due to z 0 . Altogether, the large-p form of C n,p is
+
+The crucial difference between the results for k = 1, Eq. ( 36 ), and k = 2, Eq. ( 40 ), lies in the fact that while the first is asymptotically increasing, the second is exponentially decreasing whenever ψ 2 < 1, i.e., when the two partner points are distinct. Observe that C n,p always increases for small p; this is a consequence of the fact that the Vapnik-Chervonenkis dimension of a linear classifier in n dimensions is d VC = n, therefore all dichotomies of kp points can be realized when p ≤ n/k, meaning that C n,p≤n/k = 2 p . The decreasing asymptotic form then proves that the Vapnik-Chervonenkis entropy H n,p is non-monotonic in p (and therefore in α) for fixed n. Intuitively, the non-monotonicity is due to the competition of two opposing effects. On one hand, the addition of a new pair of points {ξ, ξ} to a set of p existing pairs entails a combinatorial increase in the total number of linearly-realizable dichotomies. On the other hand, some of the C n,p admissible dichotomies can become invalid if they are realizable only by hyperplanes intersecting the segment connecting ξ and ξ.
+
+
+================================================================================
+D. Emergence of a data-driven satisfiability transition
+================================================================================
+
+A non-trivial consequence of the non-monotonic VC entropy can be observed in Fig. 1c . Consider the VC entropy H n,αn as a function of α. The curves H n,αn at different values of n intersect each other roughly around the same point α * . More precisely, if H n,αn and H n-1,α(n-1) intersect at α * (n), then α * = lim n→∞ α * (n). This empirical observation can be clarified analytically.
+
+As a function of the load α = p/n, Eq. ( 40 ) becomes
+
+(Γ is the Euler gamma function), or H n,αn ∼ H(α; n) with
+
+In the non-degenerate case (whenever ψ 2 < 1) the second term in (42) is negative for α > 1, while the first term is always positive. This competition gives rise to a transition at α = α * > 1, where the asymptotic limit of the VC entropy changes:
+
+The transition point is pinpointed by the condition
+
+With H(α; n) given by Eq. ( 42 ), the condition reads
+
+where Ψ(z) ≡ ∂ z log Γ(z) is the poly-gamma function, whose asymptotic behavior is Ψ(z) = log(z) + O(1/z). Sending n to infinity then gives the transcendental equation
+
+which has two solutions: α * is the larger. As a function of ψ 2 , the transition point α * has limits
+
+As expected, when ψ 2 goes to 1, the problem reduces to that of classifying unstructured data, and the transition runs to infinity. The phase transition at α * can be rationalized as the SAT-UNSAT transition of a random constraint satisfaction problem (CSP). First, we recall that the storage capacity α c itself corresponds to the transition between the satisfiable and the unsatisfiable phase of an appropriate satisfiability problem. The CSP relevant to α c can be stated as follows:
+
+Constraint satisfaction problem 1 Given a set of kn input-label pairs {ξ µ a , σ µ } (with a = 1, . . . , k and µ = 1, . . . , p), find a vector w such that sign(w • ξ µ a ) = σ µ for all µ and a.
+
+The input data of this problem satisfies the admissibility constraints by construction. A corresponding random constraint satisfaction problem (rCSP) is an ensmble of CSPs, specified by a probability measure on the input data. The rCSP is in the SAT (respectively UNSAT) phase when the satisfiability problem admits a solution with probability one (respectively zero) in the thermodynamic limit. The storage capacity (26) marks the transition between the SAT and the UNSAT phases of the rCSP corresponding to problem 1 with the probability measure of simplex learning described in Sec. II C
+
+A different problem can be constructed by moving the admissibility property from the definition of the input data to the conditions defining the solution:
+
+Constraint satisfaction problem 2 Given a set of kn input points {ξ µ a }, (with a = 1, . . . , k and µ = 1, . . . , p), find a set of labels {σ µ } and a vector w such that sign(w • ξ µ a ) = σ µ for all µ and a.
+
+Notice that this problem is trivially satisfiable for unstructured data, i.e., it is satisfied by almost all vectors w when the constraint of admissibility is irrelevant (i.e., when k = 1). A solution to problem 2 is given by specifying an admissible dichotomy {σ µ } and a vector w. In this framework, the VC entropy counts the (logarithm of the) number of distinct dichotomies {σ µ } that can appear in such a solution. This means that the corresponding rCSP is in the UNSAT phase when H(α; n) → -∞ and in the SAT phase otherwise.
+
+
+================================================================================
+E. Transition point for generic k
+================================================================================
+
+Now we address the more general case where the number of partners in a multiplet is k. The generating function g n (z) satisfies the recurrence equation
+
+as can be obtained from Eq. ( 22 ). Solving for g n (z) from Eqs. (48) and ( 23 ) would be hopeless. However, the asymptotic analysis discussed above only needs three pieces of information about g n (z), namely (i) the location z 0 of the dominant singularity, (ii) its order r, and (iii) its finite part R. These can be extracted from the recurrence relations without solving them. The right-hand side of Eq. ( 48 ) has a singularity in z = 1/θ k 0 . The boundary condition is g n≤0 (z) = 0, therefore the first non-zero function is g 1 (z) = 2σ(z), where
+
+encapsulates the singularity. Since the number of terms in the sum in Eq. ( 48 ) is finite, no other singularity can appear at finite n. Therefore
+
+Now consider one iteration of Eq. ( 48 ): the singularity with largest order in the right-hand side comes from g n-1 (z), and the singular term gets multiplied by θ k 1 σ(z). Indeed, it is easy to see by induction that the leading term ĝn (z) in the Laurent expansion of g n (z) around z 0 is
+
+Therefore, the order of the singularity is r = n. The constant R [Eq. ( 32 )] can be obtained by multiplying Eq. ( 51 ) by (1/θ k 0 -z) n and evaluating it at z = 1/θ k 0 :
+
+Finally, the asymptotic behavior of C n,p is
+
+from which one readily obtains the asymptotic form C(α; n) for the number of dichotomies,
+
+and the corresponding one for the VC entropy,
+
+As above, the existence of a critical value α * can be established by finding the zeros of the derivative of H(α; n) with respect to n, in the large-n limit. One finds
+
+) The two coefficients θ k 0 and θ k 1 can be obtained from Eq. ( 23 ) as functions of the ψ's. By solving the recurrence equation, specialized to l = 0, one has
+
+Then, by substituting expression (57) into Eq. ( 23 ) with l = 1, one obtains the recurrence relation
+
+with boundary condition θ 1 1 = 1. The solution is
+
+Specializing to k = 3, for instance, yields
+
+Because of the way θ k 0 and θ k 1 are constructed via the geometric quantities ψ m ∈ [0, 1], they are not independent. The range of θ k 0 is [0, 1], as can be seen from Eq. ( 57 ). The sup and inf of θ k 1 at fixed θ k 0 can be obtained by considering the two extremal cases
+
+The fact that the evaluation on the two extremal cases gives the appropriate bounds is not obvious: it can be proved by induction using Lagrange's theorem for constrained optimization (taking care to consider the boundary of the domain as well); see Appendix A. From (i) and (ii) respectively one gets
+
+The inf is monotonically decreasing with k; therefore, by letting k → ∞ one obtains a global lower bound independent of k:
+
+The upper bound (i) is already k-independent.
+
+Figure 2 summarizes the results concerning the value of α * for generic k. It also shows a comparison with numerical results obtained for k = 3, (with {ρ ab } given by the equilateral geometry). The theoretical bounds in the figure (dashed lines) are obtained by substituting the k-independent bounds above into Eq. ( 56 ).
+
+We point out that there are two sources of approximation in the computations above, namely (i) the modified boundary conditions, and (ii) the perturbative nature of the asymptotic analysis. Concerning (i), we remark that the numerical results were obtained by using the correct boundary conditions. However, using the modified conditions does not change the numerical results appreciably. The small discrepancies apparent in the Fig. 2 are therefore due almost entirely to (ii).
+
+
+================================================================================
+F. Finite-size scaling at the critical point
+================================================================================
+
+In the vicinity of the transition point α * , the quantity C(α; n) satisfies finite-size scaling, as happens for other random satisfiability problems [44, 45] . In this section we compute the scaling form and its critical exponents.
+
+Let us define a scaling variable y as n times the reduced load (α -α * )/α * around α * : By inserting α = α * y/n + α * in Eq. ( 54 ), and using the asymptotic expansion of the Γ function,
+
+one obtains in the large-n limit
+
+The linear term nA in the exponential vanishes by Eq. ( 56 ). Hence,
+
+which shows that in the thermodynamic limit C(α; n) obeys the scaling form
+
+with the exponential scaling function
+
+Equation ( 67 ) shows that, within the approximation of our asymptotic analysis, the number of dichotomies satisfies the finite-size scaling form
+
+(where F is regular), with critical exponents
+
+Let h(α) be the VC entropy density in the thermodynamic limit:
+
+The condition h(α) = 0, satisfied by α * , can be written from Eq. ( 68 ) as
+
+. By plugging this value of α * into Eq. ( 56 ), one obtains the simple condition θ k 1 = θ k 0 (1 -θ k 0 ). For data structure with θ k 0 and θ k 1 satisfying this relation, one therefore expects that C(α; n) is constant in α in the large-n limit; equivalently, the VC entropy will be approximately independent of the load, H n,p ∼ H n .
+
+
+================================================================================
+IV. REPLICA APPROACH
+================================================================================
+
+The discussion in the foregoing sections shows that (i) the VC entropy has nonmonotonic behavior for simplex learning, (ii) the hallmark of the nonmonotonicity is the existence of a phase transition, and (iii) the transition can be framed as the SAT-UNSAT transition of a constraint satisfaction problem, which is different from the one that defines the storage capacity. Since it is often challenging to deal with the combinatorics of complex data structures, our goal in this section is to identify an appropriate synaptic volume that provides access to the transition. Once this observable is identified, we will be able to pinpoint the existence of the phase transition without direct access to the VC entropy, in the same spirit of the original work by Gardner [3] , by using disordered systems techniques.
+
+We define the synaptic volume by leveraging on the definition of the CSP corresponding to the transition. already noted, in looking for a solution to the constraint satisfaction problem 2 (defined in Sec. III D), we have the freedom to adjust both the synaptic weights W and the outputs σ. This means that the outputs are promoted to be dynamical variables and should be treated at the same level of the synaptic weights. This suggests that the relevant synaptic volume for identifying the corresponding phase transition is the following:
+
+where θ(•) is the Heaviside theta, ξ µ a,j denotes the j-th component of the a-th element of the µ-th multiplet and the weights lie on the surface of a n-dimensional sphere of radius √ n (note that this is different from the convention used in the preceding sections). The inputs, constituting the set X p , are chosen randomly according to the distribution
+
+where -1 ≤ ρ ab ≤ 1 are the overlaps, ν is a normalization factor and the inputs lie on the vertices of a ndimensional hypercube.
+
+Note that data structure is implemented in Eq. ( 73 ) by asking that each point of the µth symplex be labelled by σ µ . Moreover, this synaptic volume differs from the ordinary Gardner volume by the integration over the labels σ, considered dynamical variables on the same foot of the weights W . Intuitively, an exponential growth of V (X) with n at fixed load α means that, in the thermodynamic limit, at least one classification compatible with the input-label constraints can be expressed by the model; on the contrary, when V (X) decreases exponentially in n then no such classification exists for n → ∞. Thus, the logarithm of V (X) is a suitable observable to assess the nonmonotonic behavior of the VC entropy for a given data structure.
+
+We will apply replica theory to compute the averaged (over the inputs positions) logarithm of the synaptic volume defined in Eq. ( 73 ), in order to identify the transition. The goal will be the evaluation of the critical value of α = p/n where this volume changes regime, as a function of the overlaps. In the following, we will restrict to the case k = 2, i.e. to data organised in doublets, so that the geometry of the simplex is fully specified by a single parameter ρ; to lighten the notation, we will omit the index a = 1, 2, simply denoting the doublets as (ξ, ξ). Using standard integral representations for the delta and theta functions, we can write the volume of interest as
+
+where the auxiliary variable E enforces the spherical constraint, while the standard integral representation of the theta function is obtained via the auxiliary variables λ, x.
+
+We dedicate the following sections to the calculation of the averaged logarithm of this volume in the annealed, replica symmetric (RS) and one-step replica symmetry breaking (1RSB) approximations. The main results of this section, to which we address the reader not interested in the details, are Eq. ( 81 ), (98) and (110).
+
+
+================================================================================
+A. Annealed computation
+================================================================================
+
+The annealed calculation is based on the substitution log V → log V , so we simply need to average the volume (75) with respect to the input distribution (indicated by the overline); the details are reported in Appendix B. After a large-n expansion and the average over the inputs, the integrals in x and λ can be solved explicitly:
+
+where we introduced the notation
+
+and we used the known formula for the quadrant probability of a bivariate normal distribution, see [46] . The remaining integrals can be performed: the one over the weights is Gaussian
+
+while the one over E can be performed via a saddle-point method for large n:
+
+1 10 100 -1 -0.5 0 0.5 1 α * ρ α A * α RS * α 1RSB * α * combinatorial FIG. 3. Critical value of the load α as a function of the overlap ρ for k = 2 (data in pairs). Circles represent the combinatorial result, which is in agreement with numerical simulations. All the different approximation schemes used for the replica computations display the same qualitative shape. However the annealed and RS ansatz fail in reproducing quantitatively the combinatorial result. Using a 1RSB ansatz we obtain a one-parameter expression for α * [Eq. (110)] that fits the combinatorial result tightly.
+
+Assembling everything, and ignoring inessential factors, we find
+
+(80) Defining the critical value of α = p/n as the one where the exponent changes sign, we find
+
+A comparison of the annealed approximation and of the result obtained with combinatorics in Eq. ( 46 ) is shown in Fig. 3 . Although the annealed approximation fails in reproducing quantitatively the behavior of α * (ρ), it bounds the combinatorial result from below, and qualitatively recovers the expected divergence for ψ 2 → 1.
+
+
+================================================================================
+B. Quenched computation
+================================================================================
+
+The quenched calculation of log V is performed via the replica trick. First, we replicate t times the volume (75), obtaining
+
+where 1 ≤ a, b ≤ t are replica indices (not to be confused with the indices running inside the multiplets, a notation we abandoned at the beginning of this section, when we specialized our calculation to doublets), Q ab is the replica matrix (with Q aa = 1) and F ab are the Lagrange multipliers enforcing the constraint
+
+Now we can perform the average over the input ensemble.
+
+With the same steps we used to get equation (76) (see Appendix B), we obtain, for the x and λ integrals,
+
+where we already inserted the replica matrix using (83) and we isolated the outputs σ in the source term via the transformation x → σx. The remaining integral over the weights is Gaussian:
+
+where G is the symmetric matrix with elements
+
+The integral over the elements of G is performed via a saddle-point: ignoring all the inessential factors, (88) Finally, the resulting averaged replicated volume to be evaluated is
+
+We cannot proceed further, in taking the limit t → 0 as prescribed by the replica approach, without making an ansatz on the form of the replica matrix Q ab .
+
+
+================================================================================
+RS ansatz
+================================================================================
+
+In the RS ansatz, the replica matrix has the form
+
+so that log det(Q)
+
+The quadratic form at the exponent of Eq. ( 89 ) reads
+
+(92) The last term can be linearized with a Hubbard-Stratonovich transformation:
+
+so that replica indices factorise, to get, after an integration over x, +∞ -∞
+
+Defining L RS (y) the quantity in square brackets, the limit t → 0 gives
+
+Since we are looking for the critical value of α of the SAT-UNSAT transition of our CSP, we can just apply the standard argument by Gardner [3] : starting with a load below the critical value and increasing the number of patterns, the set of solutions in the space of weights shrinks down to a single configuration at the transition (in the thermodynamic limit). This means that, approaching the critical point, the replicas of the vector W must be more and more correlated and therefore q → 1 at the transition. In this limit, the factor (1 -q) -1 is large and the integrals in L RS (y) can be evaluated with a saddle point: we need to find the stationary points of the exponent in the integrands as a function of λ. According to the position of the vector y on the plane, the saddle is in one of the three following spots: (i) inside the region of integration over λ; (ii) at one of its (iii) at the origin. We obtain:
+
+with the theta functions selecting in turn one of the above cases. In the summation over σ = ±1, in each domain of y survives only the dominant addend in (1 -q): this is the finite term in the first and third quadrant, and the terms proportional to exp{-y 2 /[2(1 -q)]} or exp{-ȳ 2 /[2(1 -q)]} in the second and forth quadrant (the quadrants bisectors discriminating the larger). In the end, using the obvious symmetry between y and ȳ as integration variables and ignoring suppressed factors in (1 -q), we get +∞ -∞
+
+Selecting only the most divergent terms in (1 -q) from ( 91 ) and (97), we have all the ingredients to evaluate the replica limit of (V t -1)/t for t → 0. The result is zero when the load α assumes the critical value
+
+The result is reported in Fig. 3 : the RS curve presents the expected limits (47) , but again we do not observe quantitative agreement with the combinatorial curve. We are therefore led to conjecture that we need at least one step of replica symmetry breaking (RSB). We work out the derivation of α * within the 1RSB ansatz in the next section.
+
+
+================================================================================
+1RSB ansatz
+================================================================================
+
+In the 1RSB ansatz the replica matrix has the form
+
+where ε ab = 1 if a, b belongs to a diagonal block m × m, 0 otherwise, so that log det(Q) → t m -1 m log(1 -q 1 )
+
+.
+
+(100) From (89), we get
+
+where B is a block index. We now need 2(t/m + 1) auxiliary Hubbard-Stratonovich variables to linearize the sums over replica indices: to get, after the usual factorisations and the integration over x,
+
+(102) Defining L 1RSB (y) the argument of the square brackets, we know that the logarithm of the above quantity for t → 0 gives pt m
+
+To simplify L 1RSB (y) and to get an expression similar to the one we studied before, we can shift the z variables to
+
+obtaining
+
+(105) In order to find the critical load, we investigate the behaviour of the 1RSB parameters close to the transition: it turns out that q 1 has to be sent to one (in analogy with the RS case) and m to zero [47] as
+
+with w a finite parameter. In this limit we can evaluate the integral over λ with a saddle point. We get θ(z)θ(z) + θ(-z)θ(-z) + 4θ(z)θ(-z -z)e -w(1-q 0 )z 2 2 . (107) Analytical computations are rather cumbersome after this point. However, the result simplifies a lot if we take q 0 = 0. Then the integral over y decouples and simply gives 1, while the one over z breaks into the regions +∞ 0
+
+and
+
+In the end, we find
+
+We stress that this last result is not the optimal 1RSB solution: in principle we should consider the full expression of α 1RSB * (ρ; q 0 , w) and optimize upon the remaining parameters q 0 and w. However, this is beyond the scope of this section: here, we simply verify that the functional form α 1RSB * (ρ; q 0 = 0, w) allows to fit nicely the combinatorial result, by adjusting the parameter w (see Fig. 3 ). This simple observation strongly supports our conjecture that this SAT-UNSAT transition exhibits at least one step of RSB, but it does not rule out a full-RSB scenario.
+
+
+================================================================================
+C. Margin learning
+================================================================================
+
+Replica theory turns out to be essential to explore the role of data structure whenever alternative, ad hoc methods (such as the combinatorial one) are not available. Here we apply it to identify the SAT-UNSAT transition occurring in margin learning. The synaptic volume relevant to this case is
+
+where κ is the margin. Note again that here, as in the case of Eq. ( 73 ), the outputs σ µ are dynamical variables, at variance with the usual Gardner's volume. We skip the details on the annealed and quenched calculations, which are in spirit very similar to those of the previous sections. Nonetheless, it is worth to point out that the tricky multivariate integrals in the auxiliary variable, are now replaced by Gaussian integrals, with the margin κ appearing as an integration limit. The annealed approximation leads to
+
+In the quenched calculation, the RS ansatz is again implemented by requiring q → 1; one obtains the critical threshold
+
+where Dy is the Gaussian measure. Note the difference with Gardner's result [3] for the storage capacity,
+
+The one-step RSB ansatz again depends on the parameters q 0 and w, which should be investigated numerically. However, in the special case q 0 = 0 we find the simpler expression
+
+These results essentially share the same features of those for the simplexes computed above: in particular, at variance with the usual storage capacity (114), α * computed in all the different approximation schemes diverges in the limit κ → 0 + , when the problem reduces to a standard classification of points (or equivalently, in the object manifold description, when the radius of the spheres shrinks to zero). Even in absence of a closed expression for the VC entropy of margin classification, the existence of the phase transition at a finite load is a clear indication of its non-monotonicity.
+
+
+================================================================================
+V. DISCUSSION
+================================================================================
+
+Understanding how data specificities impact the performance of machine learning models and algorithms can be considered one of the major challenges for contemporary statistical physics. Here we have shown how to deal with data structure, as it is being established in physics, within the framework of the statistical theory of learning. The presence of input-output correlations in a dataset suggests constraints to be applied to the hypothesis class under consideration. As a result, the corresponding VC entropy, deeply connected to the generalization capabilities of the model, is considerably lower than in the unstructured case.
+
+For simple models of data structure we have observed two striking phenomena that take place above the VC dimension. First, the VC entropy becomes nonmonotonic. This is a strong indication that the rigorous bounds in SLT may be substantially improved by taking data structure into account. Second, a novel transition appears beyond the well-known storage capacity, at the onset of unsatisfiability for a data-related constraint satisfaction problem. When available, a combinatorial theory à la Cover allows one to compute the VC entropy of a finitesize system, and to reveal explicitly its nonmonotonic behavior. However, this is not always feasible, such as for spherical object manifolds and margin learning. In these cases, we showed how the phase transition can be probed with the standard tools of statistical physics, thus allowing an indirect quantification of the data-dependent behavior.
+
+The new satisfiability transition is due to a competition between the combinatorial expansion, with sample size, of the space of possible functions and the reduction due to the constraints [33] . We believe, as this observation suggests, that the emergence of the data-driven transition, as well as the nonmonotonic VC entropy it entails, is not specific to the two models of data that we have studied here, but is more generally present whenever the constraints imposed on the hypothesis class by data structure are strong enough. On a more quantitative level, notice that the upper and lower bounds obtained for α * in Sec. III E are very close to one another. The bounds are independent of the particular choice of simplexes, i.e., they do not depend on k or on {ρ ab }. This is a clue pointing to the robustness of the phenomenology for disparate data structures. We remark that the combinatoric analysis was done at leading order in α; thus, it remains to assess how much the bounds are affected by perturbative corrections.
+
+An ambitious and pressing goal concerns the generalization of our results to other architectures, notably deep neural networks, in the same spirit of what was achieved in SLT regarding the VC dimension.
+
+where φ(k, t) = (1 -k)t + kt 1-1 k . Notice that φ(k, t) is a monotone decreasing function of k, and it is always less then 1.
+
+The case t = 0 is special, as the constraint restricts the domain to the origin and f (k) is null; in the following, suppose that t > 0.
+
+If k = 1, the constraint implies that x 1 = t, so that f (1) (x 1 ) = f (1) (t) = 1. The fact that φ(1, t) = 1 proves that the proposed bounds are indeed true.
+
+If k > 1, we first look for critical points inside [0, 1] k using Lagrange's theorem for constrained optimization; then, we optimize our function on the boundary of [0, 1] k to look for non-critical extrema.
+
+• Inside the domain, Lagrange's theorem gives that
+
+x * = (t
+
+) is the only critical point, and
+
+• on the boundary, we have that at least one of the x variables (without loss of generality, let us take x k to be this boundary variable) must be either 0 or 1; the former is not compatible with the constraint as t > 0, so x k = 1. But f (k) (x 1 . . . x k-1 , 1) = f (k-1) (x 1 . . . x k-1 ), and t = k m=1 x m = k-1 m=1 x m , so that the constrained optimization of f (k) ( x) on the boundary of the domain is equivalent to the constrained optimization of f (k-1) ( x) on the full domain [0, 1] k-1 .
+
+Thus, the candidates for the infimum and the supremum of f (k) ( x) are given by φ(k) (inside the domain, by Lagrange's theorem) and 1, φ(k -1, t) (on the boundary of the domain, by induction hypothesis). The properties of φ imply that 1 is the supremum and φ(k, t) is the infimum of f (k) ( x).
+
+Finally, again by induction, we see that the supremum is realized on the point (t, 1, . . . ) and by all the distinct permutations of its coordinates, and that the infimum is realized by (t
+
+
+================================================================================
+Appendix B: Averaging over the input distribution
+================================================================================
+
+In this Appendix we report the details of the calculation of the averages over the input ensemble, performed in Sec. IV. From Eq. ( 74 ), specialized for k = 2, we observe that at fixed overlap ρ, given c, d ∈ N the numbers of concordant and discordant signs of the components of the pair for each µ, then c -d = ρn, c
+
+For each µ, we can freely choose in 2 n different ways the components of ξ µ , but then for ξµ we must take c components with the same sign of their counterparts and d with the opposite. We can do that in n c different ways, so the normalization factor is
+
+However, the order of the components of the vectors ξ, ξ is completely irrelevant, because they appear only in scalar products, among themselves (in the overlap constraint) and with the same vector W , whose components again we are free to relabel. This means that we can choose as a representative of the vector ξ, for example, the one with the concordant components at the beginning. We can write the ensemble measure as
+
+where
+
+Note that with the choice of a representative we are explicitly breaking the invariance of the original expression under permutation (relabeling) of the indices j, a symmetry we will reintroduce by hand in the following calculation.
+
+We can now perform the averages of the volumes (75) and (82). We report only the annealed calculation, the quenched one being a straightforward variation. Isolating the only part depending on the inputs in the integrand of Eq. ( 75 ), we find
+
+where, in the final step, a large n expansion is performed. The exponent of the last term, consisting in a sum over j that does not extend over all the n components, cannot be readily solved using the spherical constraint, but we can write it as
+
+Now, only the first sum is not invariant under permutations of the components. However, since the starting point was symmetric, we can also multiply this expression by similar ones obtained with other choices of the vector ξµ , and then take the corresponding root of the result, obtaining an equivalent formula. The trick to restore a complete sum over the n components, is to multiply by all the c-permutations of n, and then take the n!/(n-c)!th root of the result. The only non-trivial term at the exponent during this procedure is indeed the partial sum, which reads:
+
+Now the spherical constraint can be invoked on all terms. Using (2c/n -1) = ρ, and factorising the p integrals over the auxiliary variables x and λ, we obtain Eq. ( 76 ).
+
+
+================================================================================
+ACKNOWLEDGMENTS
+================================================================================
+
+The authors would like to thank Enrico Malatesta and Marco Cosentino Lagomarsino for useful discussions and suggestions.
+
+
+================================================================================
+Appendix A: Bounds on θ k 1
+================================================================================
+
+In this Appendix we report the details of the calculation of the bounds on θ k 1 given in Section III E. To briefly recall the definitions, we have
+
+for some 0 ≤ ψ m ≤ 1, ∀m ≥ 2. We want to compute the infimum and the supremum of θ k 1 at fixed θ k 0 , as a function of the ψ variables. First of all, let us simplify the notation. Define:
+
+Explicitly:
+
+where
+
+Our problem is to optimize (i.e., to find the infimum and the supremum) f (k) ( x) in the hypercube x ∈ [0, 1] k , subject to the constraint
+
+We will prove by induction that sup
+

@@ -1,0 +1,381 @@
+
+================================================================================
+Title
+================================================================================
+
+Methods Of Solving Ill-Posed Problems
+
+
+================================================================================
+Abstract
+================================================================================
+
+Many physical problems can be formulated as operator equations of the form Au = f . If these operator equations are ill-posed, we then resort to finding the approximate solutions numerically. Ill-posed problems can be found in the fields of mathematical analysis, mathematical physics, geophysics, medicine, tomography, technology and ecology. The theory of ill-posed problems was developed in the 1960's by several mathematicians, mostly Soviet and American. In this report we review the methods of solving ill-posed problems and recent developments in this field. We review the variational regularization method, the method of quasi-solution, iterative regularization method and the dynamical systems method. We focus mainly on the dynamical systems method as it is found that the dynamical systems method is more efficient than the regularization procedure.  Contents Acknowledgements v Dedication vii Chapter 1. What are ill-posed problems? 1. Introduction 2. Examples of ill-posed problems 3. Regularizing family Chapter 2. Review of the methods for solving ill-posed problems 1. Variational regularization method 2. Discrepancy principle for variational regularization method 3. The method of quasi-solution 4. Iterative regularization method 5. Dynamical systems method Chapter 3. Dynamical systems method for linear problems Appendix. Bibliography iii It gives me immense pleasure to express my deepest sense of gratitude and indebtedness to my advisor Professor Alexander G. Ramm for his wise and thoughtful guidance and for the excellent, motivating lectures he gave, otherwise this report and my knowledge and appreciation of this subject wouldn't have been possible. I offer my sincere regards and thanks to him. I am deeply obliged and greatly indebted to my family and to all those for their sustained co-operation and inspiration. There are no words to express how much I am grateful to them. Finally, I would like to express my profound appreciation and thanks to the faculty and staff of the Department of Mathematics and to faculty and to the staff of Kansas State University who have helped me directly and indirectly in the preparation of the report and pursuit of knowledge.
+
+
+================================================================================
+Introduction
+================================================================================
+
+Definition 1. A problem of solving an operator equation (1.1) Au = f
+
+where A : X-→ Y is an operator from a Banach space X into a Banach space Y is called well-posed in the sense of J. Hadamard (1902) iff it satisfies the following conditions.
+
+(1) (1.1) is solvable for any f ∈ Y . (Existence of the solution, i.e., A is surjective.) (2) The solution to (1.1) is unique. (A is injective.) (3) (1.1) is stable with respect to small perturbations of f . (Continuous dependence of the solution i.e., A -1 is continuous.) If any of these conditions fails to hold, then problem (1.1) is called ill-posed.
+
+If the solution does not depend continuously on the data, then small errors, whether round off errors, or measurement errors, or perturbations caused by noise, can create large deviations in the solutions. Therefore the numerical treatment of ill-posed problems is a challenge. We shall briefly discuss below some of the concepts and auxiliary results used in this report.
+
+Henceforth D(A), R(A), and N (A) := {u : Au = 0} denote the domain, range and null-space of A respectively. Let A * : Y * -→ X * be the adjoint operator. For simplicity we assume below that X = Y = H, where H is a Hilbert space. If A is self-adjoint then A = A * . If A is injective, then N (A) = {0}, A -1 is well-defined on R(A) and u = A -1 f is the unique solution to equation (1.1) for f ∈ R(A). Equation ( 1.1 ⊥ . The overbar denotes closure. If N (A) = {0} define the normal solution (pseudo-solution) u 0 to equation (1.1) as the solution orthogonal to N (A). Then the normal solution is unique and has the property that its norm is minimal: min u = u 0 , where the minimum is taken over the set of all solutions to equation (1.1) . The normal solution to the equation Au = f can be defined as the least squares solution: Au -f = min., u ⊥ N (A). This solution exists, is unique and depends continuously on f , if H is finite-dimensional. The normal solution is also called minimal-norm solution.
+
+A is called closed if {u n -→ u, Au n -→ f } implies {u ∈ D(A) and Au = f }. By Banach theorem, if A is a linear closed operator defined on all of X then A is bounded. A is called compact if it maps bounded sets into pre-compact sets. The set {f } is bounded means there exists ρ > 0 such that f ≤ ρ and a set is precompact if any subsequence from the set contains a convergent subsequence. In a finite-dimensional Banach space a set is pre-compact iff it is bounded. If A is an injective linear compact operator on an infinite dimensional space then A -1 is unbounded.
+
+
+================================================================================
+Singular Value Decomposition:
+================================================================================
+
+Suppose A is a compact linear operator on H, then A * is compact and |A| := [A * A] 1/2 is self-adjoint, compact and non-negative definite, |A|φ j = λ j φ j , λ 1 ≥ λ 2 ≥ ... ≥ 0 → 0 are the eigenvalues of |A| with s-values of A: s j = s j (A) := λ j (|A|) and φ j are the normalized eigenvectors of |A|. The faster the s-values go to zero the more ill-posed problem (1.1) is. Any bounded linear operator A admits the polar representation A := U |A|, where
+
+j=1 s j (., φ j )ψ j , where ψ j := U φ j . A closed set K of X is called a compactum if any infinite sequence of its elements contains a convergent subsequence. A sequence u n in U converges weakly to u in U iff lim n→∞ (u n , φ) = (u, φ) for all φ∈ H. We denote the weak convergence by u n ⇀ u. If u n ⇀ u then u ≤ lim inf n→∞ u n . If u n ⇀ u and A is a bounded linear operator, then Au n ⇀ Au. A bounded set in a Hilbert space contains a weakly convergent subsequence. A functional F : U → R is called convex if the domain of F is a linear set and for all u, v ∈ D(F ), F (λu
+
+Let F : X → Y be a functional. Suppose F ′ (u)η = lim ǫ→+0 F (u+ǫη)-F (u) ǫ , exists for all η, and F ′ (u) is a linear bounded operator in H. Then F ′ (u) is called Gateaux derivative. It is called Fréchet derivative if the limit is attained uniformly with respect to η running through the unit sphere.
+
+
+================================================================================
+Spectral Theory:
+================================================================================
+
+Let A be a self-adjoint operator in a Hilbert space H. To A there corresponds a family E λ of ortho-projection operators such that φ(A) :=
+
+Let the operator equation Au = f be solvable (possibly non-uniquely). Let y be its minimal-norm solution, y ⊥ N (A). Let B = A * A ≥ 0 and q := A * f . Then Bu = q. Also, (B + α) -1 := (B + αI) -1 is a positive definite operator and is given by
+
+If α → 0, the integrand α 2 (λ+α) 2 tends to zero. So, by the Lebesgue dominated convergence theorem [(A + α) -1 A -I]f 2 → 0 as δ → 0, provided that  An operator Φ(t, u) is locally Lipschitz with respect to u ∈ H in the sense sup Φ(t, u) -Φ(t, v) ≤ c u -v , c = c(R, u 0 , T ) > 0 where the supremum is taken for all u, v ∈ B(u 0 , R), and t ∈ [0, T ].
+
+
+================================================================================
+Example 1. Stable numerical differentiation of noisy data
+================================================================================
+
+The problem of numerical differentiation is ill-posed in the sense that small perturbations of the function to be differentiated may lead to large errors in its derivative. Let f ∈ C 1 [0, 1], with noisy data {δ, f δ }, where δ > 0 is the noise level, that is we have the estimate (2.1)
+
+The problem is to estimate stably the derivative f ′ , i.e., to find such an operation R δ such that the error estimate R δ f δ -f ′ ≤ η(δ) -→ 0 as δ -→ 0. This problem is equivalent to stably solving the equation
+
+if noisy data f δ are given in place of f . In this case, finding f ′ = A -1 f , given the data f δ is an ill-posed problem, since equation (2.2) may have no solution in L 2 [0, 1] if f δ ∈ L 2 [0, 1] is arbitrary, subject to only the restriction f δ -f ≤ δ, and if f δ ∈ C 1 [0, 1] then f ′ δ may differ from f ′ as much as one wishes however small δ is. Also, if A is a linear compact operator then A -1 , if it exists is unbounded and hence equation (2.2) is ill-posed. The problem is: given {δ, A, f δ }, find a stable approximation u δ to the solution u(x) = f ′ (x) of the equation (2.2) in the sense the error estimate (2.3) u δ -u ≤ η(δ) -→ 0 as δ -→ 0.
+
+For this we try to construct an operator R α : H -→ H such that (2.4) u δ := R α(δ) f δ satisfies the error estimate (2.3). R α depends on a parameter α and is called a regularizer if R α is applicable to any f δ ∈ Y and if there is a choice of the regularizing parameter α≡ α(δ) → 0 as δ → 0 such that R δ f δ := R α(δ) f δ -→ u as δ -→ 0.
+
+Example 2. The Cauchy problem for the Laplace equation We consider the classical problem posed by J.Hadamard. It is required to find the solution u(x, y) of the Laplace equation (2.5) u xx + u yy = 0 in the domain Ω = {(x, y) ∈ R 2 : y > 0} satisfying the boundary conditions
+
+The Cauchy problem consists of finding a solution of the equation (2.5) satisfying the conditions (2.6). The data differ from zero as little in the sup-norm as can be wished, if n is sufficiently large. Its solution is given by (2.7) u(x, y) = A n n sin (nx) sinh (ny), which, if A n = 1/n, is very large for any value of y > 0, because sinh (ny) = 0(e ny ).
+
+As n -→ ∞, the Cauchy data tend to zero in C 1 (R), and u ≡ 0 is a solution to equation (2.5) with u = u y = 0 at y = 0. Thus, even though the solution to the Cauchy problem (2.5)-(2.6) is unique, continuous dependence of the solution on the data in the sup-norm does not hold. This shows that the Cauchy problem for the Laplace equation (2.5) is an ill-posed problem.
+
+
+================================================================================
+Example 3. Fredholm integral equations of the first kind
+================================================================================
+
+Consider the problem of finding the solution to the integral equation
+
+where the operator A : H := L 2 (0, 1) -→ L 2 (0, 1) is compact and > 0 almost everywhere, with kernel K(x, y) satisfying the condition:
+
+(2.9)
+
+Then A : H -→ H is compact. A compact operator in an infinite-dimensional space cannot have a bounded inverse. That is the problem (2.8) is ill-posed.
+
+
+================================================================================
+Regularizing family
+================================================================================
+
+Consider the operator equation given by (1.1) with the following assumptions:
+
+(1) A is not continuously invertible.
+
+(2) For exact values of f and A, there exists a solution u of equation (1.1).
+
+(3) A is known exactly, and instead of f , we are given its approximation f δ ∈ Y such that the estimate (2.1) is satisfied in Y . where δ > 0 is a numeric parameter characterizing the errors of input data f δ .
+
+We need a numerical algorithm for solving the operator equation satisfying the condition that the smaller the value of δ , the closer the approximation to u is obtained, i.e., the error estimate (2.3) is satisfied. The Regularizing Algorithm (RA) is the operator R α : Y -→ X which, for a suitable choice of α ≡ α(δ), puts into correspondence to any pair {δ, f δ }, the element u δ ∈ X such that the error estimate (2.3) is satisfied where u δ := R α(δ) f δ . For a given set of data, u δ is the approximate solution of the problem. Based on the existence and construction of RA, all ill-posed problems may be classified into regularizable (i.e., the ones for which a RA exists) and non-regularizable, and solving an ill-posed problem means constructing RA for such a problem.
+
+Let Au = f , where A : X -→ Y is a linear injective operator, R(A) = R(A), f ∈ R(A) is not known and the data are the elements f δ such that the estimate (2.1) is satisfied. The objective is to find stable approximation u δ to the solution u such that the error estimate (2.3) is satisfied. Such a sequence u δ is called a stable solution to the equation (1.1) with the perturbed (or noisy) data.
+
+Let the operator equation Au = f , be given, and f δ , f δ -f ≤ δ, the noisy data be given in place of f . Let A be injective. Then R α is called a regularizer of the operator equation if D(R α ) = H and there exists α(δ) → 0, δ → 0 such that R α(δ) f δ -u → 0 as δ → 0 for all u ∈ H. Lemma 2. If there exists an operator R α , D(R α ) = H, R α ≤ a(α), such that R α Au -u := η(α) → 0 as α → 0, and the function g(α) := -η ′ (α) a ′ (α) is monotone for α ∈ (0, α 0 ), α 0 > 0 a small number with g(+0) = 0, then there exists an α≡ α(δ) → 0 as δ → 0 such that R α(δ) f δ -u → 0 as δ → 0 for all u ∈ H.
+
+and α(δ) can be chosen suitably. One can choose α(δ) so that the minimization problem δa(α
+
+(**) is a necessary condition for min. in (*). Since problem (1.1) is ill-posed, one has a(α) → ∞ as α → 0. The function a(α) can be assumed monotone decreasing and η(α) can be assumed monotone increasing on (0, α 0 ), η(0) = 0. We assume in lemma, η(α
+
+a ′ (α) is a monotone function for α ∈ (0, α 0 ), equation (*) has a unique solution α ≡ α(δ) for any sufficiently small δ> 0.
+
+More precisely for any fixed f δ , an operator R δ : H -→ H such that R δ := R α(δ),δ , which depends on δ is a regularizer for equation (1.1), if for some choice of α, α ≡ α(δ), one has,
+
+so that u is stably approximated. If such a family R δ is known then the function
+
+satisfies the error estimate (2.3) in view of (3.1), i.e., formula (3.2) gives a stable approximation to the solution u of equation (1.1). The scalar parameter α is called the regularization parameter.
+
+A construction of a family R α,δ of operators such that there exists a unique α(δ) satisfying (3.1) is always used for solving an ill-posed problem (1.1). The operator A -1 is said to be regularizable, if there exists a regularizer R δ which approximates A -1 in the sense of (3.1) using the noisy data {δ, f δ }. In the case of well-posed problems, A -1 is always regularizable: one may take R δ = A -1 for all δ. This can happen only for well-posed problem. If the problem is ill-posed then there does not exist a regularizer independent of the noise δ.
+
+Example: In the stable numerical differentiation example, we shall take
+
+Following A.G.Ramm [17] , we choose a regularizer R δ of the form:
+
+(3.5)
+
+We note that A.G.Ramm [3] has given a new notion of regularizer. According to [3] a family of operators R(δ) is a regularizer if sup R(δ)f δ -v ≤ η(δ) -→ 0 as δ-→ 0, where the supremum is taken over all v ∈ S δ = {v : Av -f δ ≤ δ, v ∈ K}, and K is a compactum in X to which the solution u belongs. The difference between Ramm's definition and the original definition is that in the original definition u is fixed, one does not know the solution u ∈ K, the only information available is a family f δ and some apriori information about the solution u, while in the new definition v is any element of S δ and the supremum, over all such v, of the norm above must go to zero as δ goes to zero. This definition is more natural in the sense that not only the solution u to (1.1) satisfies the estimate Au -f δ ≤ δ, but many v ∈ K satisfy such an inequality Av -f δ ≤ δ, v ∈ K, and the data f δ may correspond, to any v ∈ S δ , and not only to the solution of problem (1.1).
+
+
+================================================================================
+Review of the methods for solving ill-posed problems
+================================================================================
+
+In this chapter, we shall discuss four different methods, (variational regularization method, quasi-solutions method, iterative regularization method and dynamical systems method) for constructing regularizing families for ill-posed problems (1.1) with bounded operators. See also A.G.Ramm [1] for ill-posed problems with unbounded operators.
+
+
+================================================================================
+Variational regularization method
+================================================================================
+
+This method consists of solving a variational problem, which was proposed by D.Phillips (1962) and studied by A.N.Tikhonov (1963) et al by constructing regularizers for solving ill-posed problems.
+
+Consider equation (1.1), which has to be solved, where A : X -→ Y is assumed to be a bounded, linear, injective operator, with A -1 not continuous, f ∈ R(A) is not known, and the data are the elements {δ, A, f δ }, where the noise level δ > 0 is given, estimate (2.1) holds, and the noisy data f δ is the δ-approximation of f . The problem is: given {δ, A, f δ }, find the stable solution u δ such that the error estimate (2.3) holds.
+
+Let equation (1.1) have a minimal-norm solution y. Variational regularization method consists of solving the variational problem (minimization problem) and constructing a stable approximation to solution y with minimal-norm such that y⊥N (A). Assume without loss of generality A ≤ 1, and then A * ≤ 1. Let B := A * A, then B ≥ 0 and is a bounded, self-adjoint operator. The equation Au = f is equivalent to the equation Bu = q, where q := A * f . Assume that q δ is given in place of q, q -q δ ≤ A * δ ≤ δ. Since N (A) = N (B), y ⊥ N (B) and (B + α) -1 ≤ 1 α . Consider the problem of finding the minimum of the functional
+
+where α > 0 is the regularization parameter. The functional F (u) is a function of two parameters α and δ. Solutions of variational problem (1.1) are called minimizers. First, we shall prove the following two lemmas.
+
+Lemma 3. Existence of minimizers: For arbitrary α>0 and δ>0, there exists a solution u α,δ to variational problem (1.1), in the sense F (u α,δ ) ≤ F (u) for all u ∈ X.
+
+Lemma 4. Uniqueness of minimizers: The solution u α,δ of variational problem (1.1) is unique.
+
+Proof of Lemma 3: Define m := inf u∈H F (u). Note that m ≡ m(δ) ≥ 0, and m ≤ F (u), u ∈ H. Let {u n } ∈ D(F ) be a minimizing sequence for the functional F , such that
+
+So, α u n foot_0 ≤ m + ǫ n . Hence u n 2 ≤ m+ǫn α . Since a bounded set in H contains a weakly convergent subsequence, there exists a weakly convergent subsequence of {u n }, denoted again by {u n }, with u n ⇀ u. This implies by continuity of A, Au n ⇀ Au. Thus, u ≤ lim inf n→∞ u n and Au -
+
+So we have m ≤ F (u) ≤ m. Hence F (u) = m. So u is the minimizer of F (u). Thus we have proved the existence of the minimizer for the variational problem (1.1).
+
+Proof of Lemma 4: Since u is the minimizer of variational problem (1.1), it follows that F (u) ≤ F (u + ǫη), for any η ∈ H, and for any ǫ ∈ (0, ǫ 0 ). So, lim ǫ→0 F (u+ǫη)-F (u) ǫ ≥ 0. Assuming that F ′ (u) exists, this implies that (F ′ (u), η) ≥ 0 for all η ∈ H and hence F ′ (u) = 0. We shall calculate the derivative of (1.1) with respect to ǫ at ǫ = 0 and get:
+
+and
+
+Thus if u is a minimizer of F (u), then equation (1.3) holds. We claim that equation (1.3) has not more than one solution. For this, it is sufficient to prove that A * Aw + αw = 0 implies w = 0. Suppose that for every α > 0 and the operator (A * A + α) -1 exists and is bounded by (A * A + α) -1 ≤ 1 α , because A * A ≥ 0. We shall now consider the main theorem which gives us a method for constructing a regularizing family for the ill-posed problem (1.1).
+
+
+================================================================================
+Theorem 1.
+================================================================================
+
+Assume that A is a linear bounded, injective operator, equation Au = f is solvable, A -1 is not continuous, and let y be the minimal-norm solution: Ay = f , y⊥N (A). If f δ is given in place of f , f -f δ ≤ δ. Then for any α> 0, minimization problem (1.1) has a unique solution u α,δ given by the formula (1.5). Moreover, if α ≡ α(δ) is such that (1.6) α(δ) -→ 0 and δ α(δ) -→ 0 as δ -→ 0, then u δ := u α(δ),δ -→ y as δ -→ 0.
+
+Proof: The proofs of existence and uniqueness of the minimizers were given above. Let us prove the last conclusion of the theorem. Assume that condition (1.6) holds.
+
+Define the regularizer (by means of formula (1.5) so that it satisfies equation (1.1)):
+
+If f = Ay, then R α Ay = (B + α) -1 By -→ y as α -→ 0. Here the assumption y ⊥ N (A) is used. We claim that
+
+α + η(α) → 0 as δ -→ 0, because of (1.6).
+
+
+================================================================================
+Discrepancy principle for variational regularization method
+================================================================================
+
+Assumptions (A) Let A be a linear, bounded, injective operator. Let equation Au = f be solvable. Let A -1 not be continuous and let there exist a minimal-norm solution y such that Ay = f , y ⊥ N (A). Let f δ be given in place of f , f -f δ ≤ δ. Let u δ be the stable solution of equation (1.1) given by u δ = (B + α)
+
+-1 A * f δ . The discrepancy principle (DP) introduced by Morozov is used as an aposteriori choice of the regularization parameter α and this choice yields convergence of the variational regularization method. Choose the regularization parameter α=α(δ) as the root of the equation Au α,δ -f δ = Cδ, C = constant > 1.
+
+(*) The above equation, is a non-linear equation with respect to α. It defines α as an implicit function of δ. Let us assume that f δ > Cδ.
+
+Theorem 2. Suppose that the assumptions (A) above holds. Then there exists a unique solution α= α(δ) > 0 to equation (*) and lim δ→0 α(δ) = 0. Moreover, if u δ := u α(δ),δ is given by formula (1.7), then lim δ→0 u δ -y = 0.
+
+Proof: Denote Q := AA * . Then, N (Q) = N (A * ), and (B + α)
+
+-1 A * = A * (Q + α) -1 . By variational regularization method, for any α> 0, minimization problem (1.1) has a unique solution u α,δ = (B + α)
+
+. Equation (*) is a non-linear equation of the form C 2 δ 2 = I(α, δ), for a given fixed pair {f δ , δ}, the function I(α, δ) satisfies lim α→+0 I(α, δ) < C 2 δ 2 and lim α→∞ I(α, δ) > C 2 δ 2 . Hence I(α, δ) is a monotone increasing function of α on (0, ∞). Hence, equation (*) has a unique solution α=α(δ). Now let us prove that lim δ→0 α(δ) = 0. Suppose that α(δ) ≥ α 0 > 0. So as δ→ 0,
+
+(α0+ Q ) 2 f δ 2 > 0. This contradicts the assumption that α(δ) > 0. It remains to prove the last conclusion of the theorem. Define the regularizer by the formula (by means of formula (1.7)) R δ f δ := u δ := u α(δ),δ , where α(δ) is given by the discrepancy principle. Let us prove that u δ -y → 0 as δ → 0. Since u δ is a minimizer of (1.1), we have F (u δ ) ≤ F (u), Au δ -f δ 2 + α(δ) u δ 2 ≤ δ 2 + α(δ) y 2 (**) then from equations (*) and (**), we obtain, u δ 2 ≤ y 2 , u δ ≤ y . This implies that there exists v such that u δ ⇀ v as δ -→ 0 and by continuity of A, Au δ -→ Av. So from (**), as δ → 0 and α → 0 it follows that Au δ -→ f. So, Av = f . Since A is injective, this implies that v = y. So, u δ ⇀ y as δ -→ 0. Also, since, u δ ≤ y , y ≤ lim inf δ→0 u δ ≤ lim sup δ→0 u δ ≤ y . Therefore, lim δ→0 u δ exists and lim δ→0 u δ = y . Thus, lim δ→0 u δ -y = 0. Hence the theorem is proved.
+
+Note that:
+
+. This implies that, F (u 1 ) ≤ F (u). So F (u 1 ) = F (P N (A) ⊥ u) ≤ F (u). Hence a minimizer of F is necessarily orthogonal to null-space of A.
+
+Remark: A.G.Ramm [7] has generalized the discrepancy principle for the cases: (a) when A is not injective, (b) when A is not compact and not injective and (c) when A -1 is not continuous. He has also shown that discrepancy principle, in general does not yield convergence which is uniform with respect to the data.
+
+
+================================================================================
+The method of quasi-solution
+================================================================================
+
+The method of quasi-solution was given by Ivanov (1962) . It is similar to the variational regularization method except that there is a restriction on the functional defined.
+
+Consider the operator equation (1.1) which has to be solved, where A is assumed to be a bounded, linear injective operator on Banach spaces X and Y or R(A) is assumed not to be closed, so that the problem is ill-posed. The data are the elements {δ, A, f δ }, where the noise level δ > 0 is given such that the estimate (2.1) holds, i.e., the noisy data f δ is the δ-approximation of f . The problem is: given {δ, A, f δ }, find the stable solution u δ such that the error estimate (2.3) holds. Let equation (1.1) have a solution y ∈ K, a convex compactum (closed, pre-compact subset) of X. Consider the variational problem:
+
+Definition 2. A quasi-solution of equation (1.1) on a compactum K is a solution to the minimization problem (3.1).
+
+
+================================================================================
+Lemma 5. : Existence of quasi-solution:
+================================================================================
+
+Assume that A is a bounded linear injective operator and that equation (1.1) holds. Assume that equation (1.1) has a solution y ∈ K a compactum of X. Then the minimization problem (3.1) has a stable solution u δ ∈ K such that u δ -y -→ 0 as δ -→ 0.
+
+Since, the infimum m = m(δ) depends on f δ and since y ∈ K, we have,
+
+So we have sup n Au n < ∞. Let us now take δ -→ 0. Since u n ∈ K and K is a compactum, there exists a convergent subsequence in K, which we again denote by u n , such that u n -→ u ∞ . Since K is a compactum, it is closed. Therefore the limit u ∞ ∈ K. By continuity of A, this implies that Au n -→ Au ∞ , and
+
+Thus, u δ is the solution of the minimization problem (3.1): Au δ -f δ = m(δ). It remains to be shown that u δ ∈ K, is the quasi-solution of equation (1.1). Now, as δ -→ 0, there exists a subsequence u δn ∈ K which is again denoted by u n , such that u n -→ v ∈ K. By continuity of A, this implies that Au n -→ Av. Therefore, since m(δ) -→ 0 as δ -→ 0, (3.5)
+
+Av -f -→ 0, as δ-→ 0.
+
+Since, A is injective, v = y. Thus, (3.6) lim δ→0 u n -y = 0.
+
+Since the limit y of any subsequence u n is the same, the whole sequence u n converges to y. Thus a quasi-solution exists. Hence lemma 5 is proved. It remains to be proved the uniqueness and its continuous dependence on f of the quasi-solution.
+
+Theorem 3. If A is linear, bounded and injective operator, K is a convex compactum and the functional F (u) in minimization problem (3.1) is strictly convex, then for any f , the quasi-solution exists, is unique, and depends on f continuously.
+
+Proof : The following lemmas, are needed for the proof of theorem (3). Lemma 6. Let inf u∈K u -f := dist(f, K) := m(f ). Then there exists a unique element u ≡ u(f ) := P K f ∈ K called the metric projection of f onto K such that P K f -f = dist(f, K).
+
+Proof : Existence of P K f : Let u n be a minimizing sequence in K, u n -f -→ m(f ), Let n -→ ∞. Then there exists a convergent subsequence in K, which we again denote by u n , such that u n -→ u ∈ K. Thus, u -f = m(f ). So u = P K f .
+
+Uniqueness of P K f : Suppose there exists u, v which are distinct metric projections. Then m(f
+
+Thus,
+
+Since X is strictly convex, it follows that (u -f ) = λ(v -f ). Since u -f = v -f , λ = +1, -1. If λ = 1, then u = v which is a contradiction. If λ = -1, then f = u+v 2 . Since K is convex, this implies that f ∈ K, this gives that P K f = f which is a contradiction. Thus P K is a bijective mapping onto K. Hence Lemma 6 is proved.
+
+Lemma 7. dist(f, K) is a continuous function of f. Proof : Let dist(f, K) := m(f ). Suppose f → g. Then to prove that m(f ) → m(g). Let u(f ) = P K f ∈ K and u(g) = P K g ∈ K. (f and g are arbitrary they need not be in K).
+
+Lemma 8. P K f is a continuous function of f (in a strictly convex Banach space). q δ -q ≤ δ, then one can use the iterative process (4.3) with q δ in place of q for constructing a stable approximation of the solution y.
+
+Proof: By the iterative process, (4.3) (4.6) u n+1,δ = u n,δ -µ(Bu n,δ -q δ ), u(0) = u 0 .
+
+From equation (4.5) one has: y = y -µ(By -q). Denote u n,δ -y := γ n,δ .
+
+Then subtracting equation (4.5) from equation (4.6), (4.7) γ n+1,δ = γ n,δ -µBγ n,δ + µ(q δ -q), γ 0 = u 0 -y.
+
+So that by induction, γ n,δ = (I -µB)
+
+Thus, (4.8)
+
+Since, µB ≤ 1 and by using (4.2), we obtain, γ n,δ ≤ γ n + nµδ, n ≥ 1 It is already proved in lemma (10) , that γ n -→ 0 as n -→ ∞. Hence γ n,δ -→ 0 as δ-→ 0. Thus theorem 4 is proved.
+
+Remark : In this method the regularization parameter is the stopping rule, n(δ), the number of iterations and can be found by solving the minimization problem γ (n) + nµδ = min. -→ 0 as δ -→ 0, n ≥ 1 and n(δ) -→ ∞ as δ -→ 0.
+
+The choice of t δ with this property is called the stopping rule and is the regularization parameter in DSM method. One has usually lim δ→0 t δ = ∞. Dynamical systems method can be used to solve ill-posed and also well-posed problems. In this report we are interested in discussing solving linear ill-posed problems by DSM. One can also find in A.G.Ramm's paper [2] , a discussion of DSM for solving well-posed problems, nonlinear ill-posed problems with monotone and non-monotone operators and the recent development of the theory of DSM.
+
+
+================================================================================
+Dynamical systems method for linear problems
+================================================================================
+
+In this section, for linear solvable ill-posed problem Au = f , with bounded linear operator A < 1, DSM is justified and a stable approximation of the minimal norm solution to ill-posed problem with noisy data f δ , f δ -f ≤ δ is constructed. This section is based on paper [2] .
+
+Assume that (2.24) and (2.25) holds and (2.26) fails so the problem is ill-posed. Consider the equation (0.8)
+
+
+================================================================================
+Au = f
+================================================================================
+
+where f ∈ R(A) is arbitrary. Let us assume the following Assumptions(*).
+
+(1) Let A be a linear, bounded operator in a Hilbert space H, defined on all of H, the range R(A) is not closed, so that A -1 is unbounded. So problem (0.8) is an ill-posed problem. Let f δ be given in place of f , f -f δ ≤ δ.
+
+Thus from the Cauchy problem (0.11), the DSM for solving equation (0.10) is solving the Cauchy problem
+
+with (0.13) Φ δ = -u δ + [B + ǫ(t)] -1 q δ .
+
+We now prove the main theorem of this section: Given noisy data f δ , every linear ill-posed problem (0.8) under the assumptions (*) can be stably solved by the DSM.
+
+Theorem 5. Assume (*), and let B := A * A, q := A * f . Assume ǫ(t) > 0 to be a continuous, monotonically decaying to zero function on [0, ∞) such that ∞ 0 ǫds = ∞. Then we have the following results.
+
+(1) For any u 0 ∈ H, the Cauchy problem (0.12) has a unique global solution u(t), (the initial approximation u 0 need not be close to the solution u(t) in any sense). (2) There exists lim t→∞ u(t) = u(∞) = y, and y is the unique minimalnorm solution to equation (0.8). Ay = f , y ⊥ N , and y ≤ z , for all z ∈ N := {z : F (z) = 0}. (3) If f δ is given in place of f , f -f δ ≤ δ, then there exists a unique global solution u δ (t) to the Cauchy problem
+
+with q δ := A * f δ . (4) There exists t δ , such that it satisfies the error estimate
+
+The choice of t δ with this property is the stopping rule. This t δ can be for example chosen by a discrepancy principle or as a root of the equation
+
+Proof : Since the Cauchy problem (0.
+
+11) is linear, its solution can be written by an explicit analytic formula (0.17) u(t) = u o e -t + t 0 e -(t-s) [B + ǫ(s)] -1 Byds. Taking limit as t → ∞ to (0.17) and applying L'Hospital's rule, to the second term in the right hand side of equation (0.17), we obtain, lim t→∞ t 0 e s [B+ǫ(s)] -1 Byds e t = lim t→∞ Denote η(t) := u(t) -y , then lim t→∞ η(t) = 0. In general, the rate of convergence of η to zero can be arbitrarily slow for a suitably chosen f . Under an additional a priori assumption of f (for example, the source type assumptions), this rate can be estimated.
+
+
+================================================================================
+Proof of results 3 and 4: Derivation of the stopping rule.
+================================================================================
+
+Consider the Cauchy problem with noisy data. Suppose f δ is given, with f δf ≤ δ, then q δ -q ≤ δ. We require the following lemma for the proof:
+
+Lemma 11. (0.19) [B + ǫ] -1 A * ≤ 1 2 √ ǫ Proof of lemma: We have B := A * A ≥ 0. Denote Q := AA * ≥ 0, then Q ≤ 1. We have [B + ǫI] -1 A * = A * [Q + ǫI] -1 . So, [B + ǫI] -1 A * = A * [Q + ǫI] -1 = U Q 1/2 [Q + ǫI] -1 , (U being the isometry operator ( U f = f ), and A = U |A| = U (A * A) 1/2 ,polar representation of the linear operator). = Q 1/2 [Q + ǫI] -1 , (since U = 1.) =
+
+
+================================================================================
+By triangle inequality,
+================================================================================
+
+Thus, u δ (t) -y ≤ δ 2 √ ǫ + η(t). We have already proved that lim t→∞ η(t) = 0. Choose, t = t δ , satisfying equation (0.16) then this particular choice of t δ satisfies the error estimate (0.15) and u δ (t) -u(t) -→ 0 as δ -→ 0. If the decay rate of η(t) is known, a more efficient stopping rule can be obtained by choosing, t = t δ such that it satisfies the minimization problem δ 2 √ ǫ + η(t δ ) = min. -→ 0 as δ -→ 0. Remarks Remark 1: Discrepancy principle for the DSM. Choose the stopping time t δ as the unique solution to the equation: Au δ (t)f δ = Cδ where C=constant> 1, where it is assumed that f δ > δ. In-addition, we assume that f δ ⊥ N (A * ), so that C=1, then the equation is:
+
+Then this t δ satisfies the error estimate (0.15). One can find detailed discussion of this in A.G.Ramm's paper [5] .
+
+
+================================================================================
+Remark 2: Choosing scaling parameter ǫ(t).
+================================================================================
+
+We can choose the scaling parameter as large as we wish. In particular we can choose
+
+
+================================================================================
+Iterative regularization method
+================================================================================
+
+Consider the operator equation (1.1) which has to be solved, where A : H -→ H is assumed to be a bounded, linear injective operator on a Hilbert space H with A -1 unbounded. So the problem is ill-posed. The data are the elements {δ, A, f δ }, where the noise level δ > 0 is given such that estimate (2.1) holds, i.e., f δ is the δ-approximation of f , where f ∈ R(A). Let Au = f be solvable and let y be its minimal-norm solution. The problem is: given {δ, A, f δ }, find the stable solution u δ such that error estimate (2.3) holds. Let Let q δ be given in place of q. Since Au = f is solvable, it is equivalent to Bu = q. Since A is injective, B is also injective. Assume without loss of generality A ≤ 1, which implies that A * ≤ 1. Since f -f δ ≤ δ we obtain, q -q δ ≤ A * δ, hence we obtain (4.2) q -q δ ≤ δ.
+
+Consider the iterative process:
+
+For example one may take u 0 = 0. We obtain the following result:
+
+Lemma 10. Assume that equation (1.1) is solvable, and that y is its minimalnorm solution. Then (4.4) lim n→∞ u n = y.
+
+
+================================================================================
+Proof
+================================================================================
+
+We note that from equation (4.3), (4.5) y = y -µ(By -q).
+
+Denote u n -y := γ n . Subtracting equation (4.5) from equation (4.3) and using induction, we obtain γ n+1 = γ n -µBγ n = (I -µB)γ n = ... = (I -µB) n+1 γ 0 with γ 0 = u 0 -y, γ 0 ⊥ N (A). Since, 0 < (1 -µλ) < 1, for all λ∈ (0, B ), we have,
+
+Now, we shall prove the main theorem, Theorem 4. Suppose that A is a linear, bounded, injective operator on a Hilbert space with A -1 unbounded satisfying the equation Au = f . If q δ is given such that
+
+
+================================================================================
+Dynamical systems method
+================================================================================
+
+In this section we study dynamical systems method for solving linear and nonlinear ill-posed problems in a real Hilbert space H. The DSM for solving operator equations consists of a construction of a Cauchy problem, which has a unique global solution for an arbitrary initial data, this solution tends to a limit as time tends to infinity, and this limit is the stable solution of the given operator equation. This method can be used for solving well-posed problems also. Our discussion is based on the paper by A.G.Ramm [2] .
+
+Consider an operator equation (5.1) F (u) := Bu -f = 0, f ∈ H where B is a linear or non-linear operator in a real Hilbert space H. We make the following assumptions.
+
+
+================================================================================
+Assumption 1
+================================================================================
+
+Assume that F has two Fréchet u α,δ derivatives: F ∈ C 2 loc , i.e., (5.2) sup u∈B(u0,R)
+
+where B(u 0 , R) := {u : u -u 0 ≤ R}, u 0 is arbitrary fixed element in H and R > 0 is arbitrary and F (j) (u) is the j-th Fréchet derivative of F (u). Assumption 2 Assume that there exists a solution y ∈ B(u 0 , R) (not necessarily unique globally) to equation ( 5 .1): (5.3) F (y) = 0 Problem (5.1) is called well-posed if F ′ (u) is a bounded invertible linear operator, i.e., if [F ′ (u)] -1 exists and if the estimate (5.4) sup u∈B(u0,R) [F ′ (u)] -1 ≤ m(R), Otherwise, it is called ill-posed. Let u denote time-derivative. Consider the Cauchy problem (dynamical system): (5.5) u = Φ(t, u); u(0) = u 0
+
+where Φ is a non-linear operator, which is locally Lipschitz with respect to u ∈ H and continuous with respect to t ≥ 0, so that the Cauchy problem (5.5) has a unique local solution. The operator Φ is chosen such that the following properties hold:
+
+(1) There exists unique global solution u(t) to the Cauchy problem (5.5).
+
+(Here global solution means the solution defined for all t > 0. ) (2) There exists u(∞) := lim t→∞ u(t).
+
+(3) and finally this limit solves equation (5.1): F (u(∞)) = 0. Problem (5.1) with noisy data f δ , f δ -f ≤ δ, given in place of f , generates the problem:
+
+(5.6) uδ = Φ δ (t, u δ ), u δ (0) = u 0 ,
+
+The solution u δ to problem (5.6), calculated at t = t δ , where t δ is suitably chosen, satisfies the error estimate (5.7) lim δ→0 u δ (t δ ) -y = 0.
+

@@ -1,0 +1,138 @@
+
+================================================================================
+Title
+================================================================================
+
+DeepSentiBank: Visual Sentiment Concept Classification with Deep Convolutional Neural Networks
+
+
+================================================================================
+Abstract
+================================================================================
+
+This paper introduces a visual sentiment concept classification method based on deep convolutional neural networks (CNNs). The visual sentiment concepts are adjective noun pairs (ANPs) automatically discovered from the tags of web photos, and can be utilized as effective statistical cues for detecting emotions depicted in the images. Nearly one million Flickr images tagged with these ANPs are downloaded to train the classifiers of the concepts. We adopt the popular model of deep convolutional neural networks which recently shows great performance improvement on classifying largescale web-based image dataset such as ImageNet. Our deep CNNs model is trained based on Caffe, a newly developed deep learning framework. To deal with the biased training data which only contains images with strong sentiment and to prevent overfitting, we initialize the model with the model weights trained from ImageNet. Performance evaluation shows the newly trained deep CNNs model SentiBank 2.0 (or called DeepSentiBank) is significantly improved in both annotation accuracy and retrieval performance, compared to its predecessors which mainly use binary SVM classification models.
+
+
+================================================================================
+INTRODUCTION
+================================================================================
+
+The explosive growth of social media and online visual content has motivated the research on large-scale social multimedia analysis. Among these research efforts, understanding the emotion and sentiment in visual media content has attracted increasing attention in research and practical applications.. Images and videos depicting strong sentiments can strengthen the opinion conveyed in the content and more effectively influence the audience. Understanding sentiment expressed in visual content will greatly benefit social media communication and enable broad applications in education, advertisement and entertainment.
+
+Modeling generic visual concepts (nouns) such as "sky" and "dog" has been studied extensively in computer vision, but modeling adjectives correlated with visual sentiments like "amazing" and "shy" remains difficult, if not impossible, due to the big "affective gap" between the low-level visual features and the high-level sentiment. Therefore, Borth et al. [1] proposed a more tractable approach which models sentiment related visual concepts as a mid-level representation to fill the gap. Those concepts are Adjective Noun Pairs (ANPs), such as "happy dog" and "beautiful sky", which combine the sentimental strength of adjectives and detectability of nouns. Though these ANP concepts do not directly express emotions or sentiments, they were discovered based on strong co-occurrence relationships with emotion tags of web photos, and thus are useful as effective statistical cues for detecting emotions depicted in the images. In [1] binary SVM classifiers of the ANPs are trained on the whole images, denoted as SentiBank 1.1. Later Chen et al. [2] improve these classifiers by considering object-based concept localization and leveraging semantic similarity among the concepts.
+
+The dataset for training the visual sentiment concepts involves thousands of categories consisting of about one million images downloaded from Flickr. Recently, Krizhevsky et al. [18] show deep convolutional neural networks (CNNs) is able to achieve great classification performance improvement and efficiency on similar datasets such as ImageNet [4] . The model has a much larger learning capacity that can be controlled by varying the network depth and breadth, compared to SVM and other learning methods. Its strong assumptions of stationarity of statistics and locality of pixel dependencies about the nature of images are also mostly correct. CNNs are also easier to train than standard feedforward neural networks with layers of similar size, since they have much fewer connections and parameters, with only slightly degraded theoretic performance. CNNs also have the capability to incorporate model weights learned from more general dataset, which can be applied to our case by transferring the model learned over ImageNet to the specialized dataset like SentiBank.. This work introduces SentiBank 2.0, or called DeepSen-tiBank, a visual sentiment concepts classification model which is trained under Caffe [14, 15] , a GPU based deep learning framework. We adopt similar CNNs architecture used in [18] while training on the ILSVRC2012 [4] dataset. We find that initializing the model with the model weights trained from ImageNet provides much better performance that training from visual sentiments dataset alone.
+
+Performance evaluation and comparisons with its predecessors show the newly trained DeepSentiBank significantly improves the annotation accuracy in ANP classification as well as moderately improves the ANP retrieval performance.
+
+
+================================================================================
+Modeling Sentiment
+================================================================================
+
+Most work on sentiment analysis so far has been based on textual information [36, 8, 32] . Sentiment models have been demonstrated to be useful in various applications including human behavior prediction [8] , business [26] , and political science [34] .
+
+Compared to text-based sentiment analysis, modeling sentiment based on images has been much less studied. The most relevant work is [1] , which proposed to design a largescale visual sentiment ontology based on Adjective-Noun Pairs (the sentiment modeling is then based on one-vs-all SVMs). Chen et al. [2] further improve the model by considering object-based concept localization and leveraging semantic similarity among the concepts.
+
+
+================================================================================
+Modeling Visual Concepts
+================================================================================
+
+Concept modeling has been widely studied in multimedia [25, 31] , and computer vision (often referred as "attributes") [9] . The concepts being modeled are mostly objects [31] , scenes [27] , or activities [10] . There is work trying to solve the "fine grained recognition" task, where the categories are usually organized in a hierarchical structure. [6, 7, 5] . There is also work trying to model "non-conventional" concepts or properties of the images, such as image aesthetic and quality [16, 22] , memorability [12] , interestingness [12] , and affection/emotions [21, 35, 13, 21, 35, 37] . The models are usually trained by SVM and other layer lacking learning methods.
+
+
+================================================================================
+Deep Learning
+================================================================================
+
+Deep convolutional networks have been long studied in computer vision. Successful results on digit recognition using supervised back-propagation networks have been achieved in early research [20] .
+
+More recently, similar networks are applied on large benchmark datasets consisting of more than one million images, such as ImageNet [4] , with competition-winning results [18] .
+
+The learned deep representations can be transferred across tasks. It has been extensively studied in an unsupervised setting [29, 23] . However, such models in convolutional networks have been limited to relatively small datasets such as CIFAR and MNIST, and only achieved modest success in [19] . Sermanet et al. [30] propose to use unsupervised pre-training, followed by supervised fine-tuning to solve the problem of insufficient training data. Supervised pretraining approach using a concept-bank paradigm [17, 33] is also proven successful in computer vision and multimedia settings. It learns the features on large-scale data in a supervised setting, then transfers them to different tasks with different labels. Recently, Girshick et al. [11] shows that supervised pre-training on a large dataset, followed by domain-adaptive fine-tuning on smaller dataset is an efficient paradigm for scarce data.
+
+
+================================================================================
+VISUAL SENTIMENT ONTOLOGY AND CONCEPTS OVERVIEW
+================================================================================
+
+In this section, we briefly review the visual sentiment ontology construction in [1] and define our classification problem.
+
+
+================================================================================
+Building Ontology
+================================================================================
+
+The analysis of emotion, affect and sentiment from visual content has become an exciting area in the multimedia community allowing to build new applications for brand monitoring, advertising, and opinion mining. To create an corpora for sentiment analysis on visual content and stimulate innovative research on this challenging issue, a database is constructed by Borth et al. [1] . This database contains a Visual Sentiment Ontology (VSO) consisting of more than 3,000 adjective noun pairs (ANPs), SentiBank foot_0 , a set of 1,200 trained visual concept detectors providing a mid-level representation of sentiment, and associated training images acquired from Flickr. Construction of the VSO is founded on psychological research by data-driven discovery -for each of the 24 emotions defined in Plutchik's theory [28] , images and videos are retrieved from Flickr and YouTube respectively to extract concurrent tags. The set of all adjectives and all nouns is then used to form ANPs such as "beautiful flowers" or "sad eyes". SentiBank is then trained on the images tagged by these ANPs.
+
+
+================================================================================
+Dataset
+================================================================================
+
+The database contains a set of Flickr images for training and testing ANP classifiers in SentiBank 1.1. For each ANP, at most 1,000 images tagged with it are downloaded, resulting about one million images for 3,316 ANPs. To train the visual sentiment concept or ANP classifiers, we first filter out the ANPs associated with less than 120 images. 2,089 ANPs with 867,919 images are left after filtering. For each ANP, 20 images are randomly selected for testing, while others are used in training, ensuring at least 100 training images per ANP. To prevent bias in the test set, any training image and test image pair associated with same ANP must not share a same publisher on Flickr. The ANP tags from Flickr users are used as labels for each image. Note those labels may suffer from incompleteness and noisiness, i.e., not all true labels are annotated and sometimes there are falsely assigned labels also. However we do not fix them due to the huge amount of annotation tasks. We use the labels as is and thus will refer to them as pseudo ground truth.
+
+We also build a subset to compare the retrieval performance of different models. This subset only contains images associated with six nouns, namely "car", "dog", "dress", "face", "flower" and "food". These nouns are not only frequently tagged in the social multimedia, but also associated with diverse adjectives to form a large set of ANPs (135 in total). Its training set is the corresponding subset of the full training set. Its test set however, contains 60 manually annotated images for each ANP, where 20 are positive and 40 are negative. The retrieval performance is evaluated by the average precision on the ranking result of the 60 test images for each ANP. For this dataset, we will compare the new DeepSentiBank with an earlier version of SentiBank using object-based localization, called SentiBank 1.5R (indicating region based SentiBank) [2] . Caffe is a deep learning framework developed by taking full account of cleanliness, readability, and speed. It was created by Jia [14] , and is in active development by the Berkeley Vision and Learning Center (BVLC) and by community contributors. Caffe is released under the BSD 2-Clause license 2 .
+
+
+================================================================================
+Introduction of Caffe
+================================================================================
+
+Using Caffe for deep learning programming has multiple advantages. Its clean architecture enables rapid deployment. Networks are specified in simple config files, with no hardcoded parameters in the code. Switching between CPU and GPU is as simple as setting a flag ĺC so models can be trained on a GPU machine, and then used on commodity clusters.
+
+
+================================================================================
+CNN Architecture
+================================================================================
+
+Here we describe the overall architecture of the deep convolutional neural networks for training the visual sentiment concept classification model, SentiBank 2.0 or DeepSen-tiBank. The architecture mostly follows [18] . As depicted in Figure 1 , the net contains eight main layers (conv or fc) with weights; the first five are convolutional and the other three are fully-connected. The output of the last fully-connected layer is fed to a 2089-way softmax which produces a distribution over the 2089 class labels. The network maximizes the average across training instances of the log-probability of the correct label under the prediction distribution by multinomial logistic regression. The kernels of the second, fourth, and fifth convolutional layers are connected only to half of kernel maps in the previous layer. The kernels of the third convolutional layer are connected to all kernel maps in the second layer. The neurons in the fullyconnected layers are connected to all neurons in the previous layer. Following [24] , the Rectified Linear Units (ReLUs) non-linearity f (x) = max(0, x) is applied to the output of every convolutional and fully-connected layer. Overlapping max-pooling layers (pool) follow the first, second and fifth ReLU layers (relu). The pooling layer consists of a grid of pooling units spaced 2 pixels apart, each summarizing a neighborhood of size 3 × 3 centered at the location of the pooling unit. Local response normalization layers (lm)
+
+Table 1: The input/output data size (left) and the layer shape (right) for each layer. name size input 3 × 256 × 256 data 3 × 227 × 227 conv1 96 × 55 × 55 pool1 96 × 27 × 27 name shape norm1 96 × 27 × 27 conv1 96 × 3 × 11 × 11 conv2 256 × 27 × 27 conv2 256 × 48 × 5 × 5 pool2 256 × 13 × 13 conv3 384 × 256 × 3 × 3 norm2 256 × 13 × 13 conv4 384 × 192 × 3 × 3 conv3 384 × 13 × 13 conv5 256 × 192 × 3 × 3 conv4 384 × 13 × 13 fc6 4096 × 9216 conv5 256 × 13 × 13 fc7 4096 × 4096 pool5 256 × 6 × 6 fc8 2089 × 4096 fc6 4096 fc7 4096 fc8 2089 label 1 output 1 follow the first and second pooling layers. The responsenormalized activity b i x,y is given by the expression b i x,y = a i x,y /
+
+where a i x,y is the activity of a neuron computed by maxpooling, the sum runs over n "adjacent" kernel maps at the same spatial position, and N is the total number of kernels in the layer. The constants k = 2, n = 5, α = 10 -4 , and β = 0.75. The dropout layers (dropout) are applied in the first two fully-connected layers.
+
+The input/output data size and the layer shape for each layer is shown in Table 1 . All training and test images are first normalized to 256 × 256 without keeping the aspect ratio. To prevent overfitting, we apply data augmentation consists of generating image translations and horizontal reflections. We do this by extracting random 227 × 227 patches (and their horizontal reflections) from the 256 × 256 images and training our network on these extracted patches. The first convolutional layer filters the 227 × 227 × 3 input image with 96 kernels of size 11 × 11 × 3 with a stride of 4 pixels. The second convolutional layer takes as input the (pooled and response-normalized) output of the first convolutional layer and filters it with 256 kernels of size 5 × 5 × 48. The third, fourth, and fifth convolutional layers are connected to one another without pooling or normalization. The third convolutional layer has 384 kernels of size 3 × 3 × 256 connected to the (normalized and pooled) outputs of the second convolutional layer. The fourth convolutional layer has 384 kernels of size 3×3×192 , and the fifth convolutional layer has 256 kernels of size 3 × 3 × 192. The fully-connected layers have 4096 neurons each.
+
+
+================================================================================
+Learning Details
+================================================================================
+
+The regression objective is minimized by stochastic gradient descent with a batch size of 256 examples, momentum of 0.9, and weight decay of 0.0005. The small weight decay here is not only a regularizer by also reduces the model's training error.
+
+Due to insufficient data and the bias to images with strong sentiment, training on our dataset may suffer from overfitting. Since our dataset is from the same domain of ImageNet, it is promising to use fine-tuning. We initialized the weights by the model trained from ILSVRC2012 except the top layer. the pre-trained model can be downloaded from http://caffe.berkeleyvision.org/getting_  pretrained_models.html . The learning rate is initialized at 0.001. Regarding the full forward-backward pass of each batch as an iteration, we run a total of 250,000 iterations (about 77 epochs). We divide learning rate by 10 after every 100,000 iterations (about 20 epochs).
+
+For comparison, we also train a similar model without fine-tuning. We initialize the weights in each layer from a zero-mean Gaussian distribution with standard deviation 0.01. We initialize the neuron biases in the second, fourth, and fifth convolutional layers, as well as in the fullyconnected hidden layers with the constant 0.1, and in the remaining layers with the constant 0. The learning rate is initialized at 0.01.
+
+During testing, we center crop the test images into 227 × 227, apply forward propagation with the trained model weights and use the softmax as predicted probability of each concept.
+
+
+================================================================================
+Computation Speed
+================================================================================
+
+Our experiment is done on a single server machine with 16-core dual Intel E5-2650L processor, 64GB memory and a nVidia K20 GPU. The training over 826,806 images takes about 9 days and testing over 41,780 test images takes about 6 minutes. The maximum memory used is 42GB, and storing data takes 300GB disk space.
+
+
+================================================================================
+Performance and Comparisons
+================================================================================
+
+We evaluate the new classification model by both annotation accuracy (measured by the percentage of images that have the pseudo ground truth label in top detected concepts) and retrieval performance (measured by mean average precision).
+
+
+================================================================================
+Annotation accuracy
+================================================================================
+
+The annotation accuracy is evaluated on the full test set of 2,089 ANPs mentioned in Section 3.2 and measured by top-k accuracy -the percentage of images that have the pseudo ground truth label in top k detected concepts. Top-1, 5, 10 accuracies of each and all ANPs are computed and compared among fine-tuned deep CNNs model (SentiBank 2.0), deep CNNs model without fine-tuning, and SentiBank 1.1 [1] . The overall accuracies are listed in Table 2 . Different from genetic visual concepts, some visual sentiment concepts can be very abstract, such as "terrible crime" and "strong community". Such ANPs usually have very low classification performance, and are meaningless to be included in the classifiers library for generating mid-level sentiment related features. Thus it is important to compare the performances of ANPs with acceptable detectability. Similar to [1] , for each approach, we select top 1,200 ANPs ranked by Top-10 accuracy. Note different approach will produce different ANP subsets. The overall accuracies for these subsets are also shown in Table 2 . Figure 2 shows the curve of ranked top-10 accuracy per ANP for each subset. According to the table and the figure it is clear that the CNNs-based approaches greatly outperform the SVM based approach, with as much as 370% performance gain on top-1 accuracy, 200% on top-5, and 150% on top-10. Fine-tuned model is also 14~25% better than the one without fine-tuning. Figure 3 shows some examples of top detected concepts from test images by the fine-tuned model. It shows that despite the serious problem of incomplete and incorrect labels in our dataset, the top detected concepts can still be accurate. Since the pseudo ground truth labels may not be correct, thus the top-5 and top-10 accuracies are more appropriate than top-1 accuracy. We also realize an important reason for the performance boost is that the SVM based SentiBank trains binary classifiers, rather than a general multi-label classification approach. Such binary classification setting is more suitable for retrieval, instead of annotation. Thus, in the next section, we will evaluate the performance of DeepSentiBank in terms of image retrieval.  The retrieval performance is evaluated on the subset of 135 ANPs mentioned in Section 3.2. We apply the models trained from SentiBank 1.1, 1.5R and DeepSentiBank to the test set. For each ANP, the test images are ranked by the estimated probability of the ANP. The performance is measured by average precision (AP) at top 20. The mean AP for each and all noun categories are shown in Figure 4 . Although not designed for retrieval, DeepSentiBank still outperforms SentiBank 1.1 by 62.3% and SentiBank 1.5R by 8.9%. Note DeepSentiBank is only trained on whole images and does not consider concept localization or concept similarity. It means the performance could be further improved if we incorporate the two factors into deep learning. Recently, R-CNN [11] shows state-of-the-art performance on object detection, which can be a promising candidate approach for the concept localization.
+
+
+================================================================================
+CONCLUSION
+================================================================================
+
+This paper presents a visual sentiment concept classification model based on deep convolutional neural networks. The deep CNNs model is trained based on Caffe, a newly developed deep learning framework. To deal with the biased training data which only contains images with strong sentiment and to prevent overfitting, we initialize the model with the model weights trained from ImageNet. Performance evaluation shows the newly trained deep CNNs model DeepSentiBank is significantly better in both annotation and retrieval, compared to previous work using independent binary SVM classification models. In the future, we will incorporate the concept localization into the deep CNNs model, and improve network structure by leveraging concept relations. The high performance boost will also help to improve applications built on SentiBank, such as assistive comment robot [3] and twitter sentiment prediction, or other applications such as sentiment-aware image editing.
+

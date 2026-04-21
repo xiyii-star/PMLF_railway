@@ -1,0 +1,120 @@
+
+================================================================================
+Title
+================================================================================
+
+Dermatologist Level Dermoscopy Skin Cancer Classification Using Different Deep Learning Convolutional Neural Networks Algorithms
+
+
+================================================================================
+Abstract
+================================================================================
+
+In this paper, the effectiveness and capability of convolutional neural networks have been studied in the classification of 8 skin diseases. Different pre-trained state-of-the-art architectures (DenseNet 201, ResNet 152, Inception v3, InceptionResNet v2) were used and applied on 10135 dermoscopy skin images in total (HAM10000: 10015, PH 2 : 120). The utilized dataset includes 8 diagnostic categories -melanoma, melanocytic nevi, basal cell carcinoma, benign keratosis, actinic keratosis and intraepithelial carcinoma, dermatofibroma, vascular lesions, and atypical nevi. The aim is to compare the ability of deep learning with the performance of highly trained dermatologists. Overall, the mean results show that all deep learning models outperformed dermatologists (at least 11%). The best ROC AUC values for melanoma and basal cell carcinoma are 94.40% (ResNet 152) and 99.30% (DenseNet 201) versus 82.26% and 88.82% of dermatologists, respectively. Also, DenseNet 201 had the highest macro and micro averaged AUC values for overall classification (98.16%, 98.79%, respectively).
+
+
+================================================================================
+Introduction
+================================================================================
+
+Skin cancer is the most widespread cancer diagnosed in the US [1] . Melanoma is the most dangerous type of skin cancer which has been one of the most important challenges of the public health in recent years [2] .
+
+According to the latest statistics, 91270 new cases of melanoma is predicted to be diagnosed in the United States in 2018 [1] . The rates of melanoma occurrence and the mortality result of this disease, is expected to rise over the next decades [3] . Recent report shows that from 2008 to 2018, there has been a 53%increase in new melanoma case diagnosis annually [1, 4] . If this type of cancer can be diagnosed in its early phases, with choosing the appropriate treatment [5, 6] , survival rates are very promising [7] . Otherwise, the predicted 5-year survival rate of a patient will be reduced from 99% to 14% [8] [9] [10] . Also in non-melanoma type of cancer, there has been a drastic increase in the diagnosis of new cases up to 77% between 1994 and 2014. The basal cell carcinoma is the most common type of non-melanoma skin cancer which results in the death of 3000 people each year [11] .
+
+So, this will cause a high demand for primary inspection and detection of different skin cancer types in order to prevent it from getting worse and give a chance for better prognosis [3] . The usually way for a clinician to detect melanoma is by inspecting the visual details which has a low precision [12, 13] . On the other hand, dermoscopy [14] is a non-invasive technique that can capture a high resolution image of the skin which enables dermatologists to detect features which are invisible to the naked eye.
+
+By several meta-analyses, it has been shown that with the use of dermoscopy, there will be an improvement and a higher accuracy in the diagnosis of melanoma compared to the naked eye inspection [15] [16] [17] . However, this technique in the hands of an unskilled clinician would results in a poor performance [18] [19] [20] [21] , not to mention that even for experts, this task is time-consuming and based on their judgement and therefore highly subjective and they may produce even different diagnostic results [18, 22, 23] . Because of the resemblance between malignant skin tumors and benign skin lesions in visual features, it is very hard for dermatologists to differentiate between them. The average reported sensitivity for melanoma detection is often less than 80% even with highly trained dermatologists and clinicians [24, 25] . Moreover, highly trained dermatologists are not available all over the world. Therefore, automatic skin lesion classification at the same level and accuracy as dermatologists or even higher is very crucial in public health.
+
+In order to solve aforementioned problems, there has been extensive publications on classifying malignant and non-malignant skin cancer by developing computer image analysis algorithms. These algorithms use a variety of approaches towards the segmentation, detection and classification of melanoma by integrating areas like image processing, computer vision and machine learning [20, [26] [27] [28] [29] . The main problems of these works are insufficient data and the lack of diversity in skin cancer classes. Also in [30] [31] [32] [33] , different approaches were used to classify melanoma, but these approaches rely heavily on 'man-made' segmentation criteria which is a limitation.
+
+Almansour et al. [34] developed an algorithm for the classification of melanoma by using k-means clustering, and Support Vector Machine (SVM). Abbas et al. [35] , and Capdehourat et al. [36] separately used AdaBoost MC to classify skin lesions. Giotis et al. [37] , and Ruiz et al. [10] used different set of features (lesion texture, visual, color, etc.) and neural networks for the developing a decision support system. Also, Isasi et al. [38] developed an algorithm for diagnosis of melanoma. Past research on machine learning methods and their applications in pattern recognition systems was restricted to the transformation of a raw input into a representation of important handmade feature vectors which then, could be fed to a classifier for the classification and detection of patterns. However in the past recent years with the exponential raise in the computation power and a large amount of data, deep learning techniques has become popular among researchers. These powerful methods use representation learning which enables the model to learn the representation of the raw data hierarchically in multiple layers with several abstractions [39] . The advantage of deep learning is that it can learn features directly from data without the help of any human expert for feature engineering and can exceed human performance.
+
+Recently, deep learning algorithms has gained great success in different computer vision problems. In 2012, Krizhevsky et al. [40] developed a novel technique (AlexNet) by using convolutional neural networks for the classification of a big data (1.2 million images) containing 1000 object categories in the ImageNet Large Scale Visual Recognition Challenge 2010 (ILSVRC2010) and achieved the best result and therefore an enormous attention among academics in computer vision area. In [9] , Esteva et al. made a breakthrough on skin cancer classification by a pre-trained GoogleNet Inception v3 CNN model to classify 129,450 clinical skin cancer images including 3,374 dermatoscopic images. Yu et al. [41] developed a convolutional neural network with over 50 layers on ISBI 2016 challenge dataset for the classification of malignant melanoma. In 2018, Haenssle et al. [42] utilized a deep convolutional neural network to classify a binary diagnostic category of dermoscopy images of melanocytic images. Dorj et al. [8] developed ECOC SVM with deep convolutional neural network approach for the classification of 4 diagnostic categories of clinical skin cancer images. Han et al. [43] used a deep convolutional neural network to classify the clinical images of 12 skin diseases. To our best knowledge in the previous studies, we did not find any research on the use of dermoscopy skin cancer dataset with enough diversity for multiclass classification of dermatoscopic skin cancer images.
+
+This paper aims at testing a deep learning approach for a multi-class classification with 8 major diagnostic categories by applying state-of-the-art pre-trained deep convolutional neural networks on 2 public dermoscopy skin cancer databases which can yield a higher diagnostic accuracy compared to dermatologists. This approach will help clinicians for better diagnosis across different skin cancer categories. Since there are too many individual smartphones in the world, one can therefore developed some potentially low-cost universal access apps based on training deep learning approach to visually screen the skin cancer at the early stage, to help define the best treatment. The rest of paper is arranged as follows: Section 2 describes methods and materials. Section 3 represents experimental results. In Section 4 and 5, discussion and conclusion are presented.
+
+
+================================================================================
+Materials
+================================================================================
+
+In this research, the aim is to differentiate between not only melanoma and nevus, but also nonmelanocytic pigmented lesions which are common in practice. Therefore, a combination of two public datasets is utilized in this paper to classify different skin cancer images by pre-trained convolutional neural networks. The first one is the HAM10000 dataset [44] which is served as a benchmark database for academic machine learning purposes. We used the training set part of this dataset which consists of 10015 dermatoscopic images with the size of 450 × 600 and includes 7 diagnostic categories as follows: melanoma (Mel, 1113 samples), melanocytic nevi (NV, 6705 samples), basal cell carcinoma (BCC, 514 samples), actinic keratosis and intraepithelial carcinoma (AKIEC, 327 samples), benign keratosis (BKL, 1099 samples), dermatofibroma (DF, 115 samples), vascular lesions (VASC, 142 samples). The second dataset is the PH 2 [45] . This database contains of 200 dermatoscopic images of melanocytic skin lesions. They are 8-bit RGB color images with a resolution of 768 × 560 pixels which we used images of atypical nevi (Atyp NV, 80 samples) and melanoma (Mel, 40 samples) categories of this database to expand our diagnostic categories and therefore, added up the entire diagnostic classes of dataset to 8 for this paper. Examples of the training dataset images are shown in Figure 1 .
+
+
+================================================================================
+Methods
+================================================================================
+
+In over past few years, more advanced convolutional neural networks have been developed by researchers in order to solve computer vision problems more accurately. In this paper to classify skin cancer images, we utilized 4 deep convolutional neural networks pre-trained on ImageNet [46] using TensorFlow [47] which is a deep learning framework developed by Google. We split 70% of the dataset as training set, 15% as validation set and 15% as testing set to evaluate 4 models.
+
+Figure 2 shows us the architectures of 4 models. Fine-tuning every model is described in details as follows:
+
+
+================================================================================
+Google's Inception v3
+================================================================================
+
+Google's Inception v3 architecture [48] was re-trained on our dataset by fine-tuning across all layers and replacing top layers with one averagepooling, two fully connected and finally the softmax layer allowing to classify 8 diagnostic categories. The size of input images was all resized to (299, 299) to be compatible with this model. Learning rate was set to 0.0007 and stochastic gradient descent algorithm (SGD) with a decay and momentum of 0.9 was used for the optimizer.
+
+
+================================================================================
+InceptionResNet v2
+================================================================================
+
+InceptionResNet v2 architecture [49] was re-trained on our dataset by fine-tuning across all layers and replacing top layers with one globalaveragepooling, one fully connected and finally the softmax layer allowing to classify 8 diagnostic categories. The size of input images was all resized to (224, 224) to be compatible with this model. Learning rate was set to 0.0006 and stochastic gradient descent algorithm (SGD) with a decay and momentum of 0.9 was used for the optimizer.
+
+
+================================================================================
+ResNet 152
+================================================================================
+
+ResNet 152 architecture [50] was re-trained on our dataset by fine-tuning across all layers and replacing top layers with one averagepooling, one fully connected and finally the softmax layer allowing to classify 8 diagnostic categories. The size of input images was all resized to (224, 224) to be compatible with this model. Learning rate was set to 0.0006 and stochastic gradient descent algorithm (SGD) with a decay and momentum of 0.9 was used for the optimizer.
+
+
+================================================================================
+DenseNet 201
+================================================================================
+
+DenseNet 201 architecture [51] was re-trained on our dataset by fine-tuning across all layers and replacing top layers with one globalaveragepooling and the softmax layer allowing to classify 8 diagnostic categories. The size of input images was all resized to (224, 224) to be compatible with this model. Learning rate was set to 0.0006 and stochastic gradient descent algorithm (SGD) with a decay and momentum of 0.9 was used for the optimizer.
+
+
+================================================================================
+Results
+================================================================================
+
+In this section, we present our findings and show the diagnostic accuracy of trained models in comparison to an approved board of dermatologists. In this paper, a total of eight different types of major skin cancer categories is used. The evaluation and results of trained models is calculated by common classification metrics which are defined as follows:
+
+Recall (true positive rate) = 𝑇𝑃 (𝑇𝑃+𝐹𝑁)
+
+Where TP is the number of positive cases which are labeled correctly, TN is the number of negative cases which are labeled correctly, FP is the number of positive cases which are labeled falsely, and FN is the number of negative cases which are labeled falsely. Also since the distribution of the number of samples among database are highly unbalanced, F1-score result which is the harmonic mean of precision and recall, is reported and in order to have a graphical view of the trade-off between sensitivity and specificity metrics, ROC curves and their associated AUC values are used.
+
+The performance of fined-tuned models is shown in Figure 3 . This figure represents the area under curve (AUC) of receiver operating characteristic (ROC) of each category for different models. Moreover, because the dataset is unbalanced, we calculated macro and micro averaged ROC AUC scores. For DenseNet 201, the macro average ROC AUC is 98.16% and micro average ROC AUC is 98.79% which are the highest AUC scores among all models. Table 1 presents the details of ROC AUC for each algorithm. It can be seen that except for Benign keratosis and AKIEC, DenseNet 201 and ResNet 152 algorithms can achieve the highest AUC scores among the other models for each individual diagnostic category, especially for cancer categories like melanoma and basal cell carcinoma. Table 2. Micro and Macro averaged Precision, F1 -score, and ROC AUC for each algorithm
+
+Moreover, confusion matrices of each algorithm is presented in Figure 4 . On the main diagonal of each matrix, we have the recall value of each related diagnostic category. It can be concluded that all models confuse melanoma and melanocytic nevi together. In the same manner, All 4 models did a poor job on the classification of AKIEC and benign keratosis categories. However, DenseNet 201 and ResNet 152 have achieved better results overall. In the context of the comparison of CNN's accuracy with the performance of dermatologists on cancer cases, we got interesting results that indicates the superior diagnostic accuracy of deep convolutional neural networks over expert clinicians. Figure 4 depicts the comparative results of ROC curves for each model versus dermatologists on both melanoma and basal cell carcinoma conditions. In each comparative curve, dermatologists' diagnostic accuracy on cancer cases are the criterion in which the CNN's accuracy is compared to. Dermatologists' ROC AUC is based on the averaged sensitivity and specify score of dermatologists. The performance of each individual expert is also depicted. It can be seen that in both melanoma and basal cell carcinoma conditions, all of the algorithms have much greater ROC AUC than expert dermatologists. For Melanoma case, the highest ROC AUC is achieved by ResNet 152 (94.4%) in comparison to the ROC AUC of dermatologist (82.26%). Similarly, in Basal cell carcinoma case the highest ROC AUC is achieved by DenseNet 201 (99.3%) versus dermatologists' performance (88.82%). The sensitivity and specify details of each algorithm and dermatologists are summarized in
+
+Table 3. Classifier ROC AUC (%) (Mel -BCC) Dermatologist 82.26 -88.82 DenseNet 201 93.80 -99.30 ResNet 152 94.40 -99.10 Inception v3 93.40 -98.60 InceptionResNet v2 93.20 -98.60
+
+Table 3. The comparative ROC AUC results (%) between dermatologists and each algorithm on cancer cases
+
+
+================================================================================
+Discussion
+================================================================================
+
+Skin cancer disease has been the most diagnosed cancer in the U.S each year [1, 3] . In recent years with the great success of deep convolutional neural networks in AI community, there has been made many efforts to analyze medical images [52] [53] [54] . To investigate this purpose further, we demonstrate the capability of CNNs to diagnose varied types of dermoscopy skin lesion images. This study, presents a deep learning approach for fully automated analysis of dermatoscopic images of skin diseases. Our aim was to implement state-of-the-art CNN architectures in order to test their ability in analyzing dermatoscopic images of skin and comparing their performance against expert dermatologists. Using a combination of HAM10000 and PH 2 datasets, four CNN models is used for the multi-class classification task (8 class). The ROC AUC values for each category is as follows: For basal cell carcinoma and dermatofibroma cases, DenseNet 201 achieved the highest AUC with the values of 99.3% and 99.9% respectively. For melanoma and melanocytic nevi classes, ResNet 152 scored the best with 94.4% and 97.3% respectively. For atypical nevi and vascular lesions categories, both DenseNet 201 and ResNet 152 achieved 100%. Also for AKIEC and benign keratosis classes, Google's Inception v3 scored the highest ROC AUC values, 98.4% and 97.1% respectively. Within the comparison of CNNs classification accuracy to the performance of dermatologists, experimental results shows the higher ROC AUC of CNNs over experts. In the classification of cancer categories, highly experienced dermatologists' ROC AUC values are 82.26% for melanoma and 88.82% for basal cell carcinoma. Whereas, all of the trained models, diagnosed melanoma and basal cell carcinoma with a superior ROC AUC compared to experts as follows: For melanoma, the highest ROC AUC is achieved by ResNet 152 (94.40%) while InceptionResNet v2 scored 93.20% as the worst among the other models. Similarly, for basal cell carcinoma DenseNet 201 has the best ROC AUC (99.30%) while the other models achieved 98.60% and 99.10%. As is shown in Figure 5 , each model had a greater AUC compared to each individual expert. Also, DenseNet 201 has the best accuracy among the other models in terms of micro and macro averaged precision (89.01% -85.24%), F1 -Score (89.01% -85.13%), and ROC AUC (98.79% -98.16%).
+
+Finally, we have compared our findings with some of the latest works on skin cancer classification. However as far as we know, past works on multi-class classification of skin diseases were reported mostly on only clinical images and this is the first research on a multi-class classification of only dermoscopy images.
+
+Moreover, the utilized dataset of this research is different from past research. But here we present some points about ROC AUC values of the latest works on using deep learning to classify skin cancer images. Yu et al. tried to apply deep CNNs like GoogleNet, VGG-116, and DRN-50 on ISBI 2016 challenge dataset in order to classify melanoma condition and for ROC AUC metric, best result was achieved with VGG-16 (82.6%). Esteva et al. used Google's Inception v3 on 129,450 images including 3374 dermoscopy images for binary classification (malignant melanomas versus benign nevi) and compared it with the performance of expert dermatologists.
+
+For the first time they showed that artificial intelligence has the ability to diagnose deadliest types of skin cancers with the same level of dermatologists. For melanoma they reported a ROC AUC of 91% for 111 dermoscopy images which was higher than the average of dermatologists.
+
+Han et al. applied ResNet 152 on 19,398 clinical images to classify 12 major skin disease categories. The AUC of melanoma and basal cell carcinoma classes with the Asan dataset, are 96 ± 0.01% and 96% respectively. While with the Edinburgh dataset, the AUC of mentioned classes are 90% and 88% respectively. Haenssle et al. trained the Google's Inception v4 architecture on ISBI 2016 challenge dataset for the classification of melanoma and achieved ROC AUC of 86% versus 79% and 82% of dermatologists.
+
+
+================================================================================
+Conclusion and Future works
+================================================================================
+
+In conclusion, this study investigated the ability of deep convolutional neural networks in the classification of 8 major skin diseases. Our results show that state-of-the-art deep learning architectures trained on dermoscopy images (10135 in total) outperforms dermatologists. We showed that with use of very deep convolutional neural networks and fine-tuning them on dermoscopy images, better diagnostic accuracy can be achieved compared to expert physicians and clinicians. Although, the utilized dataset is highly unbalanced and also no preprocessing step is applied in this paper, but the experimental results are very promising. These models can be easily implemented in dermoscopy systems or even on smartphones in order to assist dermatologists. More diverse datasets (varied categories, different ages) with much more dermoscopy images and balanced samples per class is needed for further improvement. Also, using the metadata of each image can be useful to increase the accuracy of the model.
+

@@ -1,0 +1,166 @@
+
+================================================================================
+Title
+================================================================================
+
+Bridging Brain Connectomes and Clinical Reports for Early Alzheimer's Disease Diagnosis
+
+
+================================================================================
+Abstract
+================================================================================
+
+Integrating brain imaging data with clinical reports offers a valuable opportunity to leverage complementary multimodal information for more effective and timely diagnosis in practical clinical settings. This approach has gained significant attention in brain disorder research, yet a key challenge remains: how to effectively link objective imaging data with subjective text-based reports, such as doctors' notes. In this work, we propose a novel framework that aligns brain connectomes with clinical reports in a shared cross-modal latent space at both the subject and connectome levels, thereby enhancing representation learning. The key innovation of our approach is that we treat brain subnetworks as tokens of imaging data, rather than raw image patches, to align with word tokens in clinical reports. This enables a more efficient identification of system-level associations between neuroimaging findings and clinical observations, which is critical since brain disorders often manifest as network-level abnormalities rather than isolated regional alterations. We applied our method to mild cognitive impairment (MCI) using the ADNI dataset. Our approach not only achieves state-of-the-art predictive performance but also identifies clinically meaningful connectome-text pairs, offering new insights into the early mechanisms of Alzheimer's disease and supporting the development of clinically useful multimodal biomarkers.
+
+
+================================================================================
+Introduction
+================================================================================
+
+Alzheimer's disease (AD) is one of the most prevalent neurological disorders in the United States, progressively impairing social, linguistic, and cognitive functions. With no known cure, early diagnosis -particularly at the mild cognitive impairment (MCI) stage, a precursor of AD -is critical for timely intervention and treatment planning [1] . Current diagnostic approaches rely on clinical evaluations, cognitive assessments, and neuroimaging techniques. However, early diagnosis remains challenging due to the heterogeneity in disease manifestation and pathology. Overcoming this challenge requires a comprehensive analysis of both objective imaging data and subjective clinical measures, such as doctors' notes and other textual reports. Consequently, there is an urgent need for models that can effectively integrate multimodal clinical data, including neuroimaging and text-based information, a research direction that has gained significant attention in AD studies.
+
+Recent advancements in vision-language models (VLMs) have demonstrated the potential of multimodal learning in brain healthcare. For instance, Xue et al. [2] utilized multimodal data, including both imaging and comprehensive non-imaging information, for differential dementia diagnosis. Similarly, Zhang et al. [3] proposed Brain-Adapter, a learnable embedding adapter designed to align multimodal data from imaging and non-imaging sources. However, current methods largely adopt strategies designed for general image processing-such as treating image patches as tokens in Euclidean space (Fig. 1a ) -without considering the complex neurological and pathological information inherent in brain images. As a result, these methods struggle to extract meaningful features that can effectively align heterogeneous image-derived abnormalities with individual clinical reports in real-world settings. Additionally, beyond predictive accuracy, an ideal model should also provide interpretability, illustrating how multimodal data contribute to the overall diagnosis.
+
+To address these challenges, we propose a novel framework that aligns brain connectomes with clinical reports in a shared cross-modal latent space at both the subject
+
+
+================================================================================
+Medical Image
+================================================================================
+
+Text
+
+
+================================================================================
+Cross-modal Alignment
+================================================================================
+
+(b) Exploring Fine-grained Cross-Modality Alignment Conventional Patch Representation Demographic Information Biomarker Measurements Cognitive Assessments Doctor's Clinical Notes
+
+
+================================================================================
+Measurements …
+================================================================================
+
+and connectome levels, to enhance representation learning (Fig. 1b ). The key innovation of our approach is that we treat brain subnetworks as tokens of imaging data, rather than raw image patches, to align with word tokens in clinical reports. This design enables a more efficient identification of system-level associations between neuroimaging findings and clinical observations, which is critical since brain disorders often manifest as network-level abnormalities rather than isolated regional alterations. We applied our method to MCI diagnosis using the ADNI dataset, achieving state-of-the-art predictive performance while also identifying clinically meaningful connectome-text pairs. These findings provide new insights into the early mechanisms of Alzheimer's disease and support the development of clinically useful multimodal biomarkers.
+
+
+================================================================================
+Methodology
+================================================================================
+
+As illustrated in Fig. 2 , our proposed framework includes two major parts: (1) Multimodality Representation and (2) Cross-Modality Alignment. The first component focuses on efficient encoding of brain connectome and clinical reports separately, the second part aims to capture the complex relationship between image and non-image derived encodings via a novel cross-modality alignment approach. Part 1: Multimodality Representation Part 2: Cross-Modality Alignment Clinical Report Encoder … Patient [cls] is Patient is a 76.6-year-old female who has completed 18 years of education… Reference Token Brain Connectivity Encoder Brain sub-networks Linear Projection of Flattened Patches Token ROI 1 ROI 2 ROI n … [cls] … a Num of tokens dimension of Features dimension of Features Num of tokens
+
+
+================================================================================
+Multimodality representation
+================================================================================
+
+Brain Connectome Representation. In this section, we introduce a novel braininspired patch representation to guide the encoder understand complex brain connectome. For a given subject, the SC matrix 𝑆𝐶 ∈ 𝑅 !×! represents the whole brain connectivity, where 𝑆𝐶 #,% ∈ 𝑅 is the number of fibers connecting brain regions 𝑖 and 𝑗. To capture localized connectivity patterns, we define brain sub-network as patches 𝑆𝐶 &'()* + ∈ 𝑅 ! . Here, each sub-network is defined as the structural connectivity between one brain region to all the other brain regions, served as a connectome-level representation vector. Next, we employed a linear fully connected layer as the patch embedding layer to process SC patches as
+
+where 𝑁 is the number of brain sub-networks and 𝐷 corresponds to the feature dimension for each sub-network, 𝑊 -and 𝑏 are the weight and bias of the linear layer, respectively. To aggregate information from the whole-brain network, we introduce a learnable class token 𝑆𝐶 )./ ∈ 𝑅 , , which enables the model to combine information from all brain sub-networks into a comprehensive connectome-level representation. This class token is concatenated with all brain sub-network tokens as 𝑆𝐶 012033#+4 .
+
+Lastly, the generated 𝑆𝐶 012033#+4 ∈ 𝑅 (!78)×, is fed into a brain connectivity encoder which adopts the vanilla ViT as its backbone. Our encoder contains a series of transformer encoder layers, each consists of two Layer Normalization (LN) blocks, one Multi-Head Self-Attention (MSA) block, and one Multi-Layer Perceptron (MLP) block: 𝑜 # : = 𝑀𝑆𝐴2𝐿𝑁(𝑜 #;8 )6 + 𝑜 #;8 ; 𝑜 # = 𝑀𝐿𝑃2𝐿𝑁(𝑜 # : )6 + 𝑜 # : , where 𝑜 #;8 represents the input to the 𝑖 -𝑡ℎ transformer layer, 𝑜 # : and 𝑜 # denote the intermediate and final outputs of the layer. Through this sequential processing, the brain connectomes are transformed into a local representation 𝑋 .<)'. ∈ 𝑅 !×, capturing sub-network features and a global representation 𝑋 4.<2'. ∈ 𝑅 8×, summarizing the entire brain features. This process is illustrated in the bottom of Fig. 2 , part 1.
+
+
+================================================================================
+Clinical Reports Representation.
+================================================================================
+
+To process and understand the semantic content of clinical reports, a text encoder is employed, as shown in the top section of part 1 in Fig. 2 . In this work, we adopt BERT as the backbone of our clinical report encoder for semantic modeling. Specifically, our clinical report encoder transforms each input report 𝑇 into a local token-level representation 𝑉 .<)'. ∈ 𝑅 =×, capturing token-specific features, and a global report-level representation 𝑉 4.<2'. ∈ 𝑅 8×, summarizing the overall semantic content. Here, 𝑀 is the number of tokens in each subject's reports and 𝐷 denotes the feature dimension.
+
+
+================================================================================
+Multi-modality alignment Connectome-level Alignment.
+================================================================================
+
+To explore meaningful associations between brain subnetworks and clinical report tokens, we propose a fine-grained connectome-level alignment module: the brain sub-network embeddings 𝑋 .<)'. are used as query, while clinical token embeddings 𝑉 .<)'. serve as the key and value in a cross-attention mechanism to capture the relationships between each brain sub-network and text tokens, producing the attention output
+
+. Similarly, we compute the reverse attention flow where 𝑉 .<)'. serve as query and 𝑋 .<)'. serve as key and value to generate
+
+, enabling bidirectional information exchange across modalities. The attention outputs are then normalized and used to compute cosine similarity matrix 𝑆 ). ∈ 𝑅 !×= that quantifies the connectome-level alignment between each brain sub-network and clinical token.
+
+For each brain sub-network 𝑖, we maximize its alignment with the relevant clinical tokens through weighted similarity: ℒ ).
+
+2→( = -𝑙𝑜𝑔(∑(𝑠𝑜𝑓𝑡𝑚𝑎𝑥(𝑆 # ) • 𝑆 # ), where 𝑆 # represents the similarity scores between brain sub-network 𝑖 and all tokens. Similarly, for each token 𝑗, we maximize its alignment relevant brain sub-networks through: ℒ ).
+
+(→2 = -𝑙𝑜𝑔(∑(𝑠𝑜𝑓𝑡𝑚𝑎𝑥(𝑆 % ) • 𝑆 % , where 𝑆 % represents the similarity scores between clinical token 𝑗 and all sub-networks. The connectome-level alignment is optimized by the combined loss ℒ >? = 1/2 (ℒ ).
+
+
+================================================================================
+Subject-Level Alignment.
+================================================================================
+
+To establish a holistic alignment across different patients' brain connectivity patterns and their clinical diagnostic reports, we implement a subject-level alignment module: we utilize the brain connectivity representations 𝑋
+
+4.<2'. and semantic representation 𝑉 4.<2'. of clinical report to compute bidirectional crossattention features. The subject-level brain-to-text attention produces 𝑏𝑟𝑎𝑖𝑛2𝑡𝑒𝑥𝑡 /? by treating 𝑋 4.<2'. as the query and 𝑉 4.<2'. as key and value pairs. Similarly, text-to-brain attention generates 𝑡𝑒𝑥𝑡2𝑏𝑟𝑎𝑖𝑛 /. using 𝑉 4.<2'. as query and 𝑋 4.<2'. as key and value. The cross-modal features are L2-normalized, and a cosine similarity matrix is computed as 𝑆 /. #,% = 2E'#+F(0G( &! ' • (0G(F2E'#+ &! ( H2E'#+F(0G( &! ' HH(0G(F2E'#+ &! ( H , where 𝑆 /. #,% quantifies the similarity between the 𝑖-th patient's brain connectivity representation and the 𝑗-th patient's text representation. The subject-level alignment is optimized by the InfoCNE loss to ensures that the paired brain connectivity and clinical report embeddings are close in the shared latent space:
+
+The overall subject-level alignment can be denoted as: ℒ N? =1/2 (ℒ /.
+
+
+================================================================================
+2→( + ℒ /. (→2 ).
+================================================================================
+
+Overall objective. To achieve the downstream task of MCI/NC prediction, 𝑋 4.<2'. and 𝑉 4.<2'. were combined and passed through a fully-connected layer with a nonlinear activation function. A balancing strategy was applied to the cross-entropy loss ℒ >?N . We trained our model by jointly optimizing the loss: ℒ = ℒ >? + ℒ N? + ℒ >?N .
+
+
+================================================================================
+Data Preprocessing and Experimental Design
+================================================================================
+
+This study utilized both imaging and non-imaging data from ADNI. The imaging dataset consists of T1-weighted structural MRI and DTI data from 418 subjects including 301 normal controls (NC) (183 females, 70.25±5.91Y; 118 males, 71.37±5.92Y) and 117 individuals with MCI (43 females, 70.17±7.32Y; 74 males, 73.21±6.86Y). Standard imaging preprocessing was applied as described in [4] , including eddy current correction using FSL and fiber tracking by MedINRIA. The non-imaging dataset encompassed comprehensive patient information including demographic information (e.g., age, sex, education level), biomarker measurements (e.g., APOE-4), cognitive assessments (e.g., MMSE, CDR), and unstructured doctors' clinical notes. These components were integrated to generate comprehensive clinical narratives for each patient.
+
+To evaluate the performance of our proposed method, we analyzed the most important image-text token pairs from different perspectives. First, we identified the key disease-related brain sub-networks and their corresponding clinical report tokens. Then, we highlighted the most significant disease-related text tokens and their associated brain sub-networks. The model was implemented using a vanilla ViT architecture comprising 4 layers with 256-dimensional embeddings. It was trained for 32 epochs on a single NVIDIA A6000 GPU with a batch size of 8, using the AdamW optimizer (learning rate = 1e-5). Data was split 80/20 for training/testing. Code is publicly available.  Top 6 Brain Sub-networks Votes L G&S_frontomargin mmse aβ42 tau_protein genetic phosphorylated_tau R G_precuneus R S_pericallosal R G&S_cingul-Mid-Post R G_cingul-Post-dorsal L S_pericallosal R G_front_sup R S_pericallosal R G&S_cingul-Mid-Ant R G&S_transv_frontopol R G_precuneus intracranial tau_protein phosphorylated_tau adas aβ42 R G_subcallosal apoe4 fdg_pet middle_temporal entorhinal_cortex aβ42 R S_orbital-H_Shaped R G_orbital R G&S_frontomargin L G_orbital L G&S_frontomargin L G&S_cingul-Ant middle_temporal phosphorylated_tau tau_protein aβ42 entorhinal_cortex L G_precuneus L S_parieto_occipital L G&S_cingul-Mid-Post L S_pericallosal L S_subparietal mmse adas genetic white aβ42 mmse adas fusiform_gyrus functional_activities fdg_pet Top-5 strongest structural connections in each brain sub-networks Top-5 brain-to-text interactions 0.0 0.5 1.0 SC strength R S_subparietal R G&S_cingul-Ant L G_cingul-Post-dorsal R G_temp_sup-Plan_polar R S_orbital_med-olfact L G_subcallosal R G_parietal_sup R S_parieto_occipital L G&S_transv_frontopol L G_orbital L G_rectus L S_suborbital L S_orbital-H_Shaped 1 2 3 4 5 6
+
+
+================================================================================
+Critical brain sub-networks
+================================================================================
+
+neuroimaging studies have demonstrated that MCI patients exhibit grey matter loss primarily in the parietal and posterior cingulate cortex, accompanied by white matter damage in these regions [5] [6] [7] [8] . Our approach successfully captures these associations from both imaging and clinical text data, as reflected in panels 1 and 2 of Fig. 3 . More importantly, our model offers a powerful framework for improving our understanding of AD/MCI by linking multimodal data in practical clinical settings. previous studies have reported a puzzling discrepancy exists in AD research: structural atrophy primarily affects the medial temporal lobe, whereas metabolic dysfunction is more pronounced in the posterior association cortices [5] . This misalignment suggests that metabolic alterations may precede structural degeneration during AD progression. Our findings align with this hypothesis, as seen in panels 1 of Fig. 3 , where the brain subnetwork of the left and right S_subparietal regions shows a strong association with taurelated tokens. This connection is particularly significant because it not only reflects brain metabolic patterns but also corresponds to the fundamental pathological mechanisms of AD -the accumulation of extracellular amyloid plaques and intracellular neurofibrillary tangles (tau pathology). These pathological changes ultimately drive neuronal loss, cortical atrophy, and cognitive decline.
+
+
+================================================================================
+3.3
+================================================================================
+
+Key clinical text tokens. Fig. 4 presents the top-5 MCI-related text tokens extracted from the clinical reports and their corresponding significant Text-to-Brain interactions. To analyze these associations, we first identify the most influential tokens in diagnostic performance and then determine the top-5 most relevant brain sub-networks linked to each token. A notable example is the strong association between the token phosphorylated_tau and cingulate brain regions as shown in panel 2 of Fig. 4 . Previous studies have demonstrated that the degree of tau protein deposition in these regions is closely correlated with cognitive decline, as evidenced by MRI and PET analyses [9] [10] [11] [12] [13] . Our model successfully captures this relationship, identifying brain sub-networks G_and_S_cingul-Mid-Post and G_cingul-Post-dorsal through text analysis, which closely aligns with established neuroimaging findings. This finding further validates our model's capability to uncover meaningful multimodal relationships between clinical text and neuroimaging data.
+
+cerebrospinal_fluid phosphorylated_tau hippocampus entorhinal_cortex aβ42 R G_occipital_middle R Pole_occipital R S_temporal_sup R G_pariet_inf-Angular L G_and_S_occipital_inf R G_and_S_cingul-Mid-Post R G_cingul-Post-dorsal R S_precentral-inf-part R G_subcallosal L Pole_occipital R S_subparietal L S_collat_transv_post R G_temporal_inf L G_temp_sup-Plan_tempo L G_cingul-Post-ventral L S_collat_transv_post R S_central R Lat_Fis-post R G_temporal_inf L G_and_S_cingul-Mid-Post R G_rectus L S_suborbital L S_subparietal R S_precentral-inf-part R G_and_S_subcentral Attention Score 1.0 0.6 1 2 3 4 5 Top-5 disease-related text tokens Top-5 text-to-brain interactions 0.4 1.0 0.0 SC strength
+
+
+================================================================================
+Evaluation of MCI/NC prediction performance.
+================================================================================
+
+Our model is trained for the MCI/NC classification task and we compare its performance with the most recent approaches. For a fair comparison, Table 1 summarizes the overall prediction performance of recent MCI studies across three categories. As shown in Table 1 , multi-imaging approaches generally outperform single-modal methods, highlighting the complementary insights different imaging modalities provide in characterizing MCI. However, while clinical reports contain critical first-hand information essential for diagnosis, few studies have explored the predictive potential of integrating text-based clinical reports with neuroimaging data. In this study, we combine DTI-derived brain connectome with clinical reports to enhance MCI prediction. Our experimental results demonstrate that our multimodal approach achieves the highest prediction accuracy compared to both single-and multi-imaging methods, underscoring the advantage of incorporating clinical text data in MCI prediction.
+
+
+================================================================================
+Ablation study.
+================================================================================
+
+First, we assess the contribution of each modality -imaging and text -to the prediction task. As shown in Table 2 (A), both brain SC and clinical reports play a significant role in MCI prediction. Second, we evaluate the impact of different cross-modality alignment strategies at both subject and connectome levels, as summarized in Table 2 (B ). The results indicate that integrating both modalities provides complementary benefits, leading to improved overall prediction performance. Moreover, the connectome-level alignment strategy not only enhances diagnostic accuracy but also uncovers meaningful interactions between brain sub-networks and corresponding clinical report tokens. These findings comprehensively validate the effectiveness of our proposed model and highlight its potential for advancing multimodal MCI diagnosis. ) Single-Imaging Modality Study Shao et al. (2020) [14] PET 160/460 65.61 79.19 48.01 -Shao et al. (2020) [14] MRI 225/120 69.14 79.34 55.92 -Song et al. (2024) [15] DTI 27/10 -70.0 85.2 -Zhang et al. (2025) [16] rsfMRI 225/120 89.1 91.4 97.2 90/3 (B) Multi-Imaging Modality Study Zhou et al. (2021) [17] MRI+PET 142/82 88.25 79.74 91.58 -Shi et al. (2022) [18] MRI+PET 52/99 80.73 85.98 70.90 85.3 Zhang et al. (2021) [19] DTI+rsfMRI 116/98 92.70 -89.90 -Zhang et al. (2023) [20] DTI+rsfMRI 116/93 92.30 83.22 89.99 -(C) Imaging-Non-Imaging Modality Study Janani et al. (2021) [21] MRI+record 132/104 84.0 -78.5 77.0 Xue et al. (2024) [22] MRI+record 868/1119 59.5 55.0 64.0 41.0 Zhang et al. (2025) [23] MRI+text 5025/7111 -91.5 -89.0 Song et al. (2024) [16] DTI+record 27/10 -90.0 81.5 -Ours DTI+text 301/117 92.94 93.0 85.16 93.0
+
+
+================================================================================
+Conclusion
+================================================================================
+
+We introduce a novel multimodal approach that bridges brain connectomes and clinical reports at both subject and connectome levels for early AD diagnosis, enhancing both accuracy and interpretability. Our findings reveal several valuable insights derived solely from DTI-formed brain network and text information without additional imaging data, highlighting the potential of clinical reports analysis in uncovering neurodegenerative disease patterns. In the future, we will further explore more imaging modalities for a more comprehensive and generalizable brain presentation, further advancing AIassisted diagnosis in neurodegenerative research.
+
+
+================================================================================
+Acknowledgments.
+================================================================================
+
+This work was supported by the National Institutes of Health ( R01AG075582 and RF1NS128534 )
+
+
+================================================================================
+Disclosure of Interests.
+================================================================================
+
+The authors have no competing interests to declare that are relevant to the content of this article.
+

@@ -1,0 +1,231 @@
+
+================================================================================
+Title
+================================================================================
+
+THE BACKPROPAGATION ALGORITHM FOR A MATH STUDENT
+
+
+================================================================================
+Abstract
+================================================================================
+
+A Deep Neural Network (DNN) is a composite function of vector-valued functions, and in order to train a DNN, it is necessary to calculate the gradient of the loss function with respect to all parameters. This calculation can be a non-trivial task because the loss function of a DNN is a composition of several nonlinear functions, each with numerous parameters. The Backpropagation (BP) algorithm leverages the composite structure of the DNN to efficiently compute the gradient. As a result, the number of layers in the network does not significantly impact the complexity of the calculation. The objective of this paper is to express the gradient of the loss function in terms of a matrix multiplication using the Jacobian operator. This can be achieved by considering the total derivative of each layer with respect to its parameters and expressing it as a Jacobian matrix. The gradient can then be represented as the matrix product of these Jacobian matrices. This approach is valid because the chain rule can be applied to a composition of vector-valued functions, and the use of Jacobian matrices allows for the incorporation of multiple inputs and outputs. By providing concise mathematical justifications, the results can be made understandable and useful to a broad audience from various disciplines.
+
+
+================================================================================
+INTRODUCTION
+================================================================================
+
+Understanding the process of training a (Deep) Neural Networks (D)NNs, as illustrated in Fig 1 , is not straightforward because it involves many detailed parts. Additionally, modern and sophisticated DNNs are often provided as pre-trained models in Python packages such as Pytorch Paszke et al. (2019) and TensorFlow Abadi et al. (2016) , which can make it difficult for users to fully understand the training process. These packages abstract away many of the implementation details, making it more accessible for users to use these models for their own tasks, but also making it less transparent for the user to understand the inner workings of the model.
+
+These pre-trained off-the-shelf models can solve variety of tasks such as computer vision or language processing. Convolutional neural networks (CNNs) are currently the most widely used architecture for image classification and other computer vision tasks. Some examples of successful CNN architectures for image classification include ResNet He et al. (2016) , Inception Szegedy et al. (2015) , DenseNet Huang et al. (2017) , and EfficientNet Tan & Le (2019) . CNNs models are capable of solving image segmentation and object detection which can be done using U-Net Ronneberger et al. (2015) Figure 1 : Relationship between training of a NN and BP algorithm 1 arXiv:2301.09977v3 [cs. LG] 31 May 2023 Algorithm 1 The backpropagation algorithm Require: Given an L-layer DNN or NN with a loss function ℓ, and a data pair (x, y). Let a [0] := x.
+
+
+================================================================================
+1:
+================================================================================
+
+Calculate ∇ z [L] ℓ y, f (z [L] ) from Tab. 1. 2: for l = 1, . . . , L do 3: [l] (z [l] )
+
+,b [L] z [L] (θ) .
+
+6: Calculate the gradient ∇ θ ℓ y, ŷ(θ) = J θ z [L] (θ) ⊤ ∇ z [L] ℓ y, f (z [L] ) .
+
+and YOLO Redmon et al. (2016) . For natural language processing tasks, transformer models like BERT Devlin et al. (2018) , GPT-3 Brown et al. (2020) , and T5 Raffel et al. (2020) have achieved state-of-the-art performance on many benchmarks.
+
+Fig 1 shows the training process that utilizes the Stochastic Gradient Descent (SGD) algorithm Robbins & Monro (1951) to minimize the loss function of a DNN. As its name suggests, the SGD algorithm requires calculating the gradient foot_0 of the loss function of a DNN. All different variants of the SGD algorithm require calculating at least a single gradient associated with a single sample, i.e., x in Fig. 1 . This calculation is a non-trivial task because the loss function of a DNN is a composition of several nonlinear vector-valued functions where each one has numerous parameters. The Backpropagation (BP) algorithm, introduced by Rumelhart et al. (1986b) is an efficient way to calculate the gradient of the loss function of a DNN. This algorithm leverages the composite structure of a DNN to efficiently calculate the gradient of the loss function with respect to the model's parameters, i.e., θ in Fig. 1 .
+
+In this paper we are going to calculate the gradient of the loss function of a DNN associated with a single sample. The gradient will be derived as the matrix multiplication of Jacobian matrices foot_1 . The derivation will be done by considering the total derivative of each layer with respect to its parameters and expressing it as a Jacobian matrix. The gradient can then be represented as the matrix product of these Jacobian matrices. This approach is well-founded because the chain rule is valid for the Jacobian operator. Hence, the Jacobian operator can be applied to a composition of vector-valued functions. We provide concise mathematical justifications so the results can be made understandable and useful to a broad audience from various disciplines, even those without a deep understanding of the mathematics involved. This is particularly important when communicating complex technical concepts to non-experts, as it allows for a clear and accurate understanding of the results. Additionally, using mathematical notation allows for precise and unambiguous statements of results, which can facilitate replication and further research in the field.
+
+Our results is summarized in Alg. 1 for L number of layers. As Alg. 1 shows the matrix multiplication is done iteratively. The iterative nature comes from the fact that the loss function of a DNN is defined as a composition of L + 1 functions where the last one ℓ is the final function which measures the loss (error) of the prediction and the actual value, i.e., ℓ(y, ŷ) in Fig 1 where ŷ is the prediction and y the actual value.
+
+The algorithm presented in Alg. 1 is explained and justified by calculating the gradient of the loss function for networks with one, two, and three layers. These calculations provide insights into the gradients of loss functions for generic neural networks and demonstrate how the gradient of a single-layer network can serve as a model for the last layer of any DNN. Additionally, the calculation of a two-layer network is used to extend the calculation beyond two-layer networks, as seen in the calculation of the gradient of the loss function for LeNet-100-300 LeCun et al. (1998) , which is a three-layer network. Finally, we show how convolutional layers can be converted to linear layers in order to calculate their Jacobian matrices. These results can be used to calculate the gradient of the loss function of a CNN.
+
+
+================================================================================
+NOTATION
+================================================================================
+
+The letters x, x, and W denote a scalar, vector, and matrix, respectively. The letter I represents the identity matrix. The i-th element of a vector x is denoted by x i . Likewise, w ij denotes the ij-th element of a matrix W located at the i-th row and j-th column (sometimes written as w i,j for clarity). Also, Wi• and W•j denote the i-th row and the j-th column of the matrix, respectively. The vector form of a matrix W is denoted by Vec(W), where each column of W is stacked on top of each other, with the first column at the top. The letter f is reserved for a vector-valued non-linear activation function of a layer in a DNN (NN), where z and a are its input and output, respectively, i.e., a = f (z).
+
+The letter x is reserved for the input to a DNN (NN), and y or y are reserved for the scalar or vector label of the input x. The predictions of a DNN (NN) associated with y or y are denoted by ŷ or ŷ, respectively. Superscripted index inside square brackets denotes the layer of a DNN (NN), e.g., z [l] is the z vector corresponding to the l-th layer.
+
+
+================================================================================
+RESULT
+================================================================================
+
+As we have explained earlier, the goal of this paper is to take the first step towards training a DNN, which involves calculating the gradient of a loss function with respect to all parameters of the DNN, i.e., ∇ θ ℓ(y, ŷ(θ)), where θ is the vector of parameters, ŷ is the predicted value by the network, y is the true value, and ℓ(y, ŷ(θ)) is the loss incurred to predict the output. To achieve this goal, two important observations can make the task easier. First, it involves separating the last-layer activation function from the network. Second, it involves using the relationship between the Jacobian operator and the gradient.
+
+To fulfill the first step, we observe the following equality:
+
+which is a consequence of the fact that ŷ = f [L] z [L] (θ) , where f [L] is the last activation layer and z [L] (θ) is its corresponding input. This equality can be illustrated more clearly as shown in Fig. 2 .
+
+Second observation utilizes the relationship between the Jacobian operator and the gradient of a scalar-valued function stated in the following lemma.
+
+Lemma 1 (Jacobian and gradient of a scalar-valued function). For f : R n → R as a scalar-valued
+
+where ∇ x f (x) is the gradient and J x f (x) is the Jacobian matrix of f at point x ∈ R n respectively.  Proof. The equality follows from the definitions of a Jacobian matrix as defined in Def. 1 and the gradient of a scalar-valued function as defined in Def. in 2 in Appendix.
+
+By using the second observation as
+
+, and making use of the first one as
+
+one can write the following:
+
+(1)
+
+The advantage of Equation ( 1 ) is that it separates the original gradient calculation into two separate calculations, i.e., J θ z [L] (θ) and ∇ z [L] ℓ y, f [L] z [L] . The calculation of the second term is straightforward because the choice of a loss function and the last activation function in a DNN are not arbitrary. This is illustrated in Fig. 3 , which shows three common combinations, each associated with a different problem.
+
+In a binary classification problem, a sigmoid function is used as the last activation function together with Binary Cross Entropy (BCE) loss, as defined in Definition 3 and Definition 5 in the Appendix, respectively. Similarly, in a classification problem with more than two classes, a softmax function is used as the last activation function together with Cross Entropy (CE) loss, as defined in Definition 4 and Definition 6 in the Appendix, respectively. In a regression problem, where the goal is to predict a continuous value, the last-layer activation function is an identity function, and Square Error (SE) is used as the loss function, as defined in Definition 7. This means that the predicted output ŷ is equal to the final layer's output z [L] . Table 1 shows the combination of the last activation function with its corresponding loss and the expression for ∇ z [L] ℓ y, f [L] z [L] . For the derivation, please refer to Appendix D.
+
+More work is required to calculate the second term, i.e., J θ z [L] (θ). In the following subsections, we show how to derive this calculation concisely for any number of layers.
+
+
+================================================================================
+GRADIENT OF A ONE-LAYER NETWORK
+================================================================================
+
+We will now focus on computing J θ z [L] (θ). This calculation can be facilitated by starting with a single layer neural network that is capable of solving a classification problem. The single layer network plays a crucial role in gradient computation as it can be considered as the last layer of any deep neural network (DNN). Due to the presence of only one layer, the superscripts in z [L] and f [L] can be omitted, giving us J θ z(θ) := J θ z [L] (θ). The network depicted in Fig. 4 is designed to perform three-class classification based on inputs with four features. Consequently, the weight matrix W is a 4 × 3 and the bias vector b is a 3 × 1, i.e., W ∈ R 4×3 and b ∈ R 3×1 . As shown in the concise representation of the network in the bottom part of Fig. 4 , z ∈ R 3 , i.e., z = W ⊤ x + b. This vector z is a vector-valued function including 15 parameters where these parameters are all elements in W and b, i.e., 15 = 4 × 3 + 3 × 1. According to the definition of Jacobian matrix as defined in Def. 1 in Appendix, J W,b z(W, b) is a 3 × 15 matrix, i.e., J W,b z(W, b) ∈ R 3 × R 15 .
+
+For notational simplicity, all the parameters are denoted by θ which is a vector in R 15 , and is constructed by the process of vectorization. The vectorization process stacks each column of W on top of each other, with the first column on the top to create Vec(W). Then, the vector of network parameters can be written as
+
+. Therefore to calculate J θ z(θ) one can write the following:
+
+where W •i is a column of W for i = 1, 2, 3 and I 3×3 appears because the derivative of each element of z with respect to components of b are either zero or one. Therefore the gradient of the loss function is calculated as follows
+
+where the value for ∇ z ℓ y, f (z) is obtained from Tab. 1. The above gradient is similar to the gradient of one-layer networks whose weights are vectors not matrices as shown in Tab. 2. As it can be seen from Tab. 2 famous problems such as simple/multiple linear regression, simple binary classification, and logistic regression can be written as a one-layer network whose weight are vectors not matrices.
+
+Although a one-layer network provides valuable understanding of the relationship between the Jacobian and the gradient of the loss function with respect to z, it is not practical in terms of performance, i.e., accuracy in prediction. To improve performance, adding more layers is recommended. As a result, the following subsection will demonstrate the calculation of the gradient of a two-layer network.
+
+
+================================================================================
+GRADIENT OF A TWO-LAYER NETWORK
+================================================================================
+
+Studying a two-layer network can not only improve performance (accuracy) but also aid in developing a method for calculating the gradient of any deep neural network (DNN) with multiple layers. To demonstrate this, a two-layer network will be considered, as shown in Fig. 5 where block-wise model helps calculating the gradient of its loss. Similar to a one-layer network, one can write ∇ z [2] ℓ y, f [2] z [2]  = -(y -ŷ) from Tab. 1. To calculate J θ z [2] (θ), observe that it can be separated into parameters of second and first layer as does θ. The separation for θ can be written as the following:
+
+which is used to write the below separation of Jacobian matrices:
+
+.  Calculating the second term is straight forward because one can write the following:
+
+where a [1] ∈ R 5 because W [2] ∈ R 5×3 . To calculate the second term first observe that W [2] is not a function of W [1] nor b [1] . Then one can write the following:
+
+The last equality is where the chain rule needs to be used in order to obtain an expression in terms of W [1] and b [1] , as shown below:
+
+Finally, the gradient would be the following:
+
+The next subsection will demonstrate the calculation of the gradient for a three-layer network, thereby illustrating the extension of a two-layer network gradient to an arbitrary number of layers. In this subsection, we evaluate the gradient of a loss function for a LeNet-100-300-10 network architecture, which consists of 100, 300, and 10 units (neurons) in the first, second and third layer respectively LeCun et al. (1998) . This network is used for image classification tasks LeCun (1998) . The input to the network is a vectorized representation of 28 × 28 digit images (784 elements) and the output is a vector in R 10 . The input to the LeNet-100-300-10 is a vector x ∈ R 784 representing the vectorized image. Similar to a one-and two-layer networks ∇ z [3] ℓ y, f [3] z [3] = -(y -ŷ) ∈ R 10 which is obtained from Tab. 1. To calculate J θ z [3] (θ), three Jacobian are needed to separate out the parameters of the layers as the following:
+
+By following the same steps as for the two-layer network, the gradient can be calculated as:
+
+where Jacobian matrices of layers
+
+, and ∇ z [3] ℓ y, f (z [3] ) = -(y -ŷ) which is consistent with Alg. 1.
+
+
+================================================================================
+JACOBIAN OF ACTIVATION FUNCTIONS
+================================================================================
+
+In this subsection we elaborate on J z [l] f [l] z [l] where f [l] is the l-th activation layer whose corresponding input is z [l] for l = 1, . . . , L -1. When l ̸ = L, the vector f [l] (z [l] ) is typically obtained by applying a single univariate function f to each element of z [l] . The most common activation function used in DNNs is the Rectified Linear Unit (ReLU) function, defined as f (x) = max(0, x) Fukushima (1969; 1975); Rumelhart et al. (1986a) ; Nair & Hinton (2010) . Algebraically, this operation can be represented as
+
+where f is the same univariate function applied to all elements of z, d is the output size of the layer, and we have omitted superscripts for clarity. This special structure results in a diagonal matrix, i.e.,
+
+where f ′ is the derivative of a univariate function. For the special case of the ReLU function J z f (z) is a diagonal matrix of zeros and ones which are associated to the negative and positive elements of z. Multiplying such a matrix from the left to any matrix W results in removing the rows of W associated to zero elements in J z f (z) which greatly decreases the computation. The zero-th norm of the parameter vector can be minimized in sparse optimizations using these intuitions, as noted in Damadi & Shen (2022b) .
+
+Note that the derivations so far have only considered fully connected networks. However, for computer vision tasks, CNN models are utilized, which employ convolution operations instead of matrix multiplication in some layers. In the next subsection, we will demonstrate how a convolutional layer can be transformed into a fully connected network.
+
+
+================================================================================
+CONVOLUTION AS MATRIX MULTIPLICATION
+================================================================================
+
+A 2-D convolution operation is a mathematical operation that is used to extract features or patterns from a 2-dimensional input (matrix), such as an image. It works by applying a filter or kernel, which is also a matrix, to the input image LeCun et al. (1998) . The filter is moved across the image, performing element-wise multiplications with the overlapping regions of the image and filter, and then summing the results. This process is repeated for every position of the filter on the image, resulting in a new matrix output, known as a feature map. Fig. 7 shows the process of a convolution operation where the 3x3 and 2x2 matrices represent the input and the filter respectively. As Fig. 7 illustrates the filter slides over the input image, one pixel at a time, and performs element-wise multiplications with the overlapping region of the image. The result of these multiplications is then summed, and the sum is stored in the corresponding location of the output feature map.
+
+The size of the filter and the stride (the number of pixels the filter is moved each time) determine the size of the output feature map. Additionally, the filter can be applied multiple times with different filter parameters, to extract different features from the same input image. Lemma 2. The convolution operation between two matrices, X and K, can be represented as a matrix multiplication. Specifically, it can be represented as the product of a Toeplitz matrix (or diagonal-constant matrix) of K and the vector obtained from stacking the columns of the transpose of X in the order of the first one on top. Mathematically, this can be represented as:
+
+where X ∈ R m X ×n X and K ∈ R m K ×n K and m X , n X , m X , n X ∈ N. Remark 1. The above representation allows for the convolution operation to be computed efficiently using matrix multiplication, which can be parallelized and accelerated on a GPU.
+
+To clarify the above lemma, consider X ∈ R 3×3 and K ∈ R 2×2 as the input and filter respectively. Then, one can verify the lemma by writing the following:
+
+Lemma 3. For an input X to a convolutional layer that has r number of filters, each calculation X * K i + B i is equivalent to (W i ) ⊤ x + b i where K i is the matrix of the i-th filter, B i is the matrix of associated bias for each filter,
+
+According to the above lemma, we can convert a convolutional neural network to a typical fully connected one and find its gradient.
+
+
+================================================================================
+CONCLUSION
+================================================================================
+
+In this paper, we demonstrated the utilization of the Jacobian operator to simplify the gradient calculation process in DNNs. We presented a matrix multiplication-based algorithm that expresses the BP algorithm using Jacobian matrices and applied it to determine gradients for single, double, and three-layer networks. Our calculations offered insights into the gradients of loss functions in DNNs; for instance, the gradient of a single-layer network can serve as a model for the final layer of any DNN. We also expanded our findings to cover more intricate architectures such as LeNet-100-300-10 and demonstrated that the gradients of convolutional neural network layers can be transformed into linear layers. These results can aid research on compressing DNNs that utilize the full gradient, as noted in Damadi et al. (2022) . Furthermore, they can benefit sparse optimization in both deterministic and stochastic settings, where the Iterative Hard Thresholding (IHT) algorithm uses the full gradient for a sparse solution in deterministic settings Damadi & Shen (2022b) and the mini-batch Stochastic IHT algorithm is employed in the stochastic context Damadi & Shen (2022a) . We provided concise mathematical justifications to make the results clear and useful for people from different fields, even those without a deep understanding of the involved mathematics. This was particularly important when communicating complex technical concepts to non-experts as it allowed for a clear and accurate understanding of the results. Additionally, using mathematical notation allowed for precise and unambiguous statements of results, facilitating replication and further research in the field. As next steps, we intend to study the calculation of gradients for loss functions in various types of neural networks such as residual, recurrent, Long Short-Term Memory (LSTM), and Transformer networks. We will also explore the Jacobian of batch normalization to further our understanding of the method.
+
+
+================================================================================
+A OPERATORS
+================================================================================
+
+Definition 1 (Jacobian matrix of a vector-valued function). Let f : R n → R m be a differentiable vector-valued function where
+
+ and x ∈ R n . This function takes a point x ∈ R n as an input and produces f (x) ∈ R m as the output. The Jacobian matrix of f with respect to x is defined to be an m × n matrix denoted by J x f (x) as the following:
+
+Definition 2 (Gradient of a scalar-valued function). Let f : R → R be a differentiable scalar-valued function. The gradient of ∇f : R n → R n at x ∈ R n is defined as the following:
+
+
+================================================================================
+Definition 3 (Sigmoid function).
+================================================================================
+
+A sigmoid function σ : R → [0, 1] is defined as σ(x) = e x 1+e x . Definition 4 (Softmax function). A softmax function σ : R c → R c is defined for c ≥ 3 as the following:
+
+
+================================================================================
+C LOSS FUNCTIONS
+================================================================================
+
+Definition 5 (Binary Cross Entropy Loss). Let ŷ ∈ [0, 1] be a predicted probability for a true label whose value is either zero or one, i.e., y ∈ {0, 1}. The Binary Cross Entropy (BCE) loss is defined as follows:
+
+BCE(y, ŷ) = -y log(ŷ) + (1 -y) log(1 -ŷ) .
+
+
+================================================================================
+Remark 2 (BCE loss).
+================================================================================
+
+The BCE loss is minimized when the predicted label is close to the true label. The BCE loss has a smooth and continuous gradient which makes it suitable for use with gradient-based optimization algorithms. It is also a convex function with respect to the variable ŷ.
+
+Definition 6 (Cross Entropy Loss). Let ŷ ∈ (0, 1) c ∈ R c (c ≥ 3) be a predicted probability for a true one-hot vector label y ∈ R c , i.e., y j = 1, y i = 0 for j ̸ = i = 1, . . . , c. The Cross Entropy (CE) loss is defined as follows:
+
+Remark 3. Cross entropy function is commonly used in machine learning and information theory to measure the difference between two probability distributions. It is often used as a loss function to evaluate the performance of classification models.
+
+In the context of machine learning, cross entropy is typically used to measure the difference between the predicted probability distribution (outputted by the model) and the true probability distribution (which represents the actual labels of the data). The cross entropy loss function is designed to penalize the model when it assigns low probabilities to the true labels, and to reward the model when it assigns high probabilities to the true labels.
+
+
+================================================================================
+D.1 SIGMOID WITH BCE
+================================================================================
+
+Lemma 4 (Gradient of BCE loss). Let x (i) be an input to a one-layer network solving binary classification with y (i) ∈ {0, 1} be its true label and ŷ(i) = σ w ⊤ x (i) + b is the predicted probability corresponding to the input for i = 1, . . . , N . The gradient of the BCE loss is given as follows:
+
+Proof. We calculate the following for a fixed i ∈ {1, . . . , N }:
+
+To calculate the above observe the following:
+
+Hence, we can write the following:
+
+Lemma 5 (Gradient of CE loss w.r.t z). Let ŷ ∈ (0, 1) c ∈ R c (c ≥ 3) be a predicted probability such that ŷ = σ(z) where σ is a softmax function as defined in Def. 4 and z ∈ R n . And, let y be a true one-hot vector label y ∈ R c , i.e., y j = 1, y i = 0 for j ̸ = i = 1, . . . , c. The gradient of the CE loss with respect to z is the following:
+
+Proof. To calculate ∇ z CE (y, ŷ(z)) one can rewrite it as ∇ z CE (y, σ(z)). Then the loss can be expanded as follows:
+
+each component can be calculated as the following:
+
+where in the last equality we have use the fact that c i=1 y i = 1. Since the above calculation is for the j-th component and (ŷ) j = (σ(z)) j , by calculating other components we get the desired result.
+
+
+================================================================================
+D.3 SQUARE ERROR
+================================================================================
+
+Lemma 6. Let x (i) be an input to a one-layer network with y (i) ∈ R be the corresponding true value and ŷ(i) = w ⊤ x (i) + b ŷ(i) inR be the corresponding prediction for i = 1, . . . , N . The gradient of SE loss is defined as follows:
+
