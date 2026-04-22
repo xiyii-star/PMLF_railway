@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EvoNarrator</title>
+  <script>
+    // 客户端路由 fallback 处理
+    // 当访问动态路由时，重定向到根路径并使用 hash 路由
+    (function() {
+      var path = window.location.pathname;
+      var search = window.location.search;
+      var hash = window.location.hash;
+
+      // 如果不是根路径，重定向到根路径并使用 hash 路由
+      if (path !== '/' && path !== '/index.html') {
+        // 将路径转换为 hash 路由格式
+        window.location.replace('/#' + path + search + hash);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: system-ui, -apple-system, sans-serif;">
+    <div style="text-align: center;">
+      <h1 style="font-size: 2rem; margin-bottom: 1rem;">加载中...</h1>
+      <p style="color: #666;">正在跳转到应用...</p>
+    </div>
+  </div>
+</body>
+</html>

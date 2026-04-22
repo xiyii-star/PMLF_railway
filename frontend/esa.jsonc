@@ -1,0 +1,9 @@
+{
+  "name": "evonarrator-frontend",
+  "entry": "./out/_worker.js",
+  "installCommand": "npm install",
+  "buildCommand": "npm run build",
+  "assets": {
+    "directory": "./out"
+  }
+}
