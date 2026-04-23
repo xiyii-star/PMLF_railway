@@ -130,46 +130,69 @@ def get_output_files(task_id: str, topic: str) -> Dict[str, Optional[Path]]:
     return files
 
 
+def get_output_files_in_dir(task_id: str, topic: str, directory: Path) -> Dict[str, Optional[Path]]:
+    """Get output file paths for a task in a specific directory"""
+    # Find files matching pattern: {task_id}_{pattern}_{topic}_*.{ext}
+    files = {}
+    for pattern in ['papers', 'graph_data', 'graph_viz', 'deep_survey', 'research_ideas']:
+        matches = list(directory.glob(f"{task_id}_{pattern}_{topic}_*.json"))
+        if not matches:
+            matches = list(directory.glob(f"{task_id}_{pattern}_{topic}_*.html"))
+        if matches:
+            files[pattern] = matches[0]
+        else:
+            files[pattern] = None
+
+    return files
+
+
 def scan_output_directory() -> List[Dict]:
     """Scan output directory for all completed analyses"""
     output_dir = PROJECT_ROOT / 'output'
     if not output_dir.exists():
         output_dir.mkdir(parents=True)
-        
+
     results = []
-    
-    # Find all papers JSON files
-    for papers_file in output_dir.glob("*_papers_*.json"):
-        try:
-            # Parse filename: {task_id}_papers_{topic}_{timestamp}.json
-            # timestamp format: YYYYMMDD_HHMMSS (2 parts when split by _)
-            parts = papers_file.stem.split('_')
-            if len(parts) >= 4:
-                task_id = parts[0]
-                # timestamp is last 2 parts: YYYYMMDD_HHMMSS
-                timestamp = '_'.join(parts[-2:])
-                # topic is everything between 'papers' and timestamp
-                topic = '_'.join(parts[2:-2])
-                
-                # Load metadata
-                with open(papers_file, 'r', encoding='utf-8') as f:
-                    papers_data = json.load(f)
-                
-                # Get other files
-                files = get_output_files(task_id, topic)
-                
-                results.append({
-                    'task_id': task_id,
-                    'topic': topic,
-                    'timestamp': timestamp,
-                    'paper_count': len(papers_data) if isinstance(papers_data, list) else 0,
-                    'files': {k: str(v) if v else None for k, v in files.items()},
-                    'created_at': datetime.fromtimestamp(papers_file.stat().st_mtime).isoformat()
-                })
-        except Exception as e:
-            logger.warning(f"Failed to parse file {papers_file}: {e}")
+
+    # Scan both output and output/demo directories
+    scan_dirs = [output_dir, output_dir / 'demo']
+
+    for scan_dir in scan_dirs:
+        if not scan_dir.exists():
             continue
-    
+
+        # Find all papers JSON files
+        for papers_file in scan_dir.glob("*_papers_*.json"):
+            try:
+                # Parse filename: {task_id}_papers_{topic}_{timestamp}.json
+                # timestamp format: YYYYMMDD_HHMMSS (2 parts when split by _)
+                parts = papers_file.stem.split('_')
+                if len(parts) >= 4:
+                    task_id = parts[0]
+                    # timestamp is last 2 parts: YYYYMMDD_HHMMSS
+                    timestamp = '_'.join(parts[-2:])
+                    # topic is everything between 'papers' and timestamp
+                    topic = '_'.join(parts[2:-2])
+
+                    # Load metadata
+                    with open(papers_file, 'r', encoding='utf-8') as f:
+                        papers_data = json.load(f)
+
+                    # Get other files (search in the same directory as papers_file)
+                    files = get_output_files_in_dir(task_id, topic, scan_dir)
+
+                    results.append({
+                        'task_id': task_id,
+                        'topic': topic,
+                        'timestamp': timestamp,
+                        'paper_count': len(papers_data) if isinstance(papers_data, list) else 0,
+                        'files': {k: str(v) if v else None for k, v in files.items()},
+                        'created_at': datetime.fromtimestamp(papers_file.stat().st_mtime).isoformat()
+                    })
+            except Exception as e:
+                logger.warning(f"Failed to parse file {papers_file}: {e}")
+                continue
+
     # Sort by creation time (newest first)
     results.sort(key=lambda x: x['created_at'], reverse=True)
     return results
@@ -508,53 +531,61 @@ async def get_result(task_id: str):
                         result['graph_data'] = json.load(f)
 
         return result
-    
+
     # Otherwise, try to load from files
     output_dir = PROJECT_ROOT / 'output'
     papers_file = None
-    
-    for f in output_dir.glob(f"{task_id}_papers_*.json"):
-        papers_file = f
-        break
-    
+    search_dir = None
+
+    # Search in both output and output/demo directories
+    for directory in [output_dir, output_dir / 'demo']:
+        if not directory.exists():
+            continue
+        for f in directory.glob(f"{task_id}_papers_*.json"):
+            papers_file = f
+            search_dir = directory
+            break
+        if papers_file:
+            break
+
     if not papers_file:
         raise HTTPException(status_code=404, detail="Result not found")
-    
+
     # Parse topic from filename
     # Format: {task_id}_papers_{topic}_{timestamp}.json
     # timestamp format: YYYYMMDD_HHMMSS (2 parts when split by _)
     parts = papers_file.stem.split('_')
     topic = '_'.join(parts[2:-2])
-    
-    # Load all related files
-    files = get_output_files(task_id, topic)
-    
+
+    # Load all related files from the same directory
+    files = get_output_files_in_dir(task_id, topic, search_dir)
+
     result = {
         'task_id': task_id,
         'topic': topic,
         'files': {}
     }
-    
+
     # Load papers
     if files['papers']:
         with open(files['papers'], 'r', encoding='utf-8') as f:
             result['papers'] = json.load(f)
-    
+
     # Load graph data
     if files['graph_data']:
         with open(files['graph_data'], 'r', encoding='utf-8') as f:
             result['graph_data'] = json.load(f)
-    
+
     # Load deep survey
     if files['deep_survey']:
         with open(files['deep_survey'], 'r', encoding='utf-8') as f:
             result['deep_survey'] = json.load(f)
-    
+
     # Load research ideas
     if files['research_ideas']:
         with open(files['research_ideas'], 'r', encoding='utf-8') as f:
             result['research_ideas'] = json.load(f)
-    
+
     return result
 
 
@@ -590,16 +621,21 @@ async def get_ideas(task_id: str):
 async def get_visualization(task_id: str):
     """Get visualization HTML file"""
     output_dir = PROJECT_ROOT / 'output'
-    
-    # Find visualization file
+
+    # Find visualization file in both output and output/demo directories
     viz_file = None
-    for f in output_dir.glob(f"{task_id}_graph_viz_*.html"):
-        viz_file = f
-        break
-    
+    for directory in [output_dir, output_dir / 'demo']:
+        if not directory.exists():
+            continue
+        for f in directory.glob(f"{task_id}_graph_viz_*.html"):
+            viz_file = f
+            break
+        if viz_file:
+            break
+
     if not viz_file:
         raise HTTPException(status_code=404, detail="Visualization not found")
-    
+
     return FileResponse(viz_file, media_type="text/html")
 
 
